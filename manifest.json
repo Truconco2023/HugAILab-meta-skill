@@ -1,0 +1,23 @@
+{
+  "name": "qiaomu-meta-skill",
+  "version": "1.0.0",
+  "owner": "Qiaomu",
+  "updated_at": "2026-05-21",
+  "status": "active",
+  "maturity_tier": "governed",
+  "lifecycle_stage": "library",
+  "context_budget_tier": "production",
+  "review_cadence": "quarterly",
+  "target_platforms": [
+    "openai",
+    "claude",
+    "generic",
+    "agent-skills-compatible"
+  ],
+  "factory_components": [
+    "templates",
+    "references",
+    "scripts",
+    "reports"
+  ]
+}
