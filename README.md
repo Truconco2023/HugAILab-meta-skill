@@ -11,7 +11,7 @@
 - 把 workflow 变成 skill
 - 给已有 skill 做重构、收敛和补强
 - 补 trigger、边界、评估和治理文件
-- 直接把 skill 做完并交给乔木发布器发布到 GitHub
+- 直接把 skill 做完并由自己完成 GitHub 发布
 - 打包成适合乔木团队复用的版本
 
 ## 安装
