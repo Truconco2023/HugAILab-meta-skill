@@ -1,7 +1,7 @@
 ---
 name: qiaomu-meta-skill
 description: |
-  Create, refactor, evaluate, and package qiaomu-flavored agent skills from workflows, prompts, transcripts, docs, or notes. Use when asked to create a new skill, improve an existing skill, add evals or guardrails, or package a skill for Qiaomu team reuse.
+  Create, refactor, evaluate, package, and publish qiaomu-flavored agent skills from workflows, prompts, transcripts, docs, or notes. Use when asked to create a new skill, improve an existing skill, add evals or guardrails, package a skill for Qiaomu team reuse, or create-and-publish a skill in one flow.
 ---
 
 # Qiaomu Meta Skill
@@ -29,6 +29,7 @@ Mode rules: [Operating Modes](references/operating-modes.md), [QA Ladder](refere
 2. Capture the recurring job, outputs, trigger phrases, and exclusions.
 3. Write the `description` early, then test route quality before expanding the package.
 4. Add only the folders and gates that earn their keep: `trigger_eval.py`, `optimize_description.py`, `judge_blind_eval.py`, `resource_boundary_check.py`, `governance_check.py`, `cross_packager.py`.
+5. If the user wants the skill published, hand off the finished package to `qiaomu-skill-publisher` and sync the实体 files into `~/.agents/skills/<name>` after publish.
 
 Playbooks: [Skill Engineering Method](references/skill-engineering-method.md), [Skill Archetypes](references/skill-archetypes.md), [Gate Selection](references/gate-selection.md), [Non-Skill Decision Tree](references/non-skill-decision-tree.md), [Operating Modes](references/operating-modes.md), [Trigger And Eval Playbook](references/eval-playbook.md).
 
@@ -40,7 +41,8 @@ Unless the user asks otherwise, produce:
 2. a trigger-aware `SKILL.md`
 3. aligned `agents/interface.yaml`
 4. optional `references/`, `scripts/`, `evals/`, `reports/`, and `manifest.json` only when justified
-5. a short summary of boundary, exclusions, gates, and next steps
+5. if publishing is requested, a handoff-ready package for `qiaomu-skill-publisher`
+6. a short summary of boundary, exclusions, gates, and next steps
 
 ## Qiaomu Adaptation Notes
 
@@ -48,6 +50,7 @@ Unless the user asks otherwise, produce:
 - Favor practical packaging over ceremonial structure.
 - Keep evals and governance light unless the skill is likely to be reused by others.
 - When a skill is meant for public sharing, ensure the description is sharp enough to route correctly and the README can stand on its own after publish.
+- For create-and-publish requests, do the packaging work first, then invoke the publisher rather than mixing the two concerns.
 
 ## Reference Map
 

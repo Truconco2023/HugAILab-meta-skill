@@ -11,6 +11,7 @@
 - 把 workflow 变成 skill
 - 给已有 skill 做重构、收敛和补强
 - 补 trigger、边界、评估和治理文件
+- 直接把 skill 做完并交给乔木发布器发布到 GitHub
 - 打包成适合乔木团队复用的版本
 
 ## 安装
@@ -22,6 +23,7 @@ npx skills add joeseesun/qiaomu-meta-skill
 ## 你可以直接这样说
 
 - “把这个流程整理成一个 skill”
+- “把这个流程整理成一个 skill 并发布”
 - “帮我优化这个 skill 的触发词和边界”
 - “给这个 skill 补上评估和治理文件”
 
