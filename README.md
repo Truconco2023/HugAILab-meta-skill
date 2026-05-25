@@ -40,7 +40,24 @@ npx skills add joeseesun/qiaomu-meta-skill
 
 - `SKILL.md` 的 frontmatter 完整
 - 需要的 `references/` 已补齐
-- README 能让陌生用户知道它能做什么
+- README 能让陌生用户知道它能做什么、为什么值得装、怎么安装和怎么排错
+
+## GitHub README 标准
+
+创建或发布 skill 时，README 不是 `SKILL.md` 的复制品，而是给人看的 GitHub 产品页。
+
+必须覆盖：
+
+- 一句话价值主张
+- 一行安装命令
+- 真实自然语言触发示例
+- 前置条件和验证命令
+- 具体输出示例
+- 环境变量/配置说明
+- Troubleshooting
+- 风险边界和致谢
+
+详细模板见 [`references/github-readme-playbook.md`](references/github-readme-playbook.md)。
 
 ## License
 
