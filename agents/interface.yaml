@@ -1,13 +1,22 @@
 interface:
   display_name: "Qiaomu Meta Skill"
-  short_description: "Create trigger-aware qiaomu agent skills"
-  default_prompt: "Use $qiaomu-meta-skill to turn my workflow or notes into a reusable skill with lean structure, clear triggering, and the right evals."
+  short_description: "Research, create, migrate, evaluate, and release Qiaomu skills"
+  default_prompt: "Use $qiaomu-meta-skill as the single skill-authoring authority. Use its resilient built-in dual-catalog research runner across skills.sh and SkillsMP, deduplicate and verify candidates in GitHub source, synthesize proven mechanisms without copying, and create, improve, migrate, audit, or release my Qiaomu skill with proportional evals and executable release gates. In the final handoff, name the skills studied, explain what was learned and rejected, and separate design advantages from validated advantages and hypotheses. Do not install another discovery or creator skill unless I explicitly request it. Respect audit-only requests by reporting findings without editing files."
+  examples:
+    - "把这个流程整理成一个 qiaomu skill"
+    - "优化这个已有 skill，补 trigger eval 和发布门禁"
+    - "把这套 SOP、脚本和提示词封装成团队可复用的 skill 包"
+    - "先找下载量高、口碑证据强的相关 skill，再取长补短创建一个更好的乔木 skill"
+    - "迁移这个旧 skill，并检查安装入口和递归发现风险"
+    - "只审计这个 skill 的路由与输出评估，先不要改文件"
 compatibility:
   canonical_format: "agent-skills"
   adapter_targets:
     - "openai"
     - "claude"
     - "generic"
+    - "agent-skills-compatible"
+    - "vscode"
   activation:
     mode: "manual"
     paths: []
@@ -17,8 +26,44 @@ compatibility:
   trust:
     source_tier: "local"
     remote_inline_execution: "forbid"
-    remote_metadata_policy: "allow-metadata-only"
+    remote_metadata_policy: "allow catalog metadata and read-only source review; forbid unreviewed execution"
+    generated_public_claims: "evidence-bound"
+  permissions:
+    network: "skills.sh, SkillsMP API/catalog, and source-repository discovery/review; external research when needed; publishing only when requested"
+    file_write: "skill package files only unless user explicitly requests sync, publish, or install"
+    subprocess: "npx --yes skills find, bundled resilient dual-catalog research, validation, release-readiness, and packaging scripts; no discovery-skill installation"
+    interactive: "avoid unless GitHub, installer, or platform auth requires it"
   degradation:
     openai: "metadata-adapter"
     claude: "neutral-source-plus-adapter"
     generic: "neutral-source"
+    agent-skills-compatible: "canonical-source"
+    vscode: "neutral-source-plus-review-notes"
+gates:
+  scaffold:
+    - "SKILL.md frontmatter"
+    - "README hook and natural trigger examples"
+    - "clear exclusions"
+  production:
+    - "qiaomu-meta-skill is the single authoring authority"
+    - "prior-art research report or explicit missing evidence"
+    - "skills.sh and SkillsMP source-separated discovery or explicit catalog unavailability"
+    - "user-facing reference, lesson, rejection, advantage, and evidence handoff"
+    - "generalization gate for sample-driven core changes"
+    - "agents/interface.yaml"
+    - "evals/trigger_cases.json"
+    - "scripts/validate_skill.py"
+    - "install and README verification"
+    - "root-only discoverable SKILL.md entrypoint"
+  library:
+    - "reports/skill-ir.json"
+    - "portability notes"
+    - "trust boundary"
+  governed:
+    - "output contract"
+    - "trust report or explicit missing evidence"
+    - "rollback boundary"
+    - "public claim guard"
+    - "blind-review integrity when human evidence is claimed"
+    - "local, PR, and published release readiness checked by executable gates"
+    - "manifest, Skill IR, trigger report, remote version, and release evidence remain consistent"
