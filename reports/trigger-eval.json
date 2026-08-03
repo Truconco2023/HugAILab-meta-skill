@@ -1,0 +1,272 @@
+{
+  "ok": true,
+  "threshold": 0.34,
+  "description_concepts": [
+    "authoring_action",
+    "eval_release",
+    "qiaomu",
+    "skill",
+    "source_material"
+  ],
+  "missing_description_concepts": [],
+  "summary": {
+    "total": 19,
+    "passed": 19,
+    "false_positive": 0,
+    "false_negative": 0,
+    "pass_rate": 1.0
+  },
+  "failures": [],
+  "results": {
+    "should_trigger": [
+      {
+        "prompt": "把这个流程整理成一个 qiaomu skill",
+        "family": "cn_workflow_to_skill",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.8,
+        "matched_concepts": [
+          "authoring_action",
+          "qiaomu",
+          "skill",
+          "source_material"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "基于这个开源 skill 优化升级乔木 meta skill",
+        "family": "cn_upgrade_existing",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.6,
+        "matched_concepts": [
+          "authoring_action",
+          "qiaomu",
+          "skill"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "优化这个已有 skill，补一下 trigger eval 和发布门禁",
+        "family": "cn_eval_release",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.6,
+        "matched_concepts": [
+          "authoring_action",
+          "eval_release",
+          "skill"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "把这套 SOP、脚本和提示词封装成团队可复用的 agent 能力",
+        "family": "cn_multi_asset",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.6,
+        "matched_concepts": [
+          "authoring_action",
+          "skill",
+          "source_material"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "Create a skill from this repeated workflow and package it for Qiaomu team reuse.",
+        "family": "en_workflow_to_skill",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.8,
+        "matched_concepts": [
+          "authoring_action",
+          "qiaomu",
+          "skill",
+          "source_material"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "Refactor this prompt collection into a governed reusable skill package with evals.",
+        "family": "en_refactor_eval",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.6,
+        "matched_concepts": [
+          "authoring_action",
+          "skill",
+          "source_material"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "先搜索 skill 目录，找安装量最高、口碑证据强的相关能力，学习后创建一个更好的 qiaomu skill",
+        "family": "cn_prior_art_synthesis",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.6,
+        "matched_concepts": [
+          "authoring_action",
+          "qiaomu",
+          "skill"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "Research the strongest existing agent skills, then synthesize an original Qiaomu skill without copying them.",
+        "family": "en_prior_art_synthesis",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.4,
+        "matched_concepts": [
+          "qiaomu",
+          "skill"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "把这个旧 skill 迁移成新的可安装格式，并检查递归发现和安装入口",
+        "family": "cn_migrate_install_check",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.4,
+        "matched_concepts": [
+          "authoring_action",
+          "skill"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "审计这个 qiaomu skill 的路由边界和输出评估，只给发现和修复建议，先不要改文件",
+        "family": "cn_audit_only",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.6,
+        "matched_concepts": [
+          "eval_release",
+          "qiaomu",
+          "skill"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "Check whether this agent skill package installs cleanly and whether nested examples can be mis-discovered.",
+        "family": "en_install_discovery_audit",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.4,
+        "matched_concepts": [
+          "authoring_action",
+          "skill"
+        ],
+        "negative_pattern": null
+      }
+    ],
+    "should_not_trigger": [
+      {
+        "prompt": "解释一下什么是 agent skill，不要做成 skill",
+        "family": "explain_only",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.2,
+        "matched_concepts": [
+          "skill"
+        ],
+        "negative_pattern": "不要做成 skill"
+      },
+      {
+        "prompt": "把这篇文章翻译一下",
+        "family": "translate_only",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.0,
+        "matched_concepts": [],
+        "negative_pattern": "翻译一下"
+      },
+      {
+        "prompt": "帮我写个产品标题",
+        "family": "copywriting_only",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.0,
+        "matched_concepts": [],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "Summarize this random note in three bullets.",
+        "family": "summary_only",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.0,
+        "matched_concepts": [],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "Just explain the difference between prompts and skills.",
+        "family": "explain_only",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.2,
+        "matched_concepts": [
+          "source_material"
+        ],
+        "negative_pattern": "just explain"
+      }
+    ],
+    "near_neighbor": [
+      {
+        "prompt": "帮我看一下这个 README 顺不顺，但不要改成 skill",
+        "family": "readme_review_only",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.2,
+        "matched_concepts": [
+          "skill"
+        ],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "头脑风暴几个插件名字，先不要打包发布",
+        "family": "brainstorm_only",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.4,
+        "matched_concepts": [
+          "authoring_action",
+          "eval_release"
+        ],
+        "negative_pattern": "头脑风暴"
+      },
+      {
+        "prompt": "给这个脚本加一个 argparse 参数",
+        "family": "script_edit_only",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.2,
+        "matched_concepts": [
+          "source_material"
+        ],
+        "negative_pattern": null
+      }
+    ]
+  }
+}
