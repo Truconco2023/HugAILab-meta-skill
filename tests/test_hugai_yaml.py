@@ -88,7 +88,7 @@ plain: value # comment
         payload = YAML.safe_load("\n".join(lines[1:end]))
         self.assertEqual(payload["name"], "hugailab-meta-skill")
         self.assertIn("Research, create", payload["description"])
-        self.assertEqual(payload["metadata"]["version"], "3.0.0")
+        self.assertEqual(payload["metadata"]["version"], "3.1.0")
 
 
 if __name__ == "__main__":

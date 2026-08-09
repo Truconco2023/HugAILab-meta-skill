@@ -3,7 +3,7 @@
   "generated_at": "2026-08-09",
   "package": {
     "name": "hugailab-meta-skill",
-    "version": "3.0.0",
+    "version": "3.1.0",
     "owner": "HugAILab",
     "maturity_tier": "governed",
     "lifecycle_stage": "library",
@@ -16,8 +16,8 @@
     }
   },
   "intent": {
-    "description": "Research, create, improve, migrate, evaluate, package, install-check, govern, and safely publish HugAILab agent skills from workflows, prompts, transcripts, docs, SOPs, runbooks, scripts, or notes. Use for new or existing skills, prior-art synthesis, routing/trigger boundaries, trigger or output evals, Skill IR, release gates, README/Profile preparation, GitHub repository and pull-request publication, versioned Releases, clean npx installation, team reuse, and create-and-publish flows. The publication path is self-contained and forbids direct default-branch pushes. Exclude one-off summaries, translations, ordinary docs, non-skill package publishing, and tasks that explicitly should not become a skill.\n",
-    "job_to_be_done": "Research, create, improve, migrate, evaluate, package, install-check, govern, and safely publish HugAILab agent skills from workflows, prompts, transcripts, docs, SOPs, runbooks, scripts, or notes. Use for new or existing skills, prior-art synthesis, routing/trigger boundaries, trigger or output evals, Skill IR, release gates, README/Profile preparation, GitHub repository and pull-request publication, versioned Releases, clean npx installation, team reuse, and create-and-publish flows. The publication path is self-contained and forbids direct default-branch pushes. Exclude one-off summaries, translations, ordinary docs, non-skill package publishing, and tasks that explicitly should not become a skill.\n",
+    "description": "Research, create, improve, migrate, evaluate, package, install-check, govern, and safely publish HugAILab agent skills from workflows, prompts, transcripts, docs, SOPs, runbooks, scripts, or notes. Use for new or existing skills, prior-art synthesis, routing/trigger boundaries, trigger or output evals, Skill IR, release gates, README preparation, GitHub repository and pull-request publication, versioned Releases, clean npx installation, team reuse, and create-and-publish flows. The publication path is self-contained and forbids direct default-branch pushes. Exclude one-off summaries, translations, ordinary docs, non-skill package publishing, and tasks that explicitly should not become a skill.\n",
+    "job_to_be_done": "Research, create, improve, migrate, evaluate, package, install-check, govern, and safely publish HugAILab agent skills from workflows, prompts, transcripts, docs, SOPs, runbooks, scripts, or notes. Use for new or existing skills, prior-art synthesis, routing/trigger boundaries, trigger or output evals, Skill IR, release gates, README preparation, GitHub repository and pull-request publication, versioned Releases, clean npx installation, team reuse, and create-and-publish flows. The publication path is self-contained and forbids direct default-branch pushes. Exclude one-off summaries, translations, ordinary docs, non-skill package publishing, and tasks that explicitly should not become a skill.\n",
     "target_users": [
       "HugAILab operator"
     ],
@@ -159,6 +159,7 @@
       "reports/iteration-2026-08-03.md",
       "reports/iteration-2026-08-09-v2.9.md",
       "reports/iteration-2026-08-09-v3.0.md",
+      "reports/iteration-2026-08-09-v3.1.md",
       "reports/prior-art-research.md",
       "reports/skill-ir.json",
       "reports/skillsmp-integration-2026-08-03.md",
@@ -235,7 +236,7 @@
       "local, PR, and published release readiness checked by executable gates",
       "manifest, Skill IR, trigger report, remote version, and release evidence remain consistent",
       "bundled publisher forbids direct default-branch push and released-version reuse",
-      "README, MIT LICENSE, optional profile assets, PR discussion/check state, Release, discovery and clean install are verified"
+      "README, MIT LICENSE, PR discussion/check state, Release, discovery and clean install are verified"
     ]
   },
   "evidence_boundary": {

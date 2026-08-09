@@ -25,15 +25,6 @@ from typing import Any, Callable
 
 PACKAGE_ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_DIR = PACKAGE_ROOT / "scripts"
-PROFILE_SOURCE = PACKAGE_ROOT / "assets" / "qiaomu-profile"
-PROFILE_TARGET = Path("assets/qiaomu-profile")
-PROFILE_ASSETS = {
-    "qiaomu_avatar.jpeg": "qiaomu_avatar.jpeg",
-    "qiaomu_reward_qr.png": "qiaomu_reward_qr.png",
-    "qiaomu_wechat_public_account_qr.jpg": "qiaomu_wechat_public_account_qr.jpg",
-}
-PROFILE_START = "<!-- qiaomu-profile:start -->"
-PROFILE_END = "<!-- qiaomu-profile:end -->"
 DEFAULT_BRANCHES = {"main", "master"}
 
 
@@ -102,6 +93,24 @@ def load_json(path: Path) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise PublishError(f"{path} must contain a JSON object")
     return payload
+
+
+DEFAULT_CREATOR_DEFAULTS: dict[str, Any] = {
+    "skill_name_prefix": "",
+    "max_preferred_hyphen_parts": 3,
+    "copyright": "",
+    "x": "",
+    "github": "",
+}
+
+
+def load_creator_defaults(manifest: dict[str, Any]) -> dict[str, Any]:
+    raw = manifest.get("creator_defaults", {})
+    if not isinstance(raw, dict):
+        raw = {}
+    defaults = dict(DEFAULT_CREATOR_DEFAULTS)
+    defaults.update({key: value for key, value in raw.items() if key in DEFAULT_CREATOR_DEFAULTS})
+    return defaults
 
 
 def identity(root: Path) -> dict[str, str]:
@@ -187,86 +196,26 @@ SOFTWARE.
     return ["LICENSE"]
 
 
-def profile_block() -> str:
-    return f"""{PROFILE_START}
-## 关于向阳乔木
-
-向阳乔木（乔向阳 / Joe）是一位实践型 AI 产品与内容创作者，长期把前沿 AI 变化转译成可复用的工作流、产品判断、AI 编程实践、AI 搜索实践和 GEO/AI 营销方法。
-
-- 个人网站: https://qiaomu.ai
-- 博客: https://blog.qiaomu.ai
-- X: https://x.com/vista8
-- GitHub: https://github.com/joeseesun/
-- 微信公众号: 向阳乔木推荐看
-
-### 支持与关注
-
-| 打赏支持 | 微信公众号 |
-|---|---|
-| <img src=\"assets/qiaomu-profile/qiaomu_reward_qr.png\" alt=\"向阳乔木打赏二维码\" width=\"180\" /> | <img src=\"assets/qiaomu-profile/qiaomu_wechat_public_account_qr.jpg\" alt=\"向阳乔木推荐看公众号二维码\" width=\"180\" /> |
-| 感谢支持乔木持续分享 AI 实践 | 扫码关注「向阳乔木推荐看」 |
-
-{PROFILE_END}"""
-
-
-def marker_outside_fence(text: str, marker: str, start: int = 0) -> int:
-    in_fence = False
-    offset = 0
-    for line in text.splitlines(keepends=True):
-        if line.lstrip().startswith("```"):
-            in_fence = not in_fence
-        index = line.find(marker) if not in_fence else -1
-        absolute = offset + index if index >= 0 else -1
-        if absolute >= start:
-            return absolute
-        offset += len(line)
-    return -1
-
-
-def insert_profile(text: str) -> str:
-    block = profile_block()
-    start = marker_outside_fence(text, PROFILE_START)
-    end = marker_outside_fence(text, PROFILE_END, max(0, start)) if start >= 0 else -1
-    if start >= 0 and end > start:
-        end += len(PROFILE_END)
-        return text[:start].rstrip() + "\n\n" + block + "\n\n" + text[end:].lstrip()
-    insertion = re.search(r"\n##\s+(?:License|许可证|授权)\b|\n<a name=\"english\"></a>|\n##\s+English\b", text, re.I)
-    if insertion:
-        return text[: insertion.start()].rstrip() + "\n\n" + block + "\n\n" + text[insertion.start() :].lstrip()
-    return text.rstrip() + "\n\n" + block + "\n"
-
-
-def ensure_profile(root: Path, *, write: bool) -> list[str]:
-    if not PROFILE_SOURCE.is_dir():
-        raise PublishError(f"bundled profile assets missing: {PROFILE_SOURCE}")
-    changes: list[str] = []
-    target = root / PROFILE_TARGET
-    for source_name, target_name in PROFILE_ASSETS.items():
-        source = PROFILE_SOURCE / source_name
-        destination = target / target_name
-        if not source.is_file():
-            raise PublishError(f"bundled profile asset missing: {source_name}")
-        same = destination.is_file() and source.read_bytes() == destination.read_bytes()
-        if not same:
-            changes.append(destination.relative_to(root).as_posix())
-            if write:
-                destination.parent.mkdir(parents=True, exist_ok=True)
-                shutil.copy2(source, destination)
-    readme = root / "README.md"
-    if readme.is_file():
-        current = readme.read_text(encoding="utf-8")
-        updated = insert_profile(current)
-        if updated != current:
-            changes.append("README.md profile block")
-            if write:
-                readme.write_text(updated, encoding="utf-8")
-    return changes
-
-
-def generated_readme(meta: dict[str, str], github_owner: str, repo: str, upstream: str) -> str:
+def generated_readme(
+    meta: dict[str, str],
+    github_owner: str,
+    repo: str,
+    upstream: str,
+    defaults: dict[str, Any] | None = None,
+) -> str:
     first = re.split(r"[。.]", meta["description"], maxsplit=1)[0].strip()
     upstream_line = f"Upstream inspiration: {upstream}" if upstream else "Upstream inspiration: none declared"
     year = dt.datetime.now().year
+    defaults = defaults or DEFAULT_CREATOR_DEFAULTS
+    copyright_line = str(defaults.get("copyright") or "").strip()
+    if not copyright_line or "<owner>" in copyright_line:
+        copyright_line = f"Copyright (c) {year} {meta['owner']}"
+    links = []
+    if defaults.get("x"):
+        links.append(f"X: {defaults['x']}")
+    if defaults.get("github"):
+        links.append(f"GitHub: {defaults['github']}")
+    footer = copyright_line + ("\n" + " · ".join(links) if links else "")
     return f"""# {repo}
 
 > {first}。
@@ -329,7 +278,7 @@ python3 ~/.agents/skills/{meta['name']}/scripts/validate_skill.py ~/.agents/skil
 
 MIT
 
-Copyright (c) {year} {meta["owner"]}
+{footer}
 """
 
 
@@ -344,7 +293,7 @@ PLACEHOLDERS = (
 )
 
 
-def check_readme(root: Path, upstream: str, *, require_profile: bool) -> list[str]:
+def check_readme(root: Path, upstream: str) -> list[str]:
     path = root / "README.md"
     if not path.is_file():
         return ["README.md missing"]
@@ -358,7 +307,6 @@ def check_readme(root: Path, upstream: str, *, require_profile: bool) -> list[st
         "troubleshooting": "Troubleshooting" in text,
         "license": "## License" in text or "## 许可证" in text,
         "upstream credit": not upstream or upstream in text,
-        "Qiaomu profile": not require_profile or (PROFILE_START in text and PROFILE_END in text),
     }
     failures.extend(f"README missing {label}" for label, passed in requirements.items() if not passed)
     return failures
@@ -371,19 +319,20 @@ def prepare_package(
     repo: str,
     *,
     write: bool,
-    include_profile: bool = False,
 ) -> dict[str, Any]:
     manifest = load_json(root / "manifest.json")
     upstream = str(manifest.get("upstream_inspiration", "")).strip()
+    creator_defaults = load_creator_defaults(manifest)
     changes = ensure_license(root, meta["owner"], write=write)
     readme = root / "README.md"
     if not readme.exists():
         changes.append("README.md")
         if write:
-            readme.write_text(generated_readme(meta, github_owner, repo, upstream), encoding="utf-8")
-    if include_profile:
-        changes.extend(ensure_profile(root, write=write))
-    failures = [] if not write and not readme.exists() else check_readme(root, upstream, require_profile=include_profile)
+            readme.write_text(
+                generated_readme(meta, github_owner, repo, upstream, creator_defaults),
+                encoding="utf-8",
+            )
+    failures = [] if not write and not readme.exists() else check_readme(root, upstream)
     return {"changes": sorted(set(changes)), "failures": failures}
 
 
@@ -499,7 +448,6 @@ def publish(args: argparse.Namespace, runner: Runner = run) -> dict[str, Any]:
         owner,
         repo,
         write=not args.dry_run,
-        include_profile=args.qiaomu_profile,
     )
     if args.dry_run:
         return {
@@ -709,11 +657,6 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--verify-only", action="store_true", help="Verify an existing release and clean install")
     parser.add_argument("--no-merge", action="store_true", help="Stop after the PR passes local and PR gates")
     parser.add_argument("--no-sync-local", action="store_true", help="Do not sync a noncanonical source into ~/.agents/skills")
-    parser.add_argument(
-        "--qiaomu-profile",
-        action="store_true",
-        help="Opt-in: inject the Qiaomu profile/QR block and assets into the published README.",
-    )
     return parser.parse_args()
 
 

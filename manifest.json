@@ -1,6 +1,6 @@
 {
   "name": "hugailab-meta-skill",
-  "version": "3.0.0",
+  "version": "3.1.0",
   "owner": "HugAILab",
   "updated_at": "2026-08-09",
   "status": "active",
@@ -70,7 +70,7 @@
     "evidence_bound_public_claims",
     "self_contained_skill_publisher",
     "mit_license_preparation",
-    "optional_profile_injection",
+    "no_third_party_branding",
     "repository_skill_name_separation",
     "feature_branch_only_publication",
     "pull_request_review_and_check_gate",

@@ -1,0 +1,46 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: with-pyyaml
+            install_pyyaml: true
+          - name: without-pyyaml
+            install_pyyaml: false
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Install PyYAML
+        if: matrix.install_pyyaml
+        run: python -m pip install --quiet pyyaml
+
+      - name: Syntax check
+        run: python -m compileall -q scripts tests
+
+      - name: Unit tests
+        run: python -m unittest discover -s tests -p 'test_*.py'
+
+      - name: Package validation
+        run: python scripts/validate_skill.py .
+
+      - name: Trigger eval
+        run: python scripts/trigger_eval.py . --cases evals/trigger_cases.json
+
+      - name: Skill IR export
+        run: python scripts/export_skill_ir.py . --output /tmp/skill-ir.json

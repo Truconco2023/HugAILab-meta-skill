@@ -99,6 +99,11 @@
         "skills.sh",
         "popular skill",
         "related skills",
+        "existing agent skills",
+        "strongest",
+        "research",
+        "synthesize",
+        "without copying",
         "下载量",
         "安装量",
         "好评",
@@ -107,7 +112,7 @@
         "借鉴",
         "取长补短"
       ],
-      "weight": 1.0,
+      "weight": 1.5,
       "core": false
     }
   },
@@ -129,7 +134,9 @@
     "普通 Python 包",
     "发布到 PyPI",
     "不用封装成技能",
-    "简单解释一下"
+    "简单解释一下",
+    "不要改成 skill",
+    "别动结构"
   ],
   "should_trigger": [
     {

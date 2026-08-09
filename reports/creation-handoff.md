@@ -2,15 +2,23 @@
 
 ## Result
 
-- Skill: `hugailab-meta-skill` 3.0.0（fork：`Truconco2023/HugAILab-meta-skill`）
+- Skill: `hugailab-meta-skill` 3.1.0（fork：`Truconco2023/HugAILab-meta-skill`）
 - Job: research, create, evaluate, package, govern, and safely publish reusable agent skills through one self-contained workflow
-- Status: 本地候选已完整验证（无 PyYAML 环境 48/48 测试、34/34 触发评测、0 个包校验失败）；公开发布与干净安装证明在 v3.0.0 发布流程完成前保持 `missing evidence`
+- Status: 本地候选已完整验证（无 PyYAML 环境 46/46 测试、34/34 触发评测、0 个包校验失败）；公开发布与干净安装证明在 v3.1.0 发布流程完成前保持 `missing evidence`
+
+## v3.1.0 迭代升级
+
+1. **README 全面 HugAILab 化**：重写为 HugAILab 自己的项目页，移除上游 28 个案例大表与打赏/公众号区块，仅保留上游链接与必要致谢；`test_codex_skill_catalog.py` 同步改为校验 README 包含上游仓库链接。
+2. **发布器/校验器真正读取 `creator_defaults`**：`generated_readme` 使用 manifest 中的 `copyright`/`x`/`github` 生成版权与链接；`validate_skill.py` 对 skill 名超长（超过 `max_preferred_hyphen_parts`）或未按 `skill_name_prefix` 开头给出警告。
+3. **触发评测加固**：`prior_art` 概念补充 `research`/`synthesize`/`strongest`/`without copying` 等短语并把权重提到 1.5；负向模式新增 `不要改成 skill`、`别动结构`。结果 34/34 通过、0 误报 0 漏报、**0 个 weak 用例**。
+4. **彻底移除 `qiaomu-profile` 资产**：删除 `assets/qiaomu-profile/` 与 `--qiaomu-profile` 开关、profile 注入代码；发布器完全品牌中立（无作者 Profile、二维码、打赏入口）。LICENSE 与上游链接保留。
+5. **GitHub Actions CI**：新增 `.github/workflows/ci.yml`，在 Python 3.12 上分别以「有 PyYAML / 无 PyYAML」运行语法检查、46 个单元测试、包校验、触发评测与 Skill IR 导出。
 
 ## v3.0.0 彻底改名
 
 - 内部 skill 名由 `qiaomu-meta-skill` 改为 `hugailab-meta-skill`：SKILL.md frontmatter、manifest、interface.yaml、README、安装命令、`~/.agents/skills` 路径、校验器 `META_SKILL_NAMES`、发布器错误信息全部同步。
 - 内置 YAML 模块由 `qiaomu_yaml.py` 更名为 `hugai_yaml.py`；触发评测品牌概念由 `qiaomu` 改为 `brand`（phrases 保留 `hugailab`/`hugai`，同时兼容 `qiaomu`/`乔木` 旧说法）。
-- 方法文档中的品牌称谓更新为 HugAILab；上游 `joeseesun/qiaomu-meta-skill`、`qiaomu-skill-publisher`、`qiaomu-profile` 资产、`--qiaomu-profile` 标志、README 上游案例表与 `向阳乔木` 署名按来源保留。
+- 方法文档中的品牌称谓更新为 HugAILab；上游 `joeseesun/qiaomu-meta-skill`、`qiaomu-skill-publisher` 与 `向阳乔木` 署名按来源保留（`qiaomu-profile` 资产与 `--qiaomu-profile` 标志在 v3.1 已彻底移除）。
 - 版本升至 3.0.0（major bump，因为对外身份变更）；`search_skillsmp.py` User-Agent 同步为 `hugailab-meta-skill/3.0`。
 
 ## v2.9.0 升级内容
@@ -58,33 +66,34 @@
 ### `joeseesun/qiaomu-skill-publisher`
 
 - Why shortlisted: the user's explicit reference and the upstream Qiaomu implementation of LICENSE, README, Profile, repository naming and `npx` installation.
-- Learned: idempotent profile markers, strict YAML handling, repository/skill-name separation, public README scaffolding, discovery and temporary installation.
-- Applied in: bundled `scripts/publish_skill.py`, `references/publishing.md`, profile assets, trigger cases and publisher regression tests.
+- Learned: strict YAML handling, repository/skill-name separation, brand-neutral public README scaffolding, discovery and temporary installation.
+- Applied in: bundled `scripts/publish_skill.py`, `references/publishing.md`, trigger cases and publisher regression tests.
 
 ## Absorbed and rejected
 
-- `keep`: platform-neutral intent, trigger/output evaluation, evidence-bound claims, release gates, publisher README/Profile/License preparation and install verification.
-- `adapt`: profile injection is now opt-in; YAML parsing degrades to a bundled subset parser; trigger eval uses weighted and per-case required concepts; manifest defaults are neutral.
+- `keep`: platform-neutral intent, trigger/output evaluation, evidence-bound claims, release gates, publisher README/License preparation and install verification.
+- `adapt`: profile injection is removed entirely; YAML parsing degrades to a bundled subset parser; trigger eval uses weighted and per-case required concepts; manifest defaults are neutral.
 - `reject`: PyYAML as a silently-optional dependency; empty-dict fallback on parse failure; equal-weight keyword scoring; default third-party branding in generated packages.
-- `invent`: `scripts/qiaomu_yaml.py`; strict weighted trigger eval with required concepts and family coverage; `--qiaomu-profile` opt-in publisher behavior; neutral creator defaults.
+- `invent`: `scripts/hugai_yaml.py`; strict weighted trigger eval with required concepts and family coverage; brand-neutral publisher; neutral creator defaults.
 
 ## Advantages and highlights
 
-- `validated advantage`: package validation passes with 0 failures and 0 warnings on a Python 3.12 environment without PyYAML (48/48 unit tests, 34/34 trigger cases, 18/18 families).
+- `validated advantage`: package validation passes with 0 failures and 0 warnings on a Python 3.12 environment without PyYAML (46/46 unit tests, 34/34 trigger cases, 18/18 families, 0 weak cases).
 - `design advantage`: trigger cases can no longer pass on two coincidental keyword overlaps; a missing required concept or an uncovered family fails the run.
-- `design advantage`: published skill packages are brand-neutral by default; Qiaomu profile/QR injection requires an explicit flag.
+- `design advantage`: published skill packages are brand-neutral by default; no third-party profile, QR, or donation injection exists in the publisher.
 - `design advantage`: prior-art discovery, synthesis, creation, validation, and handoff remain inside one canonical workflow.
 - `design advantage`: skills.sh installs and SkillsMP repository stars remain source-separated and cannot be combined into a fake score.
-- `validated advantage`: publisher unit tests cover URL parsing, profile idempotence, generated README quality, default-branch rejection, pending-check blocking, read-only dry-run, opt-in profile behavior and bundled assets.
+- `validated advantage`: publisher unit tests cover URL parsing, creator_defaults handling, generated README quality, default-branch rejection, pending-check blocking, read-only dry-run and brand-neutral output.
 - `hypothesis`: stricter trigger gates should reduce real-world false positives, but a provider-backed routing benchmark remains `missing evidence`.
 
 ## Verification and limits
 
 - Deterministic package validation: 0 failures, 0 warnings（系统 Python 3.12 无 PyYAML 环境实测）。
-- Trigger eval: 34/34 通过，0 false positive，0 false negative，18/18 family 覆盖；3 个 weak 用例（2 个依赖负向模式的近邻、1 个 margin 仅 0.028 的英文 prior-art 用例）。
-- Unit tests: 48/48 通过，新增 YAML 降级、触发评测严格性/覆盖度、发布器品牌默认值测试。
+- Trigger eval: 34/34 通过，0 false positive，0 false negative，18/18 family 覆盖，0 个 weak 用例。
+- Unit tests: 46/46 通过，覆盖 YAML 降级、触发评测严格性/覆盖度、creator_defaults 与发布器品牌中立行为。
 - Avatar: 4096²/5.9MB → 512²/68.6KB。
-- 发布器 `--dry-run`、`--prepare-only` 行为由更新后的测试覆盖；默认不再写入 Profile。
-- Public release / clean-install proof for 3.0.0: `missing evidence` until the release workflow completes.
+- 发布器 `--dry-run`、`--prepare-only` 行为由更新后的测试覆盖；发布器不含任何 Profile/QR 注入代码。
+- GitHub Actions CI: 已新增（Python 3.12，有/无 PyYAML 双路径），首次运行时需要在合并后确认绿。
+- Public release / clean-install proof for 3.1.0: `missing evidence` until the release workflow completes.
 - Provider-backed head-to-head output evaluation: `missing evidence`.
 - Human blind comparison of trigger reliability: `missing evidence`.

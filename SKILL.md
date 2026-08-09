@@ -1,10 +1,10 @@
 ---
 name: hugailab-meta-skill
 description: |
-  Research, create, improve, migrate, evaluate, package, install-check, govern, and safely publish HugAILab agent skills from workflows, prompts, transcripts, docs, SOPs, runbooks, scripts, or notes. Use for new or existing skills, prior-art synthesis, routing/trigger boundaries, trigger or output evals, Skill IR, release gates, README/Profile preparation, GitHub repository and pull-request publication, versioned Releases, clean npx installation, team reuse, and create-and-publish flows. The publication path is self-contained and forbids direct default-branch pushes. Exclude one-off summaries, translations, ordinary docs, non-skill package publishing, and tasks that explicitly should not become a skill.
+  Research, create, improve, migrate, evaluate, package, install-check, govern, and safely publish HugAILab agent skills from workflows, prompts, transcripts, docs, SOPs, runbooks, scripts, or notes. Use for new or existing skills, prior-art synthesis, routing/trigger boundaries, trigger or output evals, Skill IR, release gates, README preparation, GitHub repository and pull-request publication, versioned Releases, clean npx installation, team reuse, and create-and-publish flows. The publication path is self-contained and forbids direct default-branch pushes. Exclude one-off summaries, translations, ordinary docs, non-skill package publishing, and tasks that explicitly should not become a skill.
 metadata:
   author: HugAILab
-  version: "3.0.0"
+  version: "3.1.0"
   upstream_inspiration: yaojingang/yao-meta-skill; joeseesun/qiaomu-skill-publisher
 ---
 
@@ -135,7 +135,7 @@ The final creation handoff must name the **reference skills studied**, give **ca
 1. Treat README as a product page: value, install, natural examples, prerequisites, outputs, configuration, risks, and troubleshooting.
 2. Audit without mutation when useful: `python3 scripts/publish_skill.py /path/to/skill --dry-run`.
 3. Only after an explicit publish request, run `python3 scripts/publish_skill.py /path/to/skill`.
-4. The bundled publisher prepares MIT LICENSE and README, and only injects Qiaomu profile assets when explicitly requested; resolves skill/repository identity; blocks secrets and reused release versions; creates or reuses a GitHub repository; and publishes only through a feature branch and PR.
+4. The bundled publisher prepares MIT LICENSE and README without third-party branding; resolves skill/repository identity; blocks secrets and reused release versions; creates or reuses a GitHub repository; and publishes only through a feature branch and PR.
 5. Merge is blocked by conflicts, failed/pending checks or requested changes. Successful publication creates `vX.Y.Z`, verifies `npx skills add --list`, performs an isolated install, and runs the published release gate.
 6. Do not report publication complete until the remote default version, GitHub Release, discovery and clean installation are verified.
 
@@ -146,7 +146,7 @@ Detailed CLI and safety decisions: [Self-Contained Skill Publishing](references/
 - Prefer practical, concise, publishable Chinese output.
 - Keep one creator authority and one root skill entrypoint.
 - Preserve platform-neutral source plus minimal adapters.
-- Branding is opt-in: published packages contain no author profile, QR, or donation assets unless the user explicitly requests them.
+- Branding-free by default: published packages contain no author profile, QR, or donation assets.
 - Public claims must match trigger, output, runtime, install, or human evidence actually present.
 - Upstream ideas are adopted semantically with attribution, not mirrored wholesale.
 

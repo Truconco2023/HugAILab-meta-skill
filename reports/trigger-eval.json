@@ -6,6 +6,7 @@
     "authoring_action",
     "brand",
     "eval_release",
+    "prior_art",
     "skill",
     "source_material"
   ],
@@ -15,7 +16,7 @@
     "passed": 34,
     "false_positive": 0,
     "false_negative": 0,
-    "weak": 3,
+    "weak": 0,
     "pass_rate": 1.0,
     "families_covered": 18,
     "families_total": 18,
@@ -30,9 +31,9 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.789,
+        "score": 0.75,
         "threshold": 0.34,
-        "margin": 0.449,
+        "margin": 0.41,
         "matched_concepts": [
           "authoring_action",
           "brand",
@@ -67,9 +68,9 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.579,
+        "score": 0.55,
         "threshold": 0.34,
-        "margin": 0.239,
+        "margin": 0.21,
         "matched_concepts": [
           "authoring_action",
           "brand",
@@ -100,9 +101,9 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.632,
+        "score": 0.6,
         "threshold": 0.34,
-        "margin": 0.292,
+        "margin": 0.26,
         "matched_concepts": [
           "authoring_action",
           "eval_release",
@@ -136,9 +137,9 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.737,
+        "score": 0.7,
         "threshold": 0.34,
-        "margin": 0.397,
+        "margin": 0.36,
         "matched_concepts": [
           "authoring_action",
           "skill",
@@ -171,9 +172,9 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.789,
+        "score": 0.75,
         "threshold": 0.34,
-        "margin": 0.449,
+        "margin": 0.41,
         "matched_concepts": [
           "authoring_action",
           "brand",
@@ -209,9 +210,9 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.737,
+        "score": 0.7,
         "threshold": 0.34,
-        "margin": 0.397,
+        "margin": 0.36,
         "matched_concepts": [
           "authoring_action",
           "skill",
@@ -243,9 +244,9 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.684,
+        "score": 0.7,
         "threshold": 0.34,
-        "margin": 0.344,
+        "margin": 0.36,
         "matched_concepts": [
           "authoring_action",
           "brand",
@@ -282,11 +283,12 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.368,
+        "score": 0.5,
         "threshold": 0.34,
-        "margin": 0.028,
+        "margin": 0.16,
         "matched_concepts": [
           "brand",
+          "prior_art",
           "skill"
         ],
         "matched_phrases": {
@@ -295,6 +297,13 @@
           ],
           "brand": [
             "hugailab"
+          ],
+          "prior_art": [
+            "existing agent skills",
+            "strongest",
+            "research",
+            "synthesize",
+            "without copying"
           ]
         },
         "required_concepts": [
@@ -310,9 +319,9 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.526,
+        "score": 0.5,
         "threshold": 0.34,
-        "margin": 0.186,
+        "margin": 0.16,
         "matched_concepts": [
           "authoring_action",
           "skill"
@@ -340,9 +349,9 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.684,
+        "score": 0.65,
         "threshold": 0.34,
-        "margin": 0.344,
+        "margin": 0.31,
         "matched_concepts": [
           "authoring_action",
           "brand",
@@ -376,9 +385,9 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.526,
+        "score": 0.5,
         "threshold": 0.34,
-        "margin": 0.186,
+        "margin": 0.16,
         "matched_concepts": [
           "authoring_action",
           "skill"
@@ -406,9 +415,9 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.684,
+        "score": 0.65,
         "threshold": 0.34,
-        "margin": 0.344,
+        "margin": 0.31,
         "matched_concepts": [
           "authoring_action",
           "brand",
@@ -444,9 +453,9 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.579,
+        "score": 0.55,
         "threshold": 0.34,
-        "margin": 0.239,
+        "margin": 0.21,
         "matched_concepts": [
           "authoring_action",
           "brand",
@@ -477,9 +486,9 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.895,
+        "score": 0.85,
         "threshold": 0.34,
-        "margin": 0.555,
+        "margin": 0.51,
         "matched_concepts": [
           "authoring_action",
           "brand",
@@ -517,9 +526,9 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.526,
+        "score": 0.5,
         "threshold": 0.34,
-        "margin": 0.186,
+        "margin": 0.16,
         "matched_concepts": [
           "authoring_action",
           "skill"
@@ -545,9 +554,9 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.737,
+        "score": 0.7,
         "threshold": 0.34,
-        "margin": 0.397,
+        "margin": 0.36,
         "matched_concepts": [
           "authoring_action",
           "skill",
@@ -579,9 +588,9 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.526,
+        "score": 0.5,
         "threshold": 0.34,
-        "margin": 0.186,
+        "margin": 0.16,
         "matched_concepts": [
           "authoring_action",
           "skill"
@@ -610,9 +619,9 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.632,
+        "score": 0.6,
         "threshold": 0.34,
-        "margin": 0.292,
+        "margin": 0.26,
         "matched_concepts": [
           "authoring_action",
           "eval_release",
@@ -647,9 +656,9 @@
         "expected_trigger": false,
         "predicted_trigger": false,
         "passed": true,
-        "score": 0.316,
+        "score": 0.3,
         "threshold": 0.34,
-        "margin": -0.024,
+        "margin": -0.04,
         "matched_concepts": [
           "skill"
         ],
@@ -714,9 +723,9 @@
         "expected_trigger": false,
         "predicted_trigger": false,
         "passed": true,
-        "score": 0.211,
+        "score": 0.2,
         "threshold": 0.34,
-        "margin": -0.129,
+        "margin": -0.14,
         "matched_concepts": [
           "source_material"
         ],
@@ -735,9 +744,9 @@
         "expected_trigger": false,
         "predicted_trigger": false,
         "passed": true,
-        "score": 0.211,
+        "score": 0.2,
         "threshold": 0.34,
-        "margin": -0.129,
+        "margin": -0.14,
         "matched_concepts": [
           "authoring_action"
         ],
@@ -786,9 +795,9 @@
         "expected_trigger": false,
         "predicted_trigger": false,
         "passed": true,
-        "score": 0.211,
+        "score": 0.2,
         "threshold": 0.34,
-        "margin": -0.129,
+        "margin": -0.14,
         "matched_concepts": [
           "source_material"
         ],
@@ -807,9 +816,9 @@
         "expected_trigger": false,
         "predicted_trigger": false,
         "passed": true,
-        "score": 0.316,
+        "score": 0.3,
         "threshold": 0.34,
-        "margin": -0.024,
+        "margin": -0.04,
         "matched_concepts": [
           "skill"
         ],
@@ -830,9 +839,9 @@
         "expected_trigger": false,
         "predicted_trigger": false,
         "passed": true,
-        "score": 0.316,
+        "score": 0.3,
         "threshold": 0.34,
-        "margin": -0.024,
+        "margin": -0.04,
         "matched_concepts": [
           "skill"
         ],
@@ -843,7 +852,7 @@
         },
         "required_concepts": [],
         "required_missing": [],
-        "negative_pattern": null
+        "negative_pattern": "不要改成 skill"
       },
       {
         "prompt": "头脑风暴几个插件名字，先不要打包发布",
@@ -851,9 +860,9 @@
         "expected_trigger": false,
         "predicted_trigger": false,
         "passed": true,
-        "score": 0.211,
+        "score": 0.2,
         "threshold": 0.34,
-        "margin": -0.129,
+        "margin": -0.14,
         "matched_concepts": [
           "authoring_action"
         ],
@@ -873,9 +882,9 @@
         "expected_trigger": false,
         "predicted_trigger": false,
         "passed": true,
-        "score": 0.211,
+        "score": 0.2,
         "threshold": 0.34,
-        "margin": -0.129,
+        "margin": -0.14,
         "matched_concepts": [
           "source_material"
         ],
@@ -894,9 +903,9 @@
         "expected_trigger": false,
         "predicted_trigger": false,
         "passed": true,
-        "score": 0.526,
+        "score": 0.5,
         "threshold": 0.34,
-        "margin": 0.186,
+        "margin": 0.16,
         "matched_concepts": [
           "skill",
           "source_material"
@@ -919,9 +928,9 @@
         "expected_trigger": false,
         "predicted_trigger": false,
         "passed": true,
-        "score": 0.316,
+        "score": 0.3,
         "threshold": 0.34,
-        "margin": -0.024,
+        "margin": -0.04,
         "matched_concepts": [
           "skill"
         ],
@@ -932,7 +941,7 @@
         },
         "required_concepts": [],
         "required_missing": [],
-        "negative_pattern": null
+        "negative_pattern": "别动结构"
       },
       {
         "prompt": "直接告诉我怎么做就行，不用封装成技能",
@@ -940,9 +949,9 @@
         "expected_trigger": false,
         "predicted_trigger": false,
         "passed": true,
-        "score": 0.526,
+        "score": 0.5,
         "threshold": 0.34,
-        "margin": 0.186,
+        "margin": 0.16,
         "matched_concepts": [
           "authoring_action",
           "skill"
