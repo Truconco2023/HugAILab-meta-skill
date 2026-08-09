@@ -20,6 +20,17 @@ from urllib.request import Request, urlopen
 
 API_URL = "https://skillsmp.com/api/v1/skills/search"
 RETRYABLE_HTTP_STATUS = {408, 425, 429, 500, 502, 503, 504}
+PACKAGE_ROOT = Path(__file__).resolve().parents[1]
+
+
+def user_agent() -> str:
+    """Derive the User-Agent version from manifest.json so it never goes stale."""
+    try:
+        manifest = json.loads((PACKAGE_ROOT / "manifest.json").read_text(encoding="utf-8"))
+        version = str(manifest.get("version", "dev"))
+    except (OSError, ValueError, json.JSONDecodeError):
+        version = "dev"
+    return f"hugailab-meta-skill/{version}"
 
 
 def github_parts(url: str) -> tuple[str, str]:
@@ -108,7 +119,7 @@ def retry_delay(attempt: int, backoff: float, jitter: float) -> float:
 
 
 def fetch_once(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str, str | None]]:
-    headers = {"Accept": "application/json", "User-Agent": "hugailab-meta-skill/3.0"}
+    headers = {"Accept": "application/json", "User-Agent": user_agent()}
     api_key = os.environ.get("SKILLSMP_API_KEY", "").strip()
     if api_key:
         headers["Authorization"] = f"Bearer {api_key}"
