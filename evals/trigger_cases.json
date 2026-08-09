@@ -3,92 +3,113 @@
   "description_required_concepts": [
     "skill",
     "source_material",
-    "authoring_action",
-    "qiaomu"
+    "authoring_action"
   ],
   "positive_concepts": {
-    "skill": [
-      "skill",
-      "agent skill",
-      "技能",
-      "agent 能力",
-      "能力包"
-    ],
-    "source_material": [
-      "workflow",
-      "workflows",
-      "prompt",
-      "prompts",
-      "transcript",
-      "docs",
-      "runbook",
-      "notes",
-      "SOP",
-      "流程",
-      "工作流",
-      "提示词",
-      "笔记",
-      "对话记录",
-      "材料",
-      "脚本"
-    ],
-    "authoring_action": [
-      "create",
-      "turn",
-      "convert",
-      "refactor",
-      "evaluate",
-      "package",
-      "govern",
-      "publish",
-      "upgrade",
-      "improve",
-      "migrate",
-      "install",
-      "创建",
-      "整理",
-      "封装",
-      "沉淀",
-      "优化",
-      "升级",
-      "迁移",
-      "安装",
-      "补",
-      "发布",
-      "打包"
-    ],
-    "qiaomu": [
-      "qiaomu",
-      "乔木",
-      "向阳乔木"
-    ],
-    "eval_release": [
-      "eval",
-      "trigger",
-      "output",
-      "Skill IR",
-      "release gate",
-      "评估",
-      "触发",
-      "边界",
-      "门禁",
-      "治理",
-      "发布"
-    ],
-    "prior_art": [
-      "skills catalog",
-      "skill search",
-      "skills.sh",
-      "popular skill",
-      "related skills",
-      "下载量",
-      "安装量",
-      "好评",
-      "口碑",
-      "相关 skill",
-      "借鉴",
-      "取长补短"
-    ]
+    "skill": {
+      "phrases": ["skill", "agent skill", "技能", "agent 能力", "能力包", "skill 包"],
+      "weight": 3.0,
+      "core": true
+    },
+    "source_material": {
+      "phrases": [
+        "workflow",
+        "workflows",
+        "prompt",
+        "prompts",
+        "transcript",
+        "transcripts",
+        "docs",
+        "runbook",
+        "runbooks",
+        "notes",
+        "SOP",
+        "流程",
+        "工作流",
+        "提示词",
+        "笔记",
+        "对话记录",
+        "材料",
+        "脚本"
+      ],
+      "weight": 2.0,
+      "core": true
+    },
+    "authoring_action": {
+      "phrases": [
+        "create",
+        "turn",
+        "convert",
+        "refactor",
+        "evaluate",
+        "package",
+        "govern",
+        "publish",
+        "upgrade",
+        "improve",
+        "migrate",
+        "install",
+        "audit",
+        "check",
+        "创建",
+        "整理",
+        "封装",
+        "沉淀",
+        "优化",
+        "升级",
+        "迁移",
+        "安装",
+        "打包",
+        "发布",
+        "审计",
+        "检查"
+      ],
+      "weight": 2.0,
+      "core": true
+    },
+    "qiaomu": {
+      "phrases": ["qiaomu", "乔木", "向阳乔木"],
+      "weight": 0.5,
+      "core": false
+    },
+    "eval_release": {
+      "phrases": [
+        "eval",
+        "trigger eval",
+        "output eval",
+        "skill ir",
+        "release gate",
+        "PR",
+        "Release",
+        "评估",
+        "触发评测",
+        "输出评测",
+        "门禁",
+        "治理",
+        "发布检查",
+        "发布门禁"
+      ],
+      "weight": 1.0,
+      "core": false
+    },
+    "prior_art": {
+      "phrases": [
+        "skills catalog",
+        "skill search",
+        "skills.sh",
+        "popular skill",
+        "related skills",
+        "下载量",
+        "安装量",
+        "好评",
+        "口碑",
+        "相关 skill",
+        "借鉴",
+        "取长补短"
+      ],
+      "weight": 1.0,
+      "core": false
+    }
   },
   "negative_patterns": [
     "不要做成 skill",
@@ -106,64 +127,101 @@
     "translate only",
     "one off",
     "普通 Python 包",
-    "发布到 PyPI"
+    "发布到 PyPI",
+    "不用封装成技能",
+    "简单解释一下"
   ],
   "should_trigger": [
     {
       "text": "把这个流程整理成一个 qiaomu skill",
-      "family": "cn_workflow_to_skill"
+      "family": "cn_workflow_to_skill",
+      "required": ["skill", "source_material", "authoring_action"]
     },
     {
       "text": "基于这个开源 skill 优化升级乔木 meta skill",
-      "family": "cn_upgrade_existing"
+      "family": "cn_upgrade_existing",
+      "required": ["skill", "authoring_action"]
     },
     {
       "text": "优化这个已有 skill，补一下 trigger eval 和发布门禁",
-      "family": "cn_eval_release"
+      "family": "cn_eval_release",
+      "required": ["skill", "eval_release"]
     },
     {
       "text": "把这套 SOP、脚本和提示词封装成团队可复用的 agent 能力",
-      "family": "cn_multi_asset"
+      "family": "cn_multi_asset",
+      "required": ["skill", "source_material", "authoring_action"]
     },
     {
       "text": "Create a skill from this repeated workflow and package it for Qiaomu team reuse.",
-      "family": "en_workflow_to_skill"
+      "family": "en_workflow_to_skill",
+      "required": ["skill", "source_material", "authoring_action"]
     },
     {
       "text": "Refactor this prompt collection into a governed reusable skill package with evals.",
-      "family": "en_refactor_eval"
+      "family": "en_refactor_eval",
+      "required": ["skill", "source_material", "authoring_action"]
     },
     {
       "text": "先搜索 skill 目录，找安装量最高、口碑证据强的相关能力，学习后创建一个更好的 qiaomu skill",
-      "family": "cn_prior_art_synthesis"
+      "family": "cn_prior_art_synthesis",
+      "required": ["skill", "prior_art", "authoring_action"]
     },
     {
       "text": "Research the strongest existing agent skills, then synthesize an original Qiaomu skill without copying them.",
-      "family": "en_prior_art_synthesis"
+      "family": "en_prior_art_synthesis",
+      "required": ["skill", "qiaomu"],
+      "min_score": 0.34
     },
     {
       "text": "把这个旧 skill 迁移成新的可安装格式，并检查递归发现和安装入口",
-      "family": "cn_migrate_install_check"
+      "family": "cn_migrate_install_check",
+      "required": ["skill", "authoring_action"]
     },
     {
       "text": "审计这个 qiaomu skill 的路由边界和输出评估，只给发现和修复建议，先不要改文件",
-      "family": "cn_audit_only"
+      "family": "cn_audit_only",
+      "required": ["skill", "eval_release"]
     },
     {
       "text": "Check whether this agent skill package installs cleanly and whether nested examples can be mis-discovered.",
-      "family": "en_install_discovery_audit"
+      "family": "en_install_discovery_audit",
+      "required": ["skill", "authoring_action"]
     },
     {
       "text": "把这个 qiaomu skill 发布到 GitHub，并完成 PR、Release 和干净安装验证",
-      "family": "cn_full_publish"
+      "family": "cn_full_publish",
+      "required": ["skill", "authoring_action"]
     },
     {
       "text": "先 dry-run 检查这个乔木 skill 的 README、Profile、版本和发布条件，不要写 GitHub",
-      "family": "cn_publish_dry_run"
+      "family": "cn_publish_dry_run",
+      "required": ["skill", "authoring_action"]
     },
     {
       "text": "把这个 qiaomu skill 直接推 main 发布，如果不安全就改成规范 PR 流程",
-      "family": "cn_unsafe_publish_correction"
+      "family": "cn_unsafe_publish_correction",
+      "required": ["skill", "authoring_action"]
+    },
+    {
+      "text": "Audit this skill's routing and output contract. Do not edit files.",
+      "family": "en_audit_only",
+      "required": ["skill", "authoring_action"]
+    },
+    {
+      "text": "把这段笔记沉淀成可复用的 agent skill",
+      "family": "cn_create_from_notes",
+      "required": ["skill", "source_material", "authoring_action"]
+    },
+    {
+      "text": "帮我把这个 skill 包整理得更规范，检查安装入口",
+      "family": "cn_improve_installability",
+      "required": ["skill", "authoring_action"]
+    },
+    {
+      "text": "Publish this skill package to GitHub with PR, release, and clean install verification.",
+      "family": "en_publish_flow",
+      "required": ["skill", "authoring_action"]
     }
   ],
   "should_not_trigger": [
@@ -190,6 +248,22 @@
     {
       "text": "把这个普通 Python 包发布到 PyPI",
       "family": "non_skill_package_publish"
+    },
+    {
+      "text": "帮我写一篇公众号文章",
+      "family": "article_only"
+    },
+    {
+      "text": "总结这段聊天记录，输出三条要点",
+      "family": "chat_summary_only"
+    },
+    {
+      "text": "给这个脚本修个 bug",
+      "family": "bugfix_only"
+    },
+    {
+      "text": "什么是 SKILL.md？简单解释一下",
+      "family": "explain_only"
     }
   ],
   "near_neighbor": [
@@ -204,6 +278,18 @@
     {
       "text": "给这个脚本加一个 argparse 参数",
       "family": "script_edit_only"
+    },
+    {
+      "text": "解释一下 skill 和 prompt 的区别，不要做成 skill",
+      "family": "explain_skill_concept"
+    },
+    {
+      "text": "帮我润色一下这个 skill 的 README，别动结构",
+      "family": "readme_polish_only"
+    },
+    {
+      "text": "直接告诉我怎么做就行，不用封装成技能",
+      "family": "answer_without_skill"
     }
   ]
 }

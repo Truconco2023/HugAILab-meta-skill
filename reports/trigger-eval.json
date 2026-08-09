@@ -1,5 +1,6 @@
 {
   "ok": true,
+  "mode": "strict",
   "threshold": 0.34,
   "description_concepts": [
     "authoring_action",
@@ -10,11 +11,15 @@
   ],
   "missing_description_concepts": [],
   "summary": {
-    "total": 23,
-    "passed": 23,
+    "total": 34,
+    "passed": 34,
     "false_positive": 0,
     "false_negative": 0,
-    "pass_rate": 1.0
+    "weak": 3,
+    "pass_rate": 1.0,
+    "families_covered": 18,
+    "families_total": 18,
+    "uncovered_families": []
   },
   "failures": [],
   "results": {
@@ -25,13 +30,35 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.8,
+        "score": 0.789,
+        "threshold": 0.34,
+        "margin": 0.449,
         "matched_concepts": [
           "authoring_action",
           "qiaomu",
           "skill",
           "source_material"
         ],
+        "matched_phrases": {
+          "skill": [
+            "skill"
+          ],
+          "source_material": [
+            "流程"
+          ],
+          "authoring_action": [
+            "整理"
+          ],
+          "qiaomu": [
+            "qiaomu"
+          ]
+        },
+        "required_concepts": [
+          "skill",
+          "source_material",
+          "authoring_action"
+        ],
+        "required_missing": [],
         "negative_pattern": null
       },
       {
@@ -40,12 +67,31 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.6,
+        "score": 0.579,
+        "threshold": 0.34,
+        "margin": 0.239,
         "matched_concepts": [
           "authoring_action",
           "qiaomu",
           "skill"
         ],
+        "matched_phrases": {
+          "skill": [
+            "skill"
+          ],
+          "authoring_action": [
+            "优化",
+            "升级"
+          ],
+          "qiaomu": [
+            "乔木"
+          ]
+        },
+        "required_concepts": [
+          "skill",
+          "authoring_action"
+        ],
+        "required_missing": [],
         "negative_pattern": null
       },
       {
@@ -54,12 +100,34 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.6,
+        "score": 0.632,
+        "threshold": 0.34,
+        "margin": 0.292,
         "matched_concepts": [
           "authoring_action",
           "eval_release",
           "skill"
         ],
+        "matched_phrases": {
+          "skill": [
+            "skill"
+          ],
+          "authoring_action": [
+            "优化",
+            "发布"
+          ],
+          "eval_release": [
+            "eval",
+            "trigger eval",
+            "门禁",
+            "发布门禁"
+          ]
+        },
+        "required_concepts": [
+          "skill",
+          "eval_release"
+        ],
+        "required_missing": [],
         "negative_pattern": null
       },
       {
@@ -68,12 +136,33 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.6,
+        "score": 0.737,
+        "threshold": 0.34,
+        "margin": 0.397,
         "matched_concepts": [
           "authoring_action",
           "skill",
           "source_material"
         ],
+        "matched_phrases": {
+          "skill": [
+            "agent 能力"
+          ],
+          "source_material": [
+            "SOP",
+            "提示词",
+            "脚本"
+          ],
+          "authoring_action": [
+            "封装"
+          ]
+        },
+        "required_concepts": [
+          "skill",
+          "source_material",
+          "authoring_action"
+        ],
+        "required_missing": [],
         "negative_pattern": null
       },
       {
@@ -82,13 +171,36 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.8,
+        "score": 0.789,
+        "threshold": 0.34,
+        "margin": 0.449,
         "matched_concepts": [
           "authoring_action",
           "qiaomu",
           "skill",
           "source_material"
         ],
+        "matched_phrases": {
+          "skill": [
+            "skill"
+          ],
+          "source_material": [
+            "workflow"
+          ],
+          "authoring_action": [
+            "create",
+            "package"
+          ],
+          "qiaomu": [
+            "qiaomu"
+          ]
+        },
+        "required_concepts": [
+          "skill",
+          "source_material",
+          "authoring_action"
+        ],
+        "required_missing": [],
         "negative_pattern": null
       },
       {
@@ -97,12 +209,32 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.6,
+        "score": 0.737,
+        "threshold": 0.34,
+        "margin": 0.397,
         "matched_concepts": [
           "authoring_action",
           "skill",
           "source_material"
         ],
+        "matched_phrases": {
+          "skill": [
+            "skill"
+          ],
+          "source_material": [
+            "prompt"
+          ],
+          "authoring_action": [
+            "refactor",
+            "package"
+          ]
+        },
+        "required_concepts": [
+          "skill",
+          "source_material",
+          "authoring_action"
+        ],
+        "required_missing": [],
         "negative_pattern": null
       },
       {
@@ -111,12 +243,37 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.6,
+        "score": 0.684,
+        "threshold": 0.34,
+        "margin": 0.344,
         "matched_concepts": [
           "authoring_action",
+          "prior_art",
           "qiaomu",
           "skill"
         ],
+        "matched_phrases": {
+          "skill": [
+            "skill"
+          ],
+          "authoring_action": [
+            "创建",
+            "安装"
+          ],
+          "qiaomu": [
+            "qiaomu"
+          ],
+          "prior_art": [
+            "安装量",
+            "口碑"
+          ]
+        },
+        "required_concepts": [
+          "skill",
+          "prior_art",
+          "authoring_action"
+        ],
+        "required_missing": [],
         "negative_pattern": null
       },
       {
@@ -125,11 +282,26 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.4,
+        "score": 0.368,
+        "threshold": 0.34,
+        "margin": 0.028,
         "matched_concepts": [
           "qiaomu",
           "skill"
         ],
+        "matched_phrases": {
+          "skill": [
+            "skill"
+          ],
+          "qiaomu": [
+            "qiaomu"
+          ]
+        },
+        "required_concepts": [
+          "skill",
+          "qiaomu"
+        ],
+        "required_missing": [],
         "negative_pattern": null
       },
       {
@@ -138,11 +310,28 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.4,
+        "score": 0.526,
+        "threshold": 0.34,
+        "margin": 0.186,
         "matched_concepts": [
           "authoring_action",
           "skill"
         ],
+        "matched_phrases": {
+          "skill": [
+            "skill"
+          ],
+          "authoring_action": [
+            "迁移",
+            "安装",
+            "检查"
+          ]
+        },
+        "required_concepts": [
+          "skill",
+          "authoring_action"
+        ],
+        "required_missing": [],
         "negative_pattern": null
       },
       {
@@ -151,12 +340,34 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.6,
+        "score": 0.684,
+        "threshold": 0.34,
+        "margin": 0.344,
         "matched_concepts": [
+          "authoring_action",
           "eval_release",
           "qiaomu",
           "skill"
         ],
+        "matched_phrases": {
+          "skill": [
+            "skill"
+          ],
+          "authoring_action": [
+            "审计"
+          ],
+          "qiaomu": [
+            "qiaomu"
+          ],
+          "eval_release": [
+            "评估"
+          ]
+        },
+        "required_concepts": [
+          "skill",
+          "eval_release"
+        ],
+        "required_missing": [],
         "negative_pattern": null
       },
       {
@@ -165,11 +376,28 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.4,
+        "score": 0.526,
+        "threshold": 0.34,
+        "margin": 0.186,
         "matched_concepts": [
           "authoring_action",
           "skill"
         ],
+        "matched_phrases": {
+          "skill": [
+            "skill",
+            "agent skill"
+          ],
+          "authoring_action": [
+            "package",
+            "check"
+          ]
+        },
+        "required_concepts": [
+          "skill",
+          "authoring_action"
+        ],
+        "required_missing": [],
         "negative_pattern": null
       },
       {
@@ -178,13 +406,36 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.8,
+        "score": 0.684,
+        "threshold": 0.34,
+        "margin": 0.344,
         "matched_concepts": [
           "authoring_action",
           "eval_release",
           "qiaomu",
           "skill"
         ],
+        "matched_phrases": {
+          "skill": [
+            "skill"
+          ],
+          "authoring_action": [
+            "安装",
+            "发布"
+          ],
+          "qiaomu": [
+            "qiaomu"
+          ],
+          "eval_release": [
+            "PR",
+            "Release"
+          ]
+        },
+        "required_concepts": [
+          "skill",
+          "authoring_action"
+        ],
+        "required_missing": [],
         "negative_pattern": null
       },
       {
@@ -193,13 +444,31 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 0.8,
+        "score": 0.579,
+        "threshold": 0.34,
+        "margin": 0.239,
         "matched_concepts": [
           "authoring_action",
-          "eval_release",
           "qiaomu",
           "skill"
         ],
+        "matched_phrases": {
+          "skill": [
+            "skill"
+          ],
+          "authoring_action": [
+            "发布",
+            "检查"
+          ],
+          "qiaomu": [
+            "乔木"
+          ]
+        },
+        "required_concepts": [
+          "skill",
+          "authoring_action"
+        ],
+        "required_missing": [],
         "negative_pattern": null
       },
       {
@@ -208,7 +477,9 @@
         "expected_trigger": true,
         "predicted_trigger": true,
         "passed": true,
-        "score": 1.0,
+        "score": 0.895,
+        "threshold": 0.34,
+        "margin": 0.555,
         "matched_concepts": [
           "authoring_action",
           "eval_release",
@@ -216,6 +487,156 @@
           "skill",
           "source_material"
         ],
+        "matched_phrases": {
+          "skill": [
+            "skill"
+          ],
+          "source_material": [
+            "流程"
+          ],
+          "authoring_action": [
+            "发布"
+          ],
+          "qiaomu": [
+            "qiaomu"
+          ],
+          "eval_release": [
+            "PR"
+          ]
+        },
+        "required_concepts": [
+          "skill",
+          "authoring_action"
+        ],
+        "required_missing": [],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "Audit this skill's routing and output contract. Do not edit files.",
+        "family": "en_audit_only",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.526,
+        "threshold": 0.34,
+        "margin": 0.186,
+        "matched_concepts": [
+          "authoring_action",
+          "skill"
+        ],
+        "matched_phrases": {
+          "skill": [
+            "skill"
+          ],
+          "authoring_action": [
+            "audit"
+          ]
+        },
+        "required_concepts": [
+          "skill",
+          "authoring_action"
+        ],
+        "required_missing": [],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "把这段笔记沉淀成可复用的 agent skill",
+        "family": "cn_create_from_notes",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.737,
+        "threshold": 0.34,
+        "margin": 0.397,
+        "matched_concepts": [
+          "authoring_action",
+          "skill",
+          "source_material"
+        ],
+        "matched_phrases": {
+          "skill": [
+            "skill",
+            "agent skill"
+          ],
+          "source_material": [
+            "笔记"
+          ],
+          "authoring_action": [
+            "沉淀"
+          ]
+        },
+        "required_concepts": [
+          "skill",
+          "source_material",
+          "authoring_action"
+        ],
+        "required_missing": [],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "帮我把这个 skill 包整理得更规范，检查安装入口",
+        "family": "cn_improve_installability",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.526,
+        "threshold": 0.34,
+        "margin": 0.186,
+        "matched_concepts": [
+          "authoring_action",
+          "skill"
+        ],
+        "matched_phrases": {
+          "skill": [
+            "skill",
+            "skill 包"
+          ],
+          "authoring_action": [
+            "整理",
+            "安装",
+            "检查"
+          ]
+        },
+        "required_concepts": [
+          "skill",
+          "authoring_action"
+        ],
+        "required_missing": [],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "Publish this skill package to GitHub with PR, release, and clean install verification.",
+        "family": "en_publish_flow",
+        "expected_trigger": true,
+        "predicted_trigger": true,
+        "passed": true,
+        "score": 0.632,
+        "threshold": 0.34,
+        "margin": 0.292,
+        "matched_concepts": [
+          "authoring_action",
+          "eval_release",
+          "skill"
+        ],
+        "matched_phrases": {
+          "skill": [
+            "skill"
+          ],
+          "authoring_action": [
+            "package",
+            "publish",
+            "install"
+          ],
+          "eval_release": [
+            "PR",
+            "Release"
+          ]
+        },
+        "required_concepts": [
+          "skill",
+          "authoring_action"
+        ],
+        "required_missing": [],
         "negative_pattern": null
       }
     ],
@@ -226,10 +647,20 @@
         "expected_trigger": false,
         "predicted_trigger": false,
         "passed": true,
-        "score": 0.2,
+        "score": 0.316,
+        "threshold": 0.34,
+        "margin": -0.024,
         "matched_concepts": [
           "skill"
         ],
+        "matched_phrases": {
+          "skill": [
+            "skill",
+            "agent skill"
+          ]
+        },
+        "required_concepts": [],
+        "required_missing": [],
         "negative_pattern": "不要做成 skill"
       },
       {
@@ -239,7 +670,12 @@
         "predicted_trigger": false,
         "passed": true,
         "score": 0.0,
+        "threshold": 0.34,
+        "margin": -0.34,
         "matched_concepts": [],
+        "matched_phrases": {},
+        "required_concepts": [],
+        "required_missing": [],
         "negative_pattern": "翻译一下"
       },
       {
@@ -249,7 +685,12 @@
         "predicted_trigger": false,
         "passed": true,
         "score": 0.0,
+        "threshold": 0.34,
+        "margin": -0.34,
         "matched_concepts": [],
+        "matched_phrases": {},
+        "required_concepts": [],
+        "required_missing": [],
         "negative_pattern": null
       },
       {
@@ -259,7 +700,12 @@
         "predicted_trigger": false,
         "passed": true,
         "score": 0.0,
+        "threshold": 0.34,
+        "margin": -0.34,
         "matched_concepts": [],
+        "matched_phrases": {},
+        "required_concepts": [],
+        "required_missing": [],
         "negative_pattern": null
       },
       {
@@ -268,10 +714,19 @@
         "expected_trigger": false,
         "predicted_trigger": false,
         "passed": true,
-        "score": 0.2,
+        "score": 0.211,
+        "threshold": 0.34,
+        "margin": -0.129,
         "matched_concepts": [
           "source_material"
         ],
+        "matched_phrases": {
+          "source_material": [
+            "prompts"
+          ]
+        },
+        "required_concepts": [],
+        "required_missing": [],
         "negative_pattern": "just explain"
       },
       {
@@ -280,12 +735,92 @@
         "expected_trigger": false,
         "predicted_trigger": false,
         "passed": true,
-        "score": 0.4,
+        "score": 0.211,
+        "threshold": 0.34,
+        "margin": -0.129,
         "matched_concepts": [
-          "authoring_action",
-          "eval_release"
+          "authoring_action"
         ],
+        "matched_phrases": {
+          "authoring_action": [
+            "发布"
+          ]
+        },
+        "required_concepts": [],
+        "required_missing": [],
         "negative_pattern": "普通 Python 包"
+      },
+      {
+        "prompt": "帮我写一篇公众号文章",
+        "family": "article_only",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.0,
+        "threshold": 0.34,
+        "margin": -0.34,
+        "matched_concepts": [],
+        "matched_phrases": {},
+        "required_concepts": [],
+        "required_missing": [],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "总结这段聊天记录，输出三条要点",
+        "family": "chat_summary_only",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.0,
+        "threshold": 0.34,
+        "margin": -0.34,
+        "matched_concepts": [],
+        "matched_phrases": {},
+        "required_concepts": [],
+        "required_missing": [],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "给这个脚本修个 bug",
+        "family": "bugfix_only",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.211,
+        "threshold": 0.34,
+        "margin": -0.129,
+        "matched_concepts": [
+          "source_material"
+        ],
+        "matched_phrases": {
+          "source_material": [
+            "脚本"
+          ]
+        },
+        "required_concepts": [],
+        "required_missing": [],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "什么是 SKILL.md？简单解释一下",
+        "family": "explain_only",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.316,
+        "threshold": 0.34,
+        "margin": -0.024,
+        "matched_concepts": [
+          "skill"
+        ],
+        "matched_phrases": {
+          "skill": [
+            "skill"
+          ]
+        },
+        "required_concepts": [],
+        "required_missing": [],
+        "negative_pattern": "简单解释一下"
       }
     ],
     "near_neighbor": [
@@ -295,10 +830,19 @@
         "expected_trigger": false,
         "predicted_trigger": false,
         "passed": true,
-        "score": 0.2,
+        "score": 0.316,
+        "threshold": 0.34,
+        "margin": -0.024,
         "matched_concepts": [
           "skill"
         ],
+        "matched_phrases": {
+          "skill": [
+            "skill"
+          ]
+        },
+        "required_concepts": [],
+        "required_missing": [],
         "negative_pattern": null
       },
       {
@@ -307,11 +851,20 @@
         "expected_trigger": false,
         "predicted_trigger": false,
         "passed": true,
-        "score": 0.4,
+        "score": 0.211,
+        "threshold": 0.34,
+        "margin": -0.129,
         "matched_concepts": [
-          "authoring_action",
-          "eval_release"
+          "authoring_action"
         ],
+        "matched_phrases": {
+          "authoring_action": [
+            "打包",
+            "发布"
+          ]
+        },
+        "required_concepts": [],
+        "required_missing": [],
         "negative_pattern": "头脑风暴"
       },
       {
@@ -320,11 +873,91 @@
         "expected_trigger": false,
         "predicted_trigger": false,
         "passed": true,
-        "score": 0.2,
+        "score": 0.211,
+        "threshold": 0.34,
+        "margin": -0.129,
         "matched_concepts": [
           "source_material"
         ],
+        "matched_phrases": {
+          "source_material": [
+            "脚本"
+          ]
+        },
+        "required_concepts": [],
+        "required_missing": [],
         "negative_pattern": null
+      },
+      {
+        "prompt": "解释一下 skill 和 prompt 的区别，不要做成 skill",
+        "family": "explain_skill_concept",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.526,
+        "threshold": 0.34,
+        "margin": 0.186,
+        "matched_concepts": [
+          "skill",
+          "source_material"
+        ],
+        "matched_phrases": {
+          "skill": [
+            "skill"
+          ],
+          "source_material": [
+            "prompt"
+          ]
+        },
+        "required_concepts": [],
+        "required_missing": [],
+        "negative_pattern": "不要做成 skill"
+      },
+      {
+        "prompt": "帮我润色一下这个 skill 的 README，别动结构",
+        "family": "readme_polish_only",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.316,
+        "threshold": 0.34,
+        "margin": -0.024,
+        "matched_concepts": [
+          "skill"
+        ],
+        "matched_phrases": {
+          "skill": [
+            "skill"
+          ]
+        },
+        "required_concepts": [],
+        "required_missing": [],
+        "negative_pattern": null
+      },
+      {
+        "prompt": "直接告诉我怎么做就行，不用封装成技能",
+        "family": "answer_without_skill",
+        "expected_trigger": false,
+        "predicted_trigger": false,
+        "passed": true,
+        "score": 0.526,
+        "threshold": 0.34,
+        "margin": 0.186,
+        "matched_concepts": [
+          "authoring_action",
+          "skill"
+        ],
+        "matched_phrases": {
+          "skill": [
+            "技能"
+          ],
+          "authoring_action": [
+            "封装"
+          ]
+        },
+        "required_concepts": [],
+        "required_missing": [],
+        "negative_pattern": "不用封装成技能"
       }
     ]
   }

@@ -2,13 +2,13 @@
 
 > 把一句「把这个流程做成 Skill」，变成一个真正能被发现、能稳定触发、能通过验证、还能一键开源的 Skill。
 
-[![GitHub Release](https://img.shields.io/github/v/release/joeseesun/qiaomu-meta-skill?display_name=tag&sort=semver)](https://github.com/joeseesun/qiaomu-meta-skill/releases)
-[![Stars](https://img.shields.io/github/stars/joeseesun/qiaomu-meta-skill?style=flat)](https://github.com/joeseesun/qiaomu-meta-skill/stargazers)
-[![Last commit](https://img.shields.io/github/last-commit/joeseesun/qiaomu-meta-skill)](https://github.com/joeseesun/qiaomu-meta-skill/commits/main)
-[![License](https://img.shields.io/github/license/joeseesun/qiaomu-meta-skill)](LICENSE)
+[![GitHub Release](https://img.shields.io/github/v/release/Truconco2023/HugAILab-meta-skill?display_name=tag&sort=semver)](https://github.com/Truconco2023/HugAILab-meta-skill/releases)
+[![Stars](https://img.shields.io/github/stars/Truconco2023/HugAILab-meta-skill?style=flat)](https://github.com/Truconco2023/HugAILab-meta-skill/stargazers)
+[![Last commit](https://img.shields.io/github/last-commit/Truconco2023/HugAILab-meta-skill)](https://github.com/Truconco2023/HugAILab-meta-skill/commits/main)
+[![License](https://img.shields.io/github/license/Truconco2023/HugAILab-meta-skill)](LICENSE)
 
 ```bash
-npx skills add joeseesun/qiaomu-meta-skill
+npx skills add Truconco2023/HugAILab-meta-skill
 ```
 
 安装以后，你只需要把提示词、SOP、聊天记录、旧 Skill、脚本或一个模糊想法交给 Agent：
@@ -20,7 +20,7 @@ npx skills add joeseesun/qiaomu-meta-skill
 
 它会自己完成：**需求收敛 → 同类检索 → 取长避短 → Skill 设计 → 触发评测 → 格式校验 → README → API 泄露检查 → PR → Release → npx 安装验证**。
 
-**v2.8.1 本地候选已验证：** 35/35 单元测试、23/23 触发评测、0 个包校验问题。公开发布证据以 [Releases](https://github.com/joeseesun/qiaomu-meta-skill/releases) 为准。
+**v2.9.0 本地候选已验证：** 48/48 单元测试、34/34 触发评测（18/18 场景族）、0 个包校验问题（无 PyYAML 环境同样通过）。公开发布证据以 [Releases](https://github.com/Truconco2023/HugAILab-meta-skill/releases) 为准。
 
 ## 为什么我做了这个
 
@@ -199,13 +199,13 @@ your-skill/
 ## 安装与验证
 
 ```bash
-npx skills add joeseesun/qiaomu-meta-skill
+npx skills add Truconco2023/HugAILab-meta-skill
 ```
 
 只安装这个 Skill：
 
 ```bash
-npx skills add joeseesun/qiaomu-meta-skill --skill qiaomu-meta-skill
+npx skills add Truconco2023/HugAILab-meta-skill --skill qiaomu-meta-skill
 ```
 
 验证：
@@ -314,25 +314,12 @@ Upstream inspiration: https://github.com/yaojingang/yao-meta-skill; https://gith
 - 没有 provider 实跑、人工盲评或用户结果时，必须明确标记 `missing evidence`。
 - 发布是外部写操作，只有明确要求时才执行，并通过功能分支、PR、Release 与公开安装验证。
 
-<!-- qiaomu-profile:start -->
-## 关于向阳乔木
+<!-- fork-note:start -->
+## 关于本 Fork
 
-向阳乔木（乔向阳 / Joe）是一位实践型 AI 产品与内容创作者，长期把前沿 AI 变化转译成可复用的工作流、产品判断、AI 编程实践、AI 搜索实践和 GEO/AI 营销方法。
+本仓库由 [HugAILab](https://github.com/Truconco2023) 维护，基于上游 `joeseesun/qiaomu-meta-skill` v2.8.1 继续迭代。默认不注入任何作者个人品牌、二维码或打赏入口；如需原版乔木 Profile，请使用 `--qiaomu-profile` 显式开启。
 
-- 个人网站: https://qiaomu.ai
-- 博客: https://blog.qiaomu.ai
-- X: https://x.com/vista8
-- GitHub: https://github.com/joeseesun/
-- 微信公众号: 向阳乔木推荐看
-
-### 支持与关注
-
-| 打赏支持 | 微信公众号 |
-|---|---|
-| <img src="assets/qiaomu-profile/qiaomu_reward_qr.png" alt="向阳乔木打赏二维码" width="180" /> | <img src="assets/qiaomu-profile/qiaomu_wechat_public_account_qr.jpg" alt="向阳乔木推荐看公众号二维码" width="180" /> |
-| 感谢支持乔木持续分享 AI 实践 | 扫码关注「向阳乔木推荐看」 |
-
-<!-- qiaomu-profile:end -->
+<!-- fork-note:end -->
 
 ---
 
@@ -344,7 +331,7 @@ Upstream inspiration: https://github.com/yaojingang/yao-meta-skill; https://gith
 Unlike a one-shot `SKILL.md` generator, it includes dual-catalog prior-art research, GitHub source verification, trigger evaluation, evidence-aware release gates, secret scanning, pull-request publication, versioned Releases, and clean `npx` installation verification.
 
 ```bash
-npx skills add joeseesun/qiaomu-meta-skill
+npx skills add Truconco2023/HugAILab-meta-skill
 ```
 
 Try saying:

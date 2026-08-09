@@ -8,6 +8,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
+from unittest.mock import patch
 
 
 ROOT = Path(__file__).resolve().parents[1]
@@ -68,6 +69,27 @@ class DiscoverSkillEntrypointsTest(unittest.TestCase):
             )
 
             self.assertTrue(any("package.version" in item for item in failures))
+
+    def test_load_yaml_works_without_pyyaml_via_bundled_parser(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            interface = root / "agents"
+            interface.mkdir()
+            (interface / "interface.yaml").write_text(
+                "interface:\n  display_name: Demo\ncompatibility:\n  adapter_targets: [openai]\n",
+                encoding="utf-8",
+            )
+            with patch.object(VALIDATE_SKILL, "yaml", None):
+                payload = VALIDATE_SKILL.load_yaml(interface / "interface.yaml")
+            self.assertEqual(payload["interface"]["display_name"], "Demo")
+            self.assertEqual(payload["compatibility"]["adapter_targets"], ["openai"])
+
+    def test_parse_frontmatter_works_without_pyyaml(self) -> None:
+        text = "---\nname: demo\ndescription: |\n  第一行\n  第二行\n---\n"
+        with patch.object(VALIDATE_SKILL, "yaml", None):
+            frontmatter = VALIDATE_SKILL.parse_frontmatter(text)
+        self.assertEqual(frontmatter["name"], "demo")
+        self.assertIn("第一行", frontmatter["description"])
 
 
 if __name__ == "__main__":

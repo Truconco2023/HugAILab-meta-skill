@@ -6,8 +6,13 @@ from __future__ import annotations
 import argparse
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Any
+
+_SCRIPT_DIR = Path(__file__).resolve().parent
+if str(_SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIR))
 
 try:
     import yaml  # type: ignore
@@ -19,6 +24,7 @@ REQUIRED_ROOT_FILES = ["SKILL.md", "README.md", "agents/interface.yaml", "manife
 REQUIRED_FRONTMATTER = ["name", "description"]
 REQUIRED_INTERFACE_FIELDS = ["display_name", "short_description", "default_prompt"]
 REQUIRED_MANIFEST_FIELDS = ["name", "version", "owner", "updated_at", "status", "maturity_tier"]
+META_SKILL_NAMES = {"qiaomu-meta-skill", "HugAILab-meta-skill"}
 IGNORED_DISCOVERY_DIRS = {".git", "dist", "node_modules", "__pycache__"}
 FORBIDDEN_DISCOVERY_DEPENDENCIES = (
     '.agents/skills/find-skills/SKILL.md',
@@ -42,12 +48,18 @@ def load_json(path: Path) -> dict[str, Any]:
     return payload
 
 
-def load_yaml(path: Path) -> dict[str, Any]:
-    text = read_text(path)
+def parse_yaml_text(text: str) -> Any:
+    """Parse YAML with PyYAML when available, otherwise use the bundled subset parser."""
     if yaml is not None:
-        payload = yaml.safe_load(text) or {}
-        return payload if isinstance(payload, dict) else {}
-    return {}
+        return yaml.safe_load(text)
+    from qiaomu_yaml import safe_load  # type: ignore
+
+    return safe_load(text)
+
+
+def load_yaml(path: Path) -> dict[str, Any]:
+    payload = parse_yaml_text(read_text(path)) or {}
+    return payload if isinstance(payload, dict) else {}
 
 
 def parse_frontmatter(text: str) -> dict[str, Any]:
@@ -59,24 +71,8 @@ def parse_frontmatter(text: str) -> dict[str, Any]:
     except ValueError:
         return {}
     frontmatter_text = "\n".join(lines[1:end])
-    if yaml is not None:
-        payload = yaml.safe_load(frontmatter_text) or {}
-        return payload if isinstance(payload, dict) else {}
-
-    data: dict[str, Any] = {}
-    current_key = ""
-    for raw in frontmatter_text.splitlines():
-        if not raw.strip():
-            continue
-        if raw.startswith(" ") and current_key:
-            data[current_key] = f"{data.get(current_key, '')}\n{raw.strip()}".strip()
-            continue
-        if ":" not in raw:
-            continue
-        key, value = raw.split(":", 1)
-        current_key = key.strip()
-        data[current_key] = value.strip().strip("'\"|")
-    return data
+    payload = parse_yaml_text(frontmatter_text) or {}
+    return payload if isinstance(payload, dict) else {}
 
 
 def markdown_links(text: str) -> list[str]:
@@ -156,7 +152,7 @@ def validate(root: Path) -> dict[str, Any]:
         if not (root / rel).exists():
             failures.append(f"missing required file: {rel}")
 
-    if root.name == "qiaomu-meta-skill":
+    if root.name in META_SKILL_NAMES:
         for rel in ("SKILL.md", "README.md", "references/prior-art-research.md"):
             path = root / rel
             if not path.exists():

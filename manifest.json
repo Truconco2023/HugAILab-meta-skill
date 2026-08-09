@@ -1,8 +1,8 @@
 {
   "name": "qiaomu-meta-skill",
-  "version": "2.8.1",
-  "owner": "Qiaomu",
-  "updated_at": "2026-08-04",
+  "version": "2.9.0",
+  "owner": "HugAILab fork maintainer",
+  "updated_at": "2026-08-09",
   "status": "active",
   "maturity_tier": "governed",
   "lifecycle_stage": "library",
@@ -15,12 +15,12 @@
     "reviewed_through_commit_date": "2026-07-16",
     "policy": "semantic adoption; do not mirror upstream wholesale"
   },
-  "qiaomu_defaults": {
-    "skill_name_prefix": "qiaomu-",
+  "creator_defaults": {
+    "skill_name_prefix": "",
     "max_preferred_hyphen_parts": 3,
-    "copyright": "Copyright (c) 向阳乔木",
-    "x": "https://x.com/vista8",
-    "github": "https://github.com/joeseesun/"
+    "copyright": "Copyright (c) <owner>",
+    "x": "",
+    "github": ""
   },
   "target_platforms": [
     "openai",

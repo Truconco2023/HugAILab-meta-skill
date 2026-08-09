@@ -134,7 +134,7 @@ class PublishSkillTest(unittest.TestCase):
                 verify_only=False,
                 no_merge=False,
                 no_sync_local=True,
-                skip_qiaomu_profile=False,
+                qiaomu_profile=False,
             )
             result = PUBLISH.publish(args, FakeRunner())
             self.assertTrue(result["ok"])
@@ -173,6 +173,31 @@ class PublishSkillTest(unittest.TestCase):
             self.assertIn(PUBLISH.PROFILE_START, (root / "README.md").read_text(encoding="utf-8"))
             for name in PUBLISH.PROFILE_ASSETS.values():
                 self.assertTrue((root / PUBLISH.PROFILE_TARGET / name).is_file())
+
+    def test_prepare_package_defaults_to_no_profile(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "manifest.json").write_text(
+                json.dumps({"upstream_inspiration": "https://github.com/example/upstream"}),
+                encoding="utf-8",
+            )
+            result = PUBLISH.prepare_package(
+                root,
+                {
+                    "name": "qiaomu-demo",
+                    "description": "把重复工作流整理成可验证的 skill。",
+                    "version": "1.0.0",
+                    "owner": "示例团队",
+                },
+                "example",
+                "demo-skill",
+                write=True,
+            )
+            self.assertEqual(result["failures"], [])
+            readme = (root / "README.md").read_text(encoding="utf-8")
+            self.assertNotIn(PUBLISH.PROFILE_START, readme)
+            self.assertNotIn("向阳乔木", readme)
+            self.assertFalse((root / PUBLISH.PROFILE_TARGET).exists())
 
     def test_local_sync_preserves_previous_copy_outside_skill_discovery(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

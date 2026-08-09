@@ -4,7 +4,7 @@ description: |
   Research, create, improve, migrate, evaluate, package, install-check, govern, and safely publish qiaomu-flavored agent skills from workflows, prompts, transcripts, docs, SOPs, runbooks, scripts, or notes. Use for new or existing skills, prior-art synthesis, routing/trigger boundaries, trigger or output evals, Skill IR, release gates, README/Profile preparation, GitHub repository and pull-request publication, versioned Releases, clean npx installation, team reuse, and create-and-publish flows. The publication path is self-contained and forbids direct default-branch pushes. Exclude one-off summaries, translations, ordinary docs, non-skill package publishing, and tasks that explicitly should not become a skill.
 metadata:
   author: Qiaomu
-  version: "2.8.1"
+  version: "2.9.0"
   upstream_inspiration: yaojingang/yao-meta-skill; joeseesun/qiaomu-skill-publisher
 ---
 
@@ -22,8 +22,8 @@ Build reusable Qiaomu skill packages, not long prompts.
 - A package has one discoverable root `SKILL.md`; embedded examples and fixtures use `SKILL.example.md` or `SKILL.fixture.md`.
 - Do not turn one-off summaries, translations, explanations, or brainstorming into skills.
 - Match the user's action: create/refactor/package requests may edit; audit/evaluate/diagnose-only requests remain read-only; publish only when explicitly requested.
-- Default to concise Chinese-first `qiaomu-` names with no more than three preferred hyphen parts.
-- Add `Copyright (c) 向阳乔木`, X `https://x.com/vista8`, and GitHub `https://github.com/joeseesun/` unless another owner is requested.
+- Default to concise Chinese-first names; apply a user/team prefix only when requested.
+- Add a copyright/LICENSE line for the owning user or team; never inject third-party profiles, QR assets, or donation links unless explicitly requested.
 
 ## Modes
 
@@ -141,11 +141,12 @@ The final creation handoff must name the **reference skills studied**, give **ca
 
 Detailed CLI and safety decisions: [Self-Contained Skill Publishing](references/publishing.md). README method: [GitHub README Playbook](references/github-readme-playbook.md). Operation method: [SkillOps Loop](references/skillops-loop.md).
 
-## Qiaomu Defaults
+## Creator Defaults
 
 - Prefer practical, concise, publishable Chinese output.
 - Keep one creator authority and one root skill entrypoint.
 - Preserve platform-neutral source plus minimal adapters.
+- Branding is opt-in: published packages contain no author profile, QR, or donation assets unless the user explicitly requests them.
 - Public claims must match trigger, output, runtime, install, or human evidence actually present.
 - Upstream ideas are adopted semantically with attribution, not mirrored wholesale.
 

@@ -1,10 +1,10 @@
 {
   "schema_version": "2.0.0-qiaomu-lite",
-  "generated_at": "2026-08-04",
+  "generated_at": "2026-08-09",
   "package": {
     "name": "qiaomu-meta-skill",
-    "version": "2.8.1",
-    "owner": "Qiaomu",
+    "version": "2.9.0",
+    "owner": "HugAILab fork maintainer",
     "maturity_tier": "governed",
     "lifecycle_stage": "library",
     "upstream_inspiration": "https://github.com/yaojingang/yao-meta-skill; https://github.com/joeseesun/qiaomu-skill-publisher",
@@ -24,12 +24,12 @@
     "inputs": [],
     "outputs": [],
     "exclusions": [],
-    "qiaomu_defaults": {
-      "skill_name_prefix": "qiaomu-",
+    "creator_defaults": {
+      "skill_name_prefix": "",
       "max_preferred_hyphen_parts": 3,
-      "copyright": "Copyright (c) 向阳乔木",
-      "x": "https://x.com/vista8",
-      "github": "https://github.com/joeseesun/"
+      "copyright": "Copyright (c) <owner>",
+      "x": "",
+      "github": ""
     }
   },
   "triggers": {
@@ -47,7 +47,11 @@
       "Check whether this agent skill package installs cleanly and whether nested examples can be mis-discovered.",
       "把这个 qiaomu skill 发布到 GitHub，并完成 PR、Release 和干净安装验证",
       "先 dry-run 检查这个乔木 skill 的 README、Profile、版本和发布条件，不要写 GitHub",
-      "把这个 qiaomu skill 直接推 main 发布，如果不安全就改成规范 PR 流程"
+      "把这个 qiaomu skill 直接推 main 发布，如果不安全就改成规范 PR 流程",
+      "Audit this skill's routing and output contract. Do not edit files.",
+      "把这段笔记沉淀成可复用的 agent skill",
+      "帮我把这个 skill 包整理得更规范，检查安装入口",
+      "Publish this skill package to GitHub with PR, release, and clean install verification."
     ],
     "should_not_trigger": [
       "解释一下什么是 agent skill，不要做成 skill",
@@ -55,12 +59,19 @@
       "帮我写个产品标题",
       "Summarize this random note in three bullets.",
       "Just explain the difference between prompts and skills.",
-      "把这个普通 Python 包发布到 PyPI"
+      "把这个普通 Python 包发布到 PyPI",
+      "帮我写一篇公众号文章",
+      "总结这段聊天记录，输出三条要点",
+      "给这个脚本修个 bug",
+      "什么是 SKILL.md？简单解释一下"
     ],
     "near_neighbor": [
       "帮我看一下这个 README 顺不顺，但不要改成 skill",
       "头脑风暴几个插件名字，先不要打包发布",
-      "给这个脚本加一个 argparse 参数"
+      "给这个脚本加一个 argparse 参数",
+      "解释一下 skill 和 prompt 的区别，不要做成 skill",
+      "帮我润色一下这个 skill 的 README，别动结构",
+      "直接告诉我怎么做就行，不用封装成技能"
     ]
   },
   "workflow": {
@@ -73,8 +84,8 @@
       "A package has one discoverable root `SKILL.md`; embedded examples and fixtures use `SKILL.example.md` or `SKILL.fixture.md`.",
       "Do not turn one-off summaries, translations, explanations, or brainstorming into skills.",
       "Match the user's action: create/refactor/package requests may edit; audit/evaluate/diagnose-only requests remain read-only; publish only when explicitly requested.",
-      "Default to concise Chinese-first `qiaomu-` names with no more than three preferred hyphen parts.",
-      "Add `Copyright (c) 向阳乔木`, X `https://x.com/vista8`, and GitHub `https://github.com/joeseesun/` unless another owner is requested."
+      "Default to concise Chinese-first names; apply a user/team prefix only when requested.",
+      "Add a copyright/LICENSE line for the owning user or team; never inject third-party profiles, QR assets, or donation links unless explicitly requested."
     ],
     "compact_workflow": [
       "Decide whether the request deserves a reusable skill; otherwise answer directly and create no package.",
@@ -131,6 +142,7 @@
     "scripts": [
       "scripts/export_skill_ir.py",
       "scripts/publish_skill.py",
+      "scripts/qiaomu_yaml.py",
       "scripts/release_check.py",
       "scripts/research_prior_art.py",
       "scripts/search_skillsmp.py",

@@ -9,7 +9,7 @@ The bundled `scripts/publish_skill.py` covers the useful behavior learned from `
 1. strict `SKILL.md` and `manifest.json` identity/version checks
 2. MIT `LICENSE` creation when missing
 3. README generation or quality validation
-4. bundled Qiaomu profile/QR assets and idempotent README block injection
+4. optional Qiaomu profile/QR assets and idempotent README block injection (opt-in with `--qiaomu-profile`; off by default)
 5. GitHub owner/repository detection without conflating repository and skill names
 6. repository creation with a baseline default branch when needed
 7. feature-branch commit and push; direct default-branch push is forbidden
@@ -56,7 +56,7 @@ Useful target controls:
 - `--branch codex/...`
 - `--private`
 - `--no-sync-local`
-- `--skip-qiaomu-profile` only for explicitly non-Qiaomu packages
+- `--qiaomu-profile` opt-in: inject the Qiaomu profile/QR block and assets (off by default)
 
 ## Safety decisions
 

@@ -266,6 +266,7 @@ def ensure_profile(root: Path, *, write: bool) -> list[str]:
 def generated_readme(meta: dict[str, str], github_owner: str, repo: str, upstream: str) -> str:
     first = re.split(r"[。.]", meta["description"], maxsplit=1)[0].strip()
     upstream_line = f"Upstream inspiration: {upstream}" if upstream else "Upstream inspiration: none declared"
+    year = dt.datetime.now().year
     return f"""# {repo}
 
 > {first}。
@@ -328,8 +329,7 @@ python3 ~/.agents/skills/{meta['name']}/scripts/validate_skill.py ~/.agents/skil
 
 MIT
 
-Copyright (c) 向阳乔木
-X: https://x.com/vista8 · GitHub: https://github.com/joeseesun/
+Copyright (c) {year} {meta["owner"]}
 """
 
 
@@ -371,7 +371,7 @@ def prepare_package(
     repo: str,
     *,
     write: bool,
-    include_profile: bool,
+    include_profile: bool = False,
 ) -> dict[str, Any]:
     manifest = load_json(root / "manifest.json")
     upstream = str(manifest.get("upstream_inspiration", "")).strip()
@@ -499,7 +499,7 @@ def publish(args: argparse.Namespace, runner: Runner = run) -> dict[str, Any]:
         owner,
         repo,
         write=not args.dry_run,
-        include_profile=not args.skip_qiaomu_profile,
+        include_profile=args.qiaomu_profile,
     )
     if args.dry_run:
         return {
@@ -709,7 +709,11 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--verify-only", action="store_true", help="Verify an existing release and clean install")
     parser.add_argument("--no-merge", action="store_true", help="Stop after the PR passes local and PR gates")
     parser.add_argument("--no-sync-local", action="store_true", help="Do not sync a noncanonical source into ~/.agents/skills")
-    parser.add_argument("--skip-qiaomu-profile", action="store_true", help="Only for explicitly non-Qiaomu packages")
+    parser.add_argument(
+        "--qiaomu-profile",
+        action="store_true",
+        help="Opt-in: inject the Qiaomu profile/QR block and assets into the published README.",
+    )
     return parser.parse_args()
 
 
