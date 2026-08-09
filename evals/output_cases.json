@@ -1,0 +1,31 @@
+{
+  "cases": [
+    {
+      "id": "create_skill_package",
+      "prompt": "把这个流程整理成一个可复用的 skill",
+      "baseline_output": "好的，我可以帮你把这个流程整理成一份文档，建议先列出步骤……",
+      "with_skill_output": "已创建 hugailab 风格 skill 包：SKILL.md、manifest.json、agents/interface.yaml、evals/trigger_cases.json 与 reports/skill-ir.json。",
+      "assertions": [
+        {"kind": "file_exists", "path": "SKILL.md"},
+        {"kind": "contains", "path": "SKILL.md", "needle": "name: hugailab-meta-skill"},
+        {"kind": "contains", "path": "SKILL.md", "needle": "## Router Rules"},
+        {"kind": "contains", "path": "manifest.json", "needle": "\"version\""},
+        {"kind": "not_contains", "path": "README.md", "needle": "sk-"}
+      ],
+      "human_notes": "真实使用时还应人工确认 description 的触发边界与产出结构。"
+    },
+    {
+      "id": "audit_only",
+      "prompt": "审计这个 skill 的路由与输出评估，只给建议，先不要改文件",
+      "baseline_output": "我看了看，整体还行，建议优化一下描述。",
+      "with_skill_output": "只读审计：运行 validate_skill.py 与 trigger_eval.py，输出 failures/warnings 清单，不修改任何文件。",
+      "assertions": [
+        {"kind": "file_exists", "path": "reports/skill-ir.json"},
+        {"kind": "contains", "path": "reports/skill-ir.json", "needle": "evidence_boundary"},
+        {"kind": "contains", "path": "reports/trigger-eval.json", "needle": "\"ok\": true"},
+        {"kind": "not_contains", "path": "README.md", "needle": "BEGIN PRIVATE KEY"}
+      ],
+      "human_notes": "审计型请求应验证未产生文件改动；当前以只读断言近似。"
+    }
+  ]
+}

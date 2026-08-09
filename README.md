@@ -20,7 +20,7 @@ npx skills add Truconco2023/HugAILab-meta-skill
 
 它会自己完成：**需求收敛 → 同类检索 → 取长避短 → Skill 设计 → 触发评测 → 格式校验 → README → API 泄露检查 → PR → Release → npx 安装验证**。
 
-**v3.1.0 本地候选已验证：** 46/46 单元测试、34/34 触发评测（18/18 场景族、0 个弱用例）、0 个包校验问题（无 PyYAML 环境同样通过）。公开发布证据以 [Releases](https://github.com/Truconco2023/HugAILab-meta-skill/releases) 为准。
+**v3.2.0 本地候选已验证：** 57/57 单元测试、34/34 触发评测（18/18 场景族、0 个弱用例）、0 个包校验问题（无 PyYAML 环境同样通过）、ruff/mypy 全绿。公开发布证据以 [Releases](https://github.com/Truconco2023/HugAILab-meta-skill/releases) 为准。
 
 ## 这是做什么的
 
@@ -53,6 +53,24 @@ test -f ~/.agents/skills/hugailab-meta-skill/SKILL.md
 python3 ~/.agents/skills/hugailab-meta-skill/scripts/validate_skill.py \
   ~/.agents/skills/hugailab-meta-skill
 ```
+
+## 快速上手（5 分钟）
+
+1. 克隆或安装本 skill 后，用一条命令生成一个新 skill 包：
+
+```bash
+python3 scripts/new_skill.py my-demo --description "把周报整理成要点和待办"
+```
+
+2. 编辑 `my-demo/SKILL.md` 的 `description` 和正文，让触发描述贴合你的真实用法。
+3. 跑一次验证，再按报告补触发用例：
+
+```bash
+python3 scripts/validate_skill.py my-demo
+python3 scripts/trigger_eval.py my-demo --cases my-demo/evals/trigger_cases.json
+```
+
+4. 需要团队复用或公开发布时，用 `--mode production` 重新生成，或直接看仓库内的完整示例：[examples/demo-skill](examples/demo-skill)（示例按规范使用 `SKILL.example.md`，复制为 `SKILL.md` 即可独立使用）。
 
 ## 你可以直接这样说
 
@@ -173,6 +191,23 @@ python3 -m unittest discover -s tests -p 'test_*.py'
 | README 像内部说明书 | 把 `SKILL.md` 直接复制成 README | 重写成价值、安装、说法、输出、风险与排错 |
 | 发布后别人装不上 | 只验证本地目录，没有公开发现和隔离安装 | 完整运行发布器，不把 push 成功当作发布完成 |
 | 发布器拒绝版本 | `vX.Y.Z` 已存在 | 提升版本；已发布版本不可覆盖 |
+
+## FAQ
+
+**Q: 需要安装 PyYAML 吗？**
+A: 不需要。脚本内置纯标准库 YAML 解析器；装了 PyYAML 会优先使用它。
+
+**Q: 触发评测 34/34 通过，代表路由一定准吗？**
+A: 不代表。关键词评测是确定性 smoke gate；真实语义路由可用 `--llm` 模式做 provider-backed 抽样，或人工盲评。
+
+**Q: 这个 skill 会往我发布的包里塞广告或二维码吗？**
+A: 不会。发布器完全品牌中立，已彻底移除 Profile/QR 注入代码；只保留你或团队自己的版权信息。
+
+**Q: 我可以完全去掉 HugAILab 字样吗？**
+A: 可以。它是 fork，MIT 协议允许自由修改；只建议保留 LICENSE 里的上游版权和致谢。
+
+**Q: 发布流程能自动化到什么程度？**
+A: 合并后打 `vX.Y.Z` tag，GitHub Actions 会自动跑单元测试、lint/type、校验、触发/输出评测和 published 门禁（含隔离安装验证）。
 
 ## 研究与致谢
 

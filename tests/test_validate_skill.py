@@ -10,7 +10,6 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location("validate_skill", ROOT / "scripts" / "validate_skill.py")
 if SPEC is None or SPEC.loader is None:  # pragma: no cover
@@ -90,6 +89,25 @@ class DiscoverSkillEntrypointsTest(unittest.TestCase):
             frontmatter = VALIDATE_SKILL.parse_frontmatter(text)
         self.assertEqual(frontmatter["name"], "demo")
         self.assertIn("第一行", frontmatter["description"])
+
+    def test_creator_defaults_warnings_for_name_rules(self) -> None:
+        warnings = VALIDATE_SKILL.creator_defaults_warnings(
+            {"name": "a-b-c", "creator_defaults": {"max_preferred_hyphen_parts": 2}},
+            "some-dir",
+        )
+        self.assertTrue(any("3 hyphen parts" in item for item in warnings))
+        prefix_warnings = VALIDATE_SKILL.creator_defaults_warnings(
+            {"name": "demo", "creator_defaults": {"skill_name_prefix": "hugai-"}},
+            "some-dir",
+        )
+        self.assertTrue(any("skill_name_prefix" in item for item in prefix_warnings))
+        self.assertEqual(
+            VALIDATE_SKILL.creator_defaults_warnings(
+                {"name": "demo", "creator_defaults": {"skill_name_prefix": "hugai-"}},
+                "hugailab-meta-skill",
+            ),
+            [],
+        )
 
 
 if __name__ == "__main__":

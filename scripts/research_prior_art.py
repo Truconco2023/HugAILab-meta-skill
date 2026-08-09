@@ -13,7 +13,6 @@ from pathlib import Path
 from types import SimpleNamespace
 from typing import Any, Callable
 
-
 SCRIPT_DIR = Path(__file__).resolve().parent
 SPEC = importlib.util.spec_from_file_location("qiaomu_search_skillsmp", SCRIPT_DIR / "search_skillsmp.py")
 if SPEC is None or SPEC.loader is None:  # pragma: no cover

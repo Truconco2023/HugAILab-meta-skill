@@ -1,0 +1,7 @@
+interface:
+  display_name: "HugAI Demo"
+  short_description: "把会议纪要做成结构化要点与行动项"
+  default_prompt: "Use $hugai-demo to turn meeting notes into structured decisions, action items, owners, and due dates."
+compatibility:
+  canonical_format: agent-skills
+  adapter_targets: ["openai", "claude", "generic", "agent-skills-compatible"]

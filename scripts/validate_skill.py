@@ -62,6 +62,28 @@ def load_yaml(path: Path) -> dict[str, Any]:
     return payload if isinstance(payload, dict) else {}
 
 
+def creator_defaults_warnings(manifest: dict[str, Any], root_name: str) -> list[str]:
+    warnings: list[str] = []
+    creator_defaults = manifest.get("creator_defaults", {})
+    if not isinstance(creator_defaults, dict):
+        return warnings
+    name = str(manifest.get("name", ""))
+    max_parts = creator_defaults.get("max_preferred_hyphen_parts")
+    if isinstance(max_parts, int) and name:
+        parts = len(name.split("-"))
+        if parts > max_parts:
+            warnings.append(
+                f"skill name has {parts} hyphen parts, exceeding "
+                f"creator_defaults.max_preferred_hyphen_parts ({max_parts})"
+            )
+    prefix = str(creator_defaults.get("skill_name_prefix", "")).strip()
+    if prefix and name and root_name not in META_SKILL_NAMES and not name.startswith(prefix):
+        warnings.append(
+            f"skill name does not start with configured creator_defaults.skill_name_prefix: {prefix}"
+        )
+    return warnings
+
+
 def parse_frontmatter(text: str) -> dict[str, Any]:
     if not text.startswith("---\n"):
         return {}
@@ -248,22 +270,7 @@ def validate(root: Path) -> dict[str, Any]:
             warnings.append(
                 f"SKILL.md exceeds production context budget: {skill_bytes} > {MAX_PRODUCTION_SKILL_BYTES} bytes"
             )
-        creator_defaults = manifest.get("creator_defaults", {})
-        if isinstance(creator_defaults, dict):
-            name = str(manifest.get("name", ""))
-            max_parts = creator_defaults.get("max_preferred_hyphen_parts")
-            if isinstance(max_parts, int) and name:
-                parts = len(name.split("-"))
-                if parts > max_parts:
-                    warnings.append(
-                        f"skill name has {parts} hyphen parts, exceeding "
-                        f"creator_defaults.max_preferred_hyphen_parts ({max_parts})"
-                    )
-            prefix = str(creator_defaults.get("skill_name_prefix", "")).strip()
-            if prefix and name and root.name not in META_SKILL_NAMES and not name.startswith(prefix):
-                warnings.append(
-                    f"skill name does not start with configured creator_defaults.skill_name_prefix: {prefix}"
-                )
+        warnings.extend(creator_defaults_warnings(manifest, root.name))
 
     validate_evidence_reports(root, manifest, failures, warnings)
 

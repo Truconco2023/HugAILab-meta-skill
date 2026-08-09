@@ -15,7 +15,6 @@ from __future__ import annotations
 import re
 from typing import Any
 
-
 SCRIPT_INTERFACE = "internal-module"
 
 _BLOCK_SCALAR_RE = re.compile(r"^[|>][+-]?\d*$")
@@ -42,13 +41,14 @@ def _strip_comment(line: str) -> str:
     return line.rstrip()
 
 
-def _tokenize(text: str) -> list[tuple[int, str]]:
-    tokens: list[tuple[int, str]] = []
+def _tokenize(text: str) -> list[tuple[int | None, str]]:
+    tokens: list[tuple[int | None, str]] = []
     for raw in text.splitlines():
         if "\t" in raw[: len(raw) - len(raw.lstrip(" \t"))]:
             raise YamlSubsetError("tab indentation is not supported")
         stripped = _strip_comment(raw)
         if not stripped.strip():
+            tokens.append((None, ""))
             continue
         indent = len(stripped) - len(stripped.lstrip(" "))
         tokens.append((indent, stripped.lstrip(" ")))
@@ -153,13 +153,20 @@ def _is_block_scalar_marker(value: str) -> bool:
 
 
 def _collect_block_scalar(
-    tokens: list[tuple[int, str]], index: int, parent_indent: int
+    tokens: list[tuple[int | None, str]], index: int, parent_indent: int
 ) -> tuple[list[str], int]:
     collected: list[str] = []
     content_indent: int | None = None
     cursor = index
-    while cursor < len(tokens) and tokens[cursor][0] > parent_indent:
-        indent, content = tokens[cursor]
+    while cursor < len(tokens):
+        indent = tokens[cursor][0]
+        if indent is None:
+            collected.append("")
+            cursor += 1
+            continue
+        if indent <= parent_indent:
+            break
+        content = tokens[cursor][1]
         if content_indent is None:
             content_indent = indent
         collected.append(" " * (indent - content_indent) + content)
@@ -170,7 +177,7 @@ def _collect_block_scalar(
 def _decode_block_scalar(marker: str, lines: list[str]) -> str:
     folded = marker.startswith(">")
     chomping = "-" if "-" in marker else ("+" if "+" in marker else "")
-    text = "\n".join(lines)
+    text = "".join(f"{line}\n" for line in lines)
     if folded:
         paragraphs = re.split(r"\n\s*\n", text)
         text = "\n".join(" ".join(paragraph.split()) for paragraph in paragraphs)
@@ -178,20 +185,27 @@ def _decode_block_scalar(marker: str, lines: list[str]) -> str:
         text = text.rstrip("\n")
     elif chomping == "":
         text = text.rstrip("\n") + "\n"
+    else:
+        if not text.endswith("\n"):
+            text += "\n"
     return text
 
 
 def _parse_mapping(
-    tokens: list[tuple[int, str]], index: int, indent: int
+    tokens: list[tuple[int | None, str]], index: int, indent: int
 ) -> tuple[dict[str, Any], int]:
     result: dict[str, Any] = {}
     cursor = index
     while cursor < len(tokens):
-        current_indent, content = tokens[cursor]
+        current_indent = tokens[cursor][0]
+        if current_indent is None:
+            cursor += 1
+            continue
         if current_indent < indent:
             break
         if current_indent > indent:
-            raise YamlSubsetError(f"unexpected indentation: {content!r}")
+            raise YamlSubsetError(f"unexpected indentation: {tokens[cursor][1]!r}")
+        content = tokens[cursor][1]
         if content.startswith("-"):
             break
         key, rest = _split_key(content)
@@ -199,8 +213,13 @@ def _parse_mapping(
             raise YamlSubsetError(f"expected mapping entry, got: {content!r}")
         cursor += 1
         if rest is None or rest == "":
-            if cursor < len(tokens) and tokens[cursor][0] > indent:
-                child, cursor = _parse_block(tokens, cursor, tokens[cursor][0])
+            if cursor < len(tokens):
+                child_indent = tokens[cursor][0]
+            else:
+                child_indent = None
+            if child_indent is not None and child_indent > indent:
+                assert child_indent is not None
+                child, cursor = _parse_block(tokens, cursor, child_indent)
                 result[key] = child
             else:
                 result[key] = None
@@ -213,19 +232,28 @@ def _parse_mapping(
 
 
 def _parse_sequence(
-    tokens: list[tuple[int, str]], index: int, indent: int
+    tokens: list[tuple[int | None, str]], index: int, indent: int
 ) -> tuple[list[Any], int]:
     result: list[Any] = []
     cursor = index
     while cursor < len(tokens):
-        current_indent, content = tokens[cursor]
+        current_indent = tokens[cursor][0]
+        if current_indent is None:
+            cursor += 1
+            continue
+        content = tokens[cursor][1]
         if current_indent != indent or not content.startswith("-"):
             break
         rest = content[1:].strip()
         cursor += 1
         if not rest:
-            if cursor < len(tokens) and tokens[cursor][0] > indent:
-                child, cursor = _parse_block(tokens, cursor, tokens[cursor][0])
+            if cursor < len(tokens):
+                child_indent = tokens[cursor][0]
+            else:
+                child_indent = None
+            if child_indent is not None and child_indent > indent:
+                assert child_indent is not None
+                child, cursor = _parse_block(tokens, cursor, child_indent)
                 result.append(child)
             else:
                 result.append(None)
@@ -233,8 +261,11 @@ def _parse_sequence(
             raw, cursor = _collect_block_scalar(tokens, cursor, indent)
             result.append(_decode_block_scalar(rest, raw))
         elif _split_key(rest)[0] is not None and not rest.startswith(("[", "'", '"')):
-            inline: list[tuple[int, str]] = [(indent + 1, rest)]
-            while cursor < len(tokens) and tokens[cursor][0] > indent:
+            inline: list[tuple[int | None, str]] = [(indent + 1, rest)]
+            while cursor < len(tokens):
+                child_indent = tokens[cursor][0]
+                if child_indent is None or child_indent <= indent:
+                    break
                 inline.append(tokens[cursor])
                 cursor += 1
             child, _ = _parse_mapping(inline, 0, indent + 1)
@@ -245,7 +276,7 @@ def _parse_sequence(
 
 
 def _parse_block(
-    tokens: list[tuple[int, str]], index: int, indent: int
+    tokens: list[tuple[int | None, str]], index: int, indent: int
 ) -> tuple[Any, int]:
     if index >= len(tokens):
         return None, index
@@ -263,5 +294,12 @@ def safe_load(text: str) -> Any:
     tokens = _tokenize(text)
     if not tokens:
         return None
-    value, _ = _parse_block(tokens, 0, tokens[0][0])
+    start = 0
+    while start < len(tokens) and tokens[start][0] is None:
+        start += 1
+    if start >= len(tokens):
+        return None
+    indent = tokens[start][0]
+    assert indent is not None
+    value, _ = _parse_block(tokens, start, indent)
     return value
