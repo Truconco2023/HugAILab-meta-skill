@@ -82,6 +82,11 @@
           "needle": "llm_judge 断言写法"
         },
         {
+          "kind": "contains",
+          "path": "scripts/new_skill.py",
+          "needle": "BRAND_PREFIX = \"hugailab\""
+        },
+        {
           "kind": "llm_judge",
           "prompt": "hugailab-meta-skill 的 output_eval.py 是否支持 llm_judge 网络重试参数 --retries 与 --retry-backoff，并在 fixture 模式统计 assertions_skipped？只回答 yes 或 no。",
           "must": "yes"
@@ -90,9 +95,14 @@
           "kind": "llm_judge",
           "prompt": "references/output-eval-method.md 是否包含 llm_judge 断言写法一节，且建议自包含提示词、避免逐字比对式表述？只回答 yes 或 no。",
           "must": "yes"
+        },
+        {
+          "kind": "llm_judge",
+          "prompt": "new_skill.py 是否默认把新 skill 名规范化为 hugailab- 前缀（BRAND_PREFIX）且前缀后最多 5 段？只回答 yes 或 no。",
+          "must": "yes"
         }
       ],
-      "human_notes": "v3.3.0 自证：新能力以 provider-backed 证据落地。"
+      "human_notes": "v3.4.0 自证：命名规则 + 新能力以 provider-backed 证据落地。"
     }
   ]
 }

@@ -18,15 +18,21 @@ from datetime import date
 from pathlib import Path
 
 SCRIPT_DIR = Path(__file__).resolve().parent
+BRAND_PREFIX = "hugailab"
 
 
 def validate_name(name: str) -> str:
-    name = name.strip().lower()
-    if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)*", name):
-        raise SystemExit(f"invalid skill name: {name!r} (use lowercase letters, digits and hyphens)")
-    if name in {"skill", "skills", "meta"}:
-        raise SystemExit(f"reserved skill name: {name!r}")
-    return name
+    raw = name.strip().lower()
+    if raw in {"skill", "skills", "meta"}:
+        raise SystemExit(f"reserved skill name: {raw!r}")
+    core = raw[len(BRAND_PREFIX) + 1 :] if raw.startswith(f"{BRAND_PREFIX}-") else raw
+    if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+){0,4}", core):
+        raise SystemExit(
+            f"invalid skill name: {name!r} "
+            f"(HugAILab default is {BRAND_PREFIX}-<word> or {BRAND_PREFIX}-<a>-<b>; "
+            "lowercase letters, digits and at most 5 segments after the prefix)"
+        )
+    return raw if raw.startswith(f"{BRAND_PREFIX}-") else f"{BRAND_PREFIX}-{core}"
 
 
 def frontmatter(name: str, description: str) -> str:
@@ -162,7 +168,18 @@ def main() -> None:
         text=True,
         check=False,
     )
-    print(json.dumps({"created": str(target), "files": len(files), "mode": args.mode, "validation_ok": validation.returncode == 0}, indent=2))
+    print(
+        json.dumps(
+            {
+                "name": name,
+                "created": str(target),
+                "files": len(files),
+                "mode": args.mode,
+                "validation_ok": validation.returncode == 0,
+            },
+            indent=2,
+        )
+    )
     if validation.returncode != 0:
         print(validation.stdout, file=sys.stderr)
         raise SystemExit(2)
