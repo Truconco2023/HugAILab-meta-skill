@@ -1,11 +1,14 @@
 {
   "ok": true,
   "evidence_kind": "recorded_fixture",
-  "generated_at": "2026-08-09",
+  "generated_at": "2026-08-10",
   "tool": "output_eval.py",
   "summary": {
     "cases_total": 2,
     "cases_passed": 2,
+    "assertions_total": 9,
+    "assertions_executed": 9,
+    "assertions_skipped": 0,
     "with_skill_assertion_pass_rate": 1.0,
     "baseline_passed_total": 0,
     "provider_used": false
@@ -19,6 +22,7 @@
       "prompt": "把这个流程整理成一个可复用的 skill",
       "assertions_total": 5,
       "assertions_passed": 5,
+      "assertions_skipped": 0,
       "baseline_passed": 0,
       "baseline_detail": "baseline produced no package artifacts; scoring 0 for file-backed assertions",
       "human_notes": "真实使用时还应人工确认 description 的触发边界与产出结构。",
@@ -75,6 +79,7 @@
       "prompt": "审计这个 skill 的路由与输出评估，只给建议，先不要改文件",
       "assertions_total": 4,
       "assertions_passed": 4,
+      "assertions_skipped": 0,
       "baseline_passed": 0,
       "baseline_detail": "baseline produced no package artifacts; scoring 0 for file-backed assertions",
       "human_notes": "审计型请求应验证未产生文件改动；当前以只读断言近似。",

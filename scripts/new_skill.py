@@ -41,7 +41,8 @@ def frontmatter(name: str, description: str) -> str:
 
 def write_files(root: Path, name: str, description: str, owner: str, production: bool) -> list[Path]:
     version = "0.1.0"
-    skill_description = f"{description}；作为可复用的 skill 交付可验证结果"
+    tail = "" if ("skill" in description.lower() or "技能" in description) else "；作为可复用的 agent skill 交付"
+    skill_description = description + tail
     root.mkdir(parents=True, exist_ok=True)
     (root / "SKILL.md").write_text(
         frontmatter(name, skill_description)

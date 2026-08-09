@@ -207,12 +207,28 @@ def research(
 
 
 def summary_view(result: dict[str, Any]) -> dict[str, Any]:
+    rows: list[dict[str, Any]] = []
+    for candidate in result.get("candidates", []):
+        sh = candidate.get("skills_sh") or {}
+        mp = candidate.get("skillsmp") or {}
+        rows.append(
+            {
+                "family": candidate.get("family_key"),
+                "catalogs": candidate.get("catalogs", []),
+                "skills_sh_installs": sh.get("skills_sh_installs_display"),
+                "skills_sh_url": sh.get("skills_sh_url"),
+                "skillsmp_url": mp.get("skillsmp_url"),
+                "skillsmp_stars": mp.get("skillsmp_stars"),
+                "requires_source_review": candidate.get("requires_source_review", True),
+            }
+        )
     return {
         "ok": result["ok"],
         "complete": result["complete"],
         "researched_at": result["researched_at"],
         "queries": result["queries"],
         "candidate_family_count": result["candidate_family_count"],
+        "candidates": rows,
         "query_runs": result["query_runs"],
         "missing_evidence": result["missing_evidence"],
         "full_output": "written to --output" if result.get("_has_output") else "use --output to preserve candidates",

@@ -2,9 +2,20 @@
 
 ## Result
 
-- Skill: `hugailab-meta-skill` 3.2.0（fork：`Truconco2023/HugAILab-meta-skill`）
+- Skill: `hugailab-meta-skill` 3.3.0（fork：`Truconco2023/HugAILab-meta-skill`）
 - Job: research, create, evaluate, package, govern, and safely publish reusable agent skills through one self-contained workflow
 - Status: v3.1.0 已发布并通过 published 门禁；v3.2.0 为新一轮质量/易用性升级，本地验证通过后待推送合并与发布。
+
+## v3.3.0 升级内容（2026-08-10）
+
+基于 obsidian-clip v0.3.0 与 macos-security-audit v0.1.0 两个真实陪跑实例的实战反馈：
+
+- `output_eval.py`：llm_judge 网络调用重试（`--retries` / `--retry-backoff`）；fixture 模式新增 `assertions_skipped` 计数，pass rate 只按已执行断言计算。
+- `new_skill.py`：description 模板尾巴改为条件追加（仅当描述未含 skill/技能 时补最小尾巴），消除重复与标点噪音，同时保住 production 模式触发评测。
+- `research_prior_art.py`：`--summary` 输出扁平化候选清单（family/catalogs/installs/url），消费成本降低。
+- `references/output-eval-method.md`：新增 llm_judge 断言写法实战指引（自包含提示词、避免逐字比对、摘要忠实度问法、输出协议、重试建议）。
+- `references/publishing.md`：补充受限网络下 `gh auth status` 误报说明与发布前联网核验建议。
+- 回归：58/58 单元测试（新增 fixture skipped 语义测试、summary 扁平化测试）。
 
 ## v3.2.0 升级内容
 

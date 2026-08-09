@@ -68,6 +68,11 @@ Useful target controls:
 - Existing releases are immutable. Publishing new content under the same version is blocked.
 - Canonical local sync skips an already-canonical source. Replacing another installed copy first moves it to `~/.agents/skill-backups`, outside recursive Skill discovery.
 
+## Network caveat
+
+- `gh auth status`、`gh api` 与 `npx skills` 都需要真实网络。在受限沙箱/代理环境里，有效 token 可能被误报为 `invalid`，`npx` 可能超时。
+- 发布前请联网执行 `gh auth status` 与 `gh repo view <owner>/<repo>` 确认认证与仓库状态，再相信发布器输出。
+
 ## Evidence boundary
 
 The publisher proves package gates, Git/PR/Release state, discovery and installation. It does not prove the created Skill's domain output quality, user satisfaction, adoption or business outcome. Preserve those as separate output/runtime/human evidence or `missing evidence`.

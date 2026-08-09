@@ -22,6 +22,7 @@ import argparse
 import json
 import os
 import random
+import time
 import urllib.request
 from datetime import date
 from pathlib import Path
@@ -64,7 +65,13 @@ def run_assertion(root: Path, assertion: dict[str, Any]) -> tuple[bool, str]:
     return True, "llm_judge deferred to provider pass"
 
 
-def llm_judge(assertion: dict[str, Any], model: str) -> tuple[bool, str]:
+def llm_judge(
+    assertion: dict[str, Any],
+    model: str,
+    *,
+    retries: int = 2,
+    retry_backoff: float = 1.0,
+) -> tuple[bool, str]:
     api_key = os.environ.get("OPENAI_API_KEY", "").strip()
     if not api_key:
         raise RuntimeError("OPENAI_API_KEY is required for --llm-assert")
@@ -91,23 +98,43 @@ def llm_judge(assertion: dict[str, Any], model: str) -> tuple[bool, str]:
         },
         method="POST",
     )
-    with urllib.request.urlopen(request, timeout=60) as response:
-        body = json.loads(response.read().decode("utf-8"))
-    answer = str(body["choices"][0]["message"]["content"]).strip().lower()
-    return answer == must, f"llm answered {answer!r}, expected {must!r}"
+    last_error: Exception | None = None
+    for attempt in range(retries + 1):
+        try:
+            with urllib.request.urlopen(request, timeout=60) as response:
+                body = json.loads(response.read().decode("utf-8"))
+            answer = str(body["choices"][0]["message"]["content"]).strip().lower()
+            return answer == must, f"llm answered {answer!r}, expected {must!r}"
+        except (OSError, TimeoutError) as exc:
+            last_error = exc
+            if attempt < retries:
+                time.sleep(retry_backoff * (attempt + 1))
+    raise RuntimeError(f"llm_judge failed after {retries + 1} attempts: {last_error}")
 
 
-def evaluate_case(root: Path, case: dict[str, Any], model: str, use_llm: bool) -> dict[str, Any]:
+def evaluate_case(
+    root: Path,
+    case: dict[str, Any],
+    model: str,
+    use_llm: bool,
+    *,
+    retries: int = 2,
+    retry_backoff: float = 1.0,
+) -> dict[str, Any]:
     assertions = list(case.get("assertions", []))
     results: list[dict[str, Any]] = []
     passed = 0
+    skipped = 0
     provider_used = False
     for assertion in assertions:
         if assertion.get("kind") == "llm_judge":
             if not use_llm:
-                results.append({"assertion": assertion, "passed": True, "detail": "llm_judge skipped (fixture mode)"})
+                results.append(
+                    {"assertion": assertion, "passed": True, "skipped": True, "detail": "llm_judge skipped (fixture mode)"}
+                )
+                skipped += 1
                 continue
-            ok, detail = llm_judge(assertion, model)
+            ok, detail = llm_judge(assertion, model, retries=retries, retry_backoff=retry_backoff)
             provider_used = True
         else:
             ok, detail = run_assertion(root, assertion)
@@ -121,6 +148,7 @@ def evaluate_case(root: Path, case: dict[str, Any], model: str, use_llm: bool) -
         "prompt": case.get("prompt", ""),
         "assertions_total": len(assertions),
         "assertions_passed": passed,
+        "assertions_skipped": skipped,
         "baseline_passed": baseline_pass,
         "baseline_detail": baseline_detail,
         "human_notes": case.get("human_notes", ""),
@@ -184,10 +212,16 @@ def evaluate(
     *,
     use_llm: bool = False,
     model: str = "gpt-4o-mini",
+    retries: int = 2,
+    retry_backoff: float = 1.0,
 ) -> dict[str, Any]:
     payload = load_json(cases_path)
     cases = payload.get("cases", [])
-    results = [evaluate_case(root, case, model, use_llm) for case in cases if isinstance(case, dict)]
+    results = [
+        evaluate_case(root, case, model, use_llm, retries=retries, retry_backoff=retry_backoff)
+        for case in cases
+        if isinstance(case, dict)
+    ]
     passed_cases = sum(1 for item in results if item["assertions_passed"] == item["assertions_total"])
     provider_used = any(item["provider_used"] for item in results)
     evidence_kind = "provider_backed" if use_llm and provider_used else "recorded_fixture"
@@ -197,6 +231,10 @@ def evaluate(
     if not results:
         missing_evidence.append("no output cases configured")
     ok = bool(results) and passed_cases == len(results)
+    assertions_total = sum(item["assertions_total"] for item in results)
+    assertions_skipped = sum(item["assertions_skipped"] for item in results)
+    assertions_executed = assertions_total - assertions_skipped
+    assertions_passed = sum(item["assertions_passed"] for item in results)
     return {
         "ok": ok,
         "evidence_kind": evidence_kind,
@@ -205,9 +243,11 @@ def evaluate(
         "summary": {
             "cases_total": len(results),
             "cases_passed": passed_cases,
+            "assertions_total": assertions_total,
+            "assertions_executed": assertions_executed,
+            "assertions_skipped": assertions_skipped,
             "with_skill_assertion_pass_rate": round(
-                sum(item["assertions_passed"] for item in results)
-                / max(1, sum(item["assertions_total"] for item in results)),
+                assertions_passed / max(1, assertions_executed),
                 3,
             ),
             "baseline_passed_total": sum(item["baseline_passed"] for item in results),
@@ -225,6 +265,8 @@ def main() -> None:
     parser.add_argument("--output", "-o", help="Write JSON report to this path.")
     parser.add_argument("--llm-assert", action="store_true", help="Run llm_judge assertions via OpenAI-compatible API.")
     parser.add_argument("--model", default="gpt-4o-mini", help="Model for llm_judge assertions.")
+    parser.add_argument("--retries", type=int, default=2, help="Retries per llm_judge call on network failure.")
+    parser.add_argument("--retry-backoff", type=float, default=1.0, help="Base backoff seconds between retries.")
     parser.add_argument("--blind-pack", metavar="DIR", help="Generate blind A/B review artifacts into DIR.")
     args = parser.parse_args()
 
@@ -237,7 +279,14 @@ def main() -> None:
         files = build_blind_pack(root, [c for c in payload.get("cases", []) if isinstance(c, dict)], Path(args.blind_pack))
         print(json.dumps({"created": files}, ensure_ascii=False, indent=2))
         return
-    result = evaluate(root, cases_path, use_llm=args.llm_assert, model=args.model)
+    result = evaluate(
+        root,
+        cases_path,
+        use_llm=args.llm_assert,
+        model=args.model,
+        retries=args.retries,
+        retry_backoff=args.retry_backoff,
+    )
     rendered = json.dumps(result, ensure_ascii=False, indent=2)
     if args.output:
         output = Path(args.output)

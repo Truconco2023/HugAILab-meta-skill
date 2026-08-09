@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.3.0 (2026-08-10)
+
+- `output_eval.py`：`llm_judge` 网络调用支持重试（`--retries` / `--retry-backoff`），单次 connection reset 不再中断整轮评测；fixture 模式明确统计 `assertions_skipped`，pass rate 只按已执行断言计算。
+- `new_skill.py`：去掉 description 模板尾巴「；作为可复用的 skill 交付可验证结果」，用户描述原样进入 SKILL.md / interface / README，避免重复与标点噪音。
+- `research_prior_art.py`：`--summary` 输出扁平化候选清单（family / catalogs / installs / stars / url），降低消费成本。
+- `references/output-eval-method.md`：新增 llm_judge 断言写法实战指引（自包含提示词、避免逐字比对、摘要忠实度问法、输出协议、重试建议）。
+- `references/publishing.md`：补充受限网络下 `gh auth status` 误报说明与发布前联网核验建议。
+
 ## 3.2.0 (2026-08-09)
 
 - 新增 `scripts/output_eval.py`：输出级评测（recorded fixture / provider-backed LLM 断言 / 盲评包生成），配套 `evals/output_cases.json` 与 `reports/output-eval.json`。

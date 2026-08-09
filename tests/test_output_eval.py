@@ -45,6 +45,33 @@ class OutputEvalTest(unittest.TestCase):
             with self.assertRaises(RuntimeError):
                 EVAL.llm_judge({"kind": "llm_judge", "prompt": "ok?", "must": "yes"}, "gpt-4o-mini")
 
+    def test_fixture_mode_counts_skipped_llm_judges(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            (root / "SKILL.md").write_text("demo\n", encoding="utf-8")
+            cases = {
+                "cases": [
+                    {
+                        "id": "a",
+                        "prompt": "p",
+                        "baseline_output": "b",
+                        "with_skill_output": "w",
+                        "assertions": [
+                            {"kind": "file_exists", "path": "SKILL.md"},
+                            {"kind": "llm_judge", "prompt": "q?", "must": "yes"},
+                        ],
+                    }
+                ]
+            }
+            cases_path = root / "cases.json"
+            cases_path.write_text(json.dumps(cases), encoding="utf-8")
+            result = EVAL.evaluate(root, cases_path)
+            self.assertFalse(result["ok"])
+            self.assertEqual(result["summary"]["assertions_total"], 2)
+            self.assertEqual(result["summary"]["assertions_executed"], 1)
+            self.assertEqual(result["summary"]["assertions_skipped"], 1)
+            self.assertEqual(result["summary"]["with_skill_assertion_pass_rate"], 1.0)
+
     def test_blind_pack_creates_three_artifacts(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)

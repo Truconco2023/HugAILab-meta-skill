@@ -80,7 +80,7 @@ class ResearchPriorArtTest(unittest.TestCase):
         result = RESEARCH.research(args(strict=True), skills_sh, skillsmp)
         self.assertFalse(result["ok"])
 
-    def test_summary_omits_candidate_payload(self) -> None:
+    def test_summary_includes_flattened_candidate_payload(self) -> None:
         result = {
             "ok": True,
             "complete": True,
@@ -89,10 +89,23 @@ class ResearchPriorArtTest(unittest.TestCase):
             "candidate_family_count": 1,
             "query_runs": [],
             "missing_evidence": [],
-            "candidates": [{"large": "payload"}],
+            "candidates": [
+                {
+                    "family_key": "owner/repo:seo",
+                    "catalogs": ["skills.sh"],
+                    "skills_sh": {"skills_sh_installs_display": "1.2K", "skills_sh_url": "https://skills.sh/x"},
+                    "skillsmp": None,
+                    "requires_source_review": True,
+                }
+            ],
         }
         summary = RESEARCH.summary_view(result)
-        self.assertNotIn("candidates", summary)
+        self.assertIn("candidates", summary)
+        self.assertEqual(len(summary["candidates"]), 1)
+        row = summary["candidates"][0]
+        self.assertEqual(row["family"], "owner/repo:seo")
+        self.assertEqual(row["skills_sh_installs"], "1.2K")
+        self.assertNotIn("large", row)
         self.assertEqual(summary["candidate_family_count"], 1)
 
 
