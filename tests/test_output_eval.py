@@ -21,10 +21,11 @@ SPEC.loader.exec_module(EVAL)
 class OutputEvalTest(unittest.TestCase):
     def test_real_package_passes_recorded_fixture_mode(self) -> None:
         result = EVAL.evaluate(ROOT, ROOT / "evals" / "output_cases.json")
-        self.assertTrue(result["ok"], result["results"])
+        self.assertFalse(result["ok"])
         self.assertEqual(result["evidence_kind"], "recorded_fixture")
         self.assertTrue(result["missing_evidence"])
         self.assertEqual(result["summary"]["cases_passed"], 2)
+        self.assertEqual(result["summary"]["assertions_skipped"], 2)
 
     def test_deterministic_assertions_on_temp_files(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
