@@ -25,7 +25,7 @@ class OutputEvalTest(unittest.TestCase):
         self.assertEqual(result["evidence_kind"], "recorded_fixture")
         self.assertTrue(result["missing_evidence"])
         self.assertEqual(result["summary"]["cases_passed"], 2)
-        self.assertEqual(result["summary"]["assertions_skipped"], 3)
+        self.assertEqual(result["summary"]["assertions_skipped"], 4)
 
     def test_deterministic_assertions_on_temp_files(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
@@ -72,6 +72,12 @@ class OutputEvalTest(unittest.TestCase):
             self.assertEqual(result["summary"]["assertions_executed"], 1)
             self.assertEqual(result["summary"]["assertions_skipped"], 1)
             self.assertEqual(result["summary"]["with_skill_assertion_pass_rate"], 1.0)
+
+    def test_normalize_llm_answer_handles_lists_and_extra_words(self) -> None:
+        self.assertEqual(EVAL.normalize_llm_answer("yes"), "yes")
+        self.assertEqual(EVAL.normalize_llm_answer("yes, yes, yes"), "yes")
+        self.assertEqual(EVAL.normalize_llm_answer("No, because..."), "no")
+        self.assertIsNone(EVAL.normalize_llm_answer("maybe"))
 
     def test_blind_pack_creates_three_artifacts(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

@@ -87,6 +87,21 @@
           "needle": "BRAND_PREFIX = \"hugailab\""
         },
         {
+          "kind": "contains",
+          "path": "scripts/publish_skill.py",
+          "needle": "wait_for_pr_checks"
+        },
+        {
+          "kind": "contains",
+          "path": "scripts/validate_skill.py",
+          "needle": "scan_dangerous_patterns"
+        },
+        {
+          "kind": "contains",
+          "path": "scripts/release_check.py",
+          "needle": "skill_pattern_scan"
+        },
+        {
           "kind": "llm_judge",
           "prompt": "hugailab-meta-skill 的 output_eval.py 是否支持 llm_judge 网络重试参数 --retries 与 --retry-backoff，并在 fixture 模式统计 assertions_skipped？只回答 yes 或 no。",
           "must": "yes"
@@ -100,9 +115,14 @@
           "kind": "llm_judge",
           "prompt": "new_skill.py 是否默认把新 skill 名规范化为 hugailab- 前缀（BRAND_PREFIX）且前缀后最多 5 段？只回答 yes 或 no。",
           "must": "yes"
+        },
+        {
+          "kind": "llm_judge",
+          "prompt": "hugailab-meta-skill 是否同时具备 PR 后自动等待状态检查、validate 内置危险模式扫描、release_check 含 skill_pattern_scan 门禁这三项能力？只回答一个词 yes 或 no。",
+          "must": "yes"
         }
       ],
-      "human_notes": "v3.4.0 自证：命名规则 + 新能力以 provider-backed 证据落地。"
+      "human_notes": "v3.5.0 自证：命名规则 + CI 等待 + 危险模式扫描 + 引用检查以 provider-backed 证据落地。"
     }
   ]
 }

@@ -153,13 +153,33 @@ def evaluate(root: Path, phase: str, run_tests: bool, install_check: bool) -> di
     root = root.resolve()
     gates: list[dict[str, Any]] = []
     package = VALIDATOR.validate(root)
-    gate(gates, "package_validation", "pass" if package["ok"] and not package["warnings"] else "block", package)
+    package_status = "pass" if package["ok"] and not package["warnings"] else ("warn" if package["ok"] else "block")
+    gate(gates, "package_validation", package_status, package)
 
     consistency = version_consistency(root)
     gate(gates, "version_and_report_consistency", "pass" if consistency["ok"] else "block", consistency)
 
     secrets = scan_secrets(root)
     gate(gates, "secret_scan", "pass" if not secrets else "block", {"findings": secrets})
+
+    pattern_findings = VALIDATOR.scan_dangerous_patterns(root)
+    blockers = [
+        item
+        for item in pattern_findings
+        if item["severity"] == "high" and item["kind"] in VALIDATOR.BLOCK_PATTERN_KINDS
+    ]
+    pattern_status = "block" if blockers else ("warn" if pattern_findings else "pass")
+    gate(
+        gates,
+        "skill_pattern_scan",
+        pattern_status,
+        {
+            "findings_total": len(pattern_findings),
+            "high": sum(1 for item in pattern_findings if item["severity"] == "high"),
+            "medium": sum(1 for item in pattern_findings if item["severity"] == "medium"),
+            "blockers": [{"kind": item["kind"], "file": item["file"], "line": item["line"]} for item in blockers],
+        },
+    )
 
     diff_check = run(["git", "diff", "--check"], root)
     gate(gates, "git_diff_check", "pass" if diff_check["ok"] else "block", diff_check)

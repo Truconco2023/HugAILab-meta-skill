@@ -3,7 +3,7 @@
   "generated_at": "2026-08-10",
   "package": {
     "name": "hugailab-meta-skill",
-    "version": "3.4.0",
+    "version": "3.5.0",
     "owner": "HugAILab",
     "maturity_tier": "governed",
     "lifecycle_stage": "library",
@@ -101,7 +101,7 @@
       "`Scaffold`: valid frontmatter, useful README hook, natural triggers, explicit exclusions.",
       "`Production`: Scaffold plus interface, trigger eval, output contract, troubleshooting, root isolation, and install verification.",
       "`Library`: Production plus Skill IR, portability, trust, review cadence, and evidence artifacts.",
-      "`Governed`: Library plus permission/rollback boundary, secret scan, output or integrity-preserving human evidence, and public-claim guard."
+      "`Governed`: Library plus permission/rollback boundary, secret scan, dangerous-pattern scan (`skill_pattern_scan`), output or integrity-preserving human evidence, and public-claim guard."
     ],
     "output_contract": [
       "working skill directory and trigger-aware root `SKILL.md`",
@@ -162,6 +162,7 @@
       "reports/output-eval.json",
       "reports/output-evidence.json",
       "reports/prior-art-research.md",
+      "reports/scorecard.md",
       "reports/skill-ir.json",
       "reports/skillsmp-integration-2026-08-03.md",
       "reports/trigger-eval.json",

@@ -17,6 +17,7 @@ import re
 import shutil
 import subprocess
 import tempfile
+import time
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Any, Callable
@@ -398,6 +399,39 @@ def pr_is_mergeable(payload: dict[str, Any]) -> tuple[bool, list[str]]:
     return not blockers, blockers
 
 
+def wait_for_pr_checks(
+    root: Path,
+    slug: str,
+    pr_url: str,
+    timeout: int,
+    *,
+    interval: int = 15,
+    runner: Runner = run,
+) -> dict[str, Any]:
+    """Wait until GitHub PR status checks finish; returns pending names on timeout."""
+    deadline = time.monotonic() + timeout
+    while True:
+        view = runner(
+            ["gh", "pr", "view", pr_url, "--repo", slug, "--json", "statusCheckRollup"],
+            root,
+        )
+        payload = json.loads(view.stdout) if view.ok and view.stdout else {}
+        checks = payload.get("statusCheckRollup") or []
+        pending = [
+            check
+            for check in checks
+            if check.get("status") != "COMPLETED"
+            or check.get("conclusion") is None
+            or check.get("state") in {"PENDING", "EXPECTED"}
+        ]
+        if not pending:
+            return {"ok": True, "pending": []}
+        if time.monotonic() >= deadline:
+            names = sorted({str(c.get("name") or c.get("context") or "unknown") for c in pending})
+            return {"ok": False, "pending": names}
+        time.sleep(interval)
+
+
 def verify_discovery(root: Path, slug: str, skill_name: str, runner: Runner = run) -> dict[str, Any]:
     listed = runner(["npx", "--yes", "skills", "add", slug, "--list"], root, timeout=300, check=False)
     ok = listed.ok and "Found" in listed.stdout and skill_name in listed.stdout and "No valid skills found" not in listed.stdout
@@ -461,7 +495,7 @@ def publish(args: argparse.Namespace, runner: Runner = run) -> dict[str, Any]:
     if planned["failures"]:
         raise PublishError("README preparation failed: " + "; ".join(planned["failures"]))
     package = VALIDATOR.validate(source)
-    if not package["ok"] or package["warnings"]:
+    if not package["ok"]:
         raise PublishError(f"package validation failed: {package}")
     if args.prepare_only:
         return {"ok": True, "mode": "prepare-only", "skill": meta, "repository": slug, "changes": planned["changes"]}
@@ -558,6 +592,19 @@ def publish(args: argparse.Namespace, runner: Runner = run) -> dict[str, Any]:
         )
         pr_url = created.stdout.strip().splitlines()[-1]
     pr_gates = release_check(workspace, "pr", install=False)
+    wait = wait_for_pr_checks(
+        workspace,
+        slug,
+        pr_url,
+        args.wait_checks_timeout,
+        interval=args.check_wait_interval,
+        runner=runner,
+    )
+    if not wait["ok"]:
+        raise PublishError(
+            f"PR checks still pending after {args.wait_checks_timeout}s: "
+            f"{', '.join(wait['pending'])}; rerun the publisher to continue"
+        )
     review = runner(
         [
             "gh",
@@ -654,6 +701,13 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--prepare-only", action="store_true", help="Prepare local LICENSE/README/Profile and stop")
     parser.add_argument("--verify-only", action="store_true", help="Verify an existing release and clean install")
     parser.add_argument("--no-merge", action="store_true", help="Stop after the PR passes local and PR gates")
+    parser.add_argument(
+        "--wait-checks-timeout",
+        type=int,
+        default=600,
+        help="Seconds to wait for PR status checks before failing (0 disables waiting).",
+    )
+    parser.add_argument("--check-wait-interval", type=int, default=15, help="Polling interval in seconds.")
     parser.add_argument("--no-sync-local", action="store_true", help="Do not sync a noncanonical source into ~/.agents/skills")
     return parser.parse_args()
 

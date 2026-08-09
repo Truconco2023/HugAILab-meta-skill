@@ -32,6 +32,32 @@ FORBIDDEN_DISCOVERY_DEPENDENCIES = (
 )
 EVIDENCE_TIERS = {"production", "library", "governed"}
 MAX_PRODUCTION_SKILL_BYTES = 14_000
+MAX_SKILL_MD_CHARS = 15_000
+MAX_REFERENCES_CHARS = 100_000
+PATTERN_SCAN_SUFFIXES = {".md", ".json", ".yaml", ".yml", ".py", ".sh", ".js", ".ts", ".toml"}
+PATTERN_IGNORED_PARTS = {".git", "__pycache__", ".DS_Store", "node_modules", "dist", "tests", "evals", "reports"}
+SCRIPT_SUFFIXES = {".py", ".sh", ".js", ".ts"}
+BLOCK_PATTERN_KINDS = {"download_exec", "dynamic_exec", "persistence", "destructive", "prompt_injection"}
+DANGEROUS_PATTERNS = (
+    ("download_exec", re.compile(r"curl\s+[^\n|;]*\|\s*(?:ba|z)?sh", re.I)),
+    ("download_exec", re.compile(r"wget\s+[^\n|;]*\|\s*(?:ba|z)?sh", re.I)),
+    ("download_exec", re.compile(r"base64\s*-d[^\n|;]*\|\s*(?:ba|z)?sh", re.I)),
+    ("dynamic_exec", re.compile(r"\b(?:eval|exec)\s*\(", re.I)),
+    ("dynamic_exec", re.compile(r"os\.system\s*\(", re.I)),
+    ("dynamic_exec", re.compile(r"subprocess\.[A-Za-z]+\s*\([^)]*shell\s*=\s*True", re.I)),
+    ("credential_access", re.compile(r"(?:id_rsa|id_ed25519|\.aws/credentials|\.ssh/|\.claude\.json|security\s+find-generic-password)", re.I)),
+    ("credential_access", re.compile(r"\b(?:OPENAI_API_KEY|ANTHROPIC_API_KEY|GITHUB_TOKEN|GH_TOKEN|OPENROUTER_API_KEY|DEEPSEEK_API_KEY)\b", re.I)),
+    ("network_exfil", re.compile(r"https?://[^\s\"']+", re.I)),
+    ("destructive", re.compile(r"\brm\s+-rf\b|shutil\.rmtree|os\.remove\s*\(", re.I)),
+    ("persistence", re.compile(
+        r"(?:launchctl\s+load|crontab\s+[a-z]|write_text\([^)]*\.plist|/Library/Launch(?:Daemons|Agents)/)",
+        re.I,
+    )),
+    ("prompt_injection", re.compile(
+        r"ignore\s+(?:all\s+)?(?:previous\s+)?instructions|"
+        r"忽略\s+(?:之前|所有).{0,6}(?:指令|约束)|"
+        r"绕过\s*(?:安全|审查)|disable\s+(?:safety|guardrails?)", re.I)),
+)
 
 
 def read_text(path: Path) -> str:
@@ -99,6 +125,75 @@ def parse_frontmatter(text: str) -> dict[str, Any]:
 
 def markdown_links(text: str) -> list[str]:
     return re.findall(r"\]\(([^)]+\.md)\)", text)
+
+
+def scan_dangerous_patterns(root: Path) -> list[dict[str, Any]]:
+    """Heuristic dangerous-pattern scan over runtime files (tests/evals/reports excluded)."""
+    findings: list[dict[str, Any]] = []
+    for path in root.rglob("*"):
+        if not path.is_file() or path.suffix.lower() not in PATTERN_SCAN_SUFFIXES:
+            continue
+        relative = path.relative_to(root)
+        if any(part in PATTERN_IGNORED_PARTS for part in relative.parts):
+            continue
+        try:
+            lines = read_text(path).splitlines()
+        except (UnicodeDecodeError, OSError):
+            continue
+        for line_number, line in enumerate(lines, 1):
+            for kind, pattern in DANGEROUS_PATTERNS:
+                if not pattern.search(line):
+                    continue
+                if path.suffix.lower() in SCRIPT_SUFFIXES:
+                    severity = "high" if kind in BLOCK_PATTERN_KINDS else "medium"
+                else:
+                    severity = (
+                        "medium"
+                        if kind in {"download_exec", "dynamic_exec", "credential_access", "persistence"}
+                        else "info"
+                    )
+                if kind == "credential_access" and (
+                    "OPENAI_API_KEY" in line or "ANTHROPIC_API_KEY" in line or "GITHUB_TOKEN" in line
+                ):
+                    if "environ" not in line and "getenv" not in line:
+                        severity = "info"
+                findings.append(
+                    {
+                        "file": str(relative),
+                        "line": line_number,
+                        "kind": kind,
+                        "severity": severity,
+                        "detail": line.strip()[:160],
+                    }
+                )
+    return findings
+
+
+def referenced_script_warnings(root: Path) -> list[str]:
+    warnings: list[str] = []
+    for doc_name in ("SKILL.md", "README.md"):
+        path = root / doc_name
+        if not path.is_file():
+            continue
+        for ref in re.findall(r"scripts/[\w./-]+\.(?:py|sh)", read_text(path)):
+            if not (root / ref).is_file():
+                warnings.append(f"{doc_name} references missing script: {ref}")
+    return warnings
+
+
+def context_budget_warnings(root: Path) -> list[str]:
+    warnings: list[str] = []
+    skill_md = root / "SKILL.md"
+    if skill_md.is_file():
+        chars = len(read_text(skill_md))
+        if chars > MAX_SKILL_MD_CHARS:
+            warnings.append(f"SKILL.md context budget: {chars} chars > {MAX_SKILL_MD_CHARS}")
+    references = root / "references"
+    if references.is_dir():
+        total = sum(len(read_text(p)) for p in references.glob("*.md"))
+        if total > MAX_REFERENCES_CHARS:
+            warnings.append(f"references context budget: {total} chars > {MAX_REFERENCES_CHARS}")
+    return warnings
 
 
 def discover_skill_entrypoints(root: Path) -> list[Path]:
@@ -274,6 +369,17 @@ def validate(root: Path) -> dict[str, Any]:
 
     validate_evidence_reports(root, manifest, failures, warnings)
 
+    pattern_findings = scan_dangerous_patterns(root)
+    high = sum(1 for item in pattern_findings if item["severity"] == "high")
+    medium = sum(1 for item in pattern_findings if item["severity"] == "medium")
+    if pattern_findings:
+        warnings.append(
+            f"pattern scan: {high} high / {medium} medium review signals; "
+            "blocking kinds are download_exec/dynamic_exec/persistence/destructive/prompt_injection"
+        )
+    warnings.extend(referenced_script_warnings(root))
+    warnings.extend(context_budget_warnings(root))
+
     cases_path = root / "evals" / "trigger_cases.json"
     if cases_path.exists():
         try:
@@ -299,6 +405,7 @@ def validate(root: Path) -> dict[str, Any]:
         "root": str(root),
         "failures": failures,
         "warnings": warnings,
+        "pattern_findings": pattern_findings,
     }
 
 
