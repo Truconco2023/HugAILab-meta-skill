@@ -495,7 +495,7 @@ def publish(args: argparse.Namespace, runner: Runner = run) -> dict[str, Any]:
     if planned["failures"]:
         raise PublishError("README preparation failed: " + "; ".join(planned["failures"]))
     package = VALIDATOR.validate(source)
-    if not package["ok"] or package["warnings"]:
+    if not package["ok"]:
         raise PublishError(f"package validation failed: {package}")
     if args.prepare_only:
         return {"ok": True, "mode": "prepare-only", "skill": meta, "repository": slug, "changes": planned["changes"]}

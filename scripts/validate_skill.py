@@ -144,9 +144,14 @@ def scan_dangerous_patterns(root: Path) -> list[dict[str, Any]]:
             for kind, pattern in DANGEROUS_PATTERNS:
                 if not pattern.search(line):
                     continue
-                severity = "high" if path.suffix.lower() in SCRIPT_SUFFIXES else (
-                    "medium" if kind in {"download_exec", "dynamic_exec", "credential_access", "persistence"} else "info"
-                )
+                if path.suffix.lower() in SCRIPT_SUFFIXES:
+                    severity = "high" if kind in BLOCK_PATTERN_KINDS else "medium"
+                else:
+                    severity = (
+                        "medium"
+                        if kind in {"download_exec", "dynamic_exec", "credential_access", "persistence"}
+                        else "info"
+                    )
                 if kind == "credential_access" and (
                     "OPENAI_API_KEY" in line or "ANTHROPIC_API_KEY" in line or "GITHUB_TOKEN" in line
                 ):

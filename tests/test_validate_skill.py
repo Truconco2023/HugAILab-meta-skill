@@ -138,6 +138,17 @@ class DangerousPatternScanTest(unittest.TestCase):
                 all(item["kind"] not in VALIDATE_SKILL.BLOCK_PATTERN_KINDS for item in hits)
             )
 
+    def test_network_url_in_script_is_medium_review_signal(self) -> None:
+        with tempfile.TemporaryDirectory() as temp_dir:
+            root = Path(temp_dir)
+            scripts = root / "scripts"
+            scripts.mkdir()
+            (scripts / "tool.py").write_text('API = "https://api.example.com/v1"\n', encoding="utf-8")
+            findings = VALIDATE_SKILL.scan_dangerous_patterns(root)
+            hits = [item for item in findings if item["kind"] == "network_exfil"]
+            self.assertTrue(hits)
+            self.assertEqual(hits[0]["severity"], "medium")
+
     def test_doc_mention_downgrades(self) -> None:
         with tempfile.TemporaryDirectory() as temp_dir:
             root = Path(temp_dir)
