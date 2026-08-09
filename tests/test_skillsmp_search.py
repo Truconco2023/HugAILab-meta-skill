@@ -58,6 +58,9 @@ def fetch_args(**overrides: object) -> SimpleNamespace:
 
 
 class SkillsMPSearchTest(unittest.TestCase):
+    def test_user_agent_tracks_manifest_version(self) -> None:
+        self.assertRegex(SEARCH.user_agent(), r"^hugailab-meta-skill/\d+\.\d+\.\d+$")
+
     def test_metric_and_source_fields_are_explicit(self) -> None:
         candidate = SEARCH.normalize_candidate(
             {

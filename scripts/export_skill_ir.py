@@ -1,14 +1,19 @@
 #!/usr/bin/env python3
-"""Export a compact Skill IR document from a Qiaomu skill package."""
+"""Export a compact Skill IR document from a HugAILab skill package."""
 
 from __future__ import annotations
 
 import argparse
 import json
 import re
+import sys
 from datetime import date
 from pathlib import Path
 from typing import Any
+
+_SCRIPT_DIR = Path(__file__).resolve().parent
+if str(_SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIR))
 
 try:
     import yaml  # type: ignore
@@ -16,7 +21,7 @@ except Exception:  # pragma: no cover
     yaml = None
 
 
-SCHEMA_VERSION = "2.0.0-qiaomu-lite"
+SCHEMA_VERSION = "2.0.0-hugailab-lite"
 
 
 def read_text(path: Path) -> str:
@@ -33,10 +38,18 @@ def load_json(path: Path) -> dict[str, Any]:
     return payload if isinstance(payload, dict) else {}
 
 
+def parse_yaml_text(text: str) -> Any:
+    if yaml is not None:
+        return yaml.safe_load(text)
+    from hugai_yaml import safe_load
+
+    return safe_load(text)
+
+
 def load_yaml(path: Path) -> dict[str, Any]:
-    if not path.exists() or yaml is None:
+    if not path.exists():
         return {}
-    payload = yaml.safe_load(read_text(path)) or {}
+    payload = parse_yaml_text(read_text(path)) or {}
     return payload if isinstance(payload, dict) else {}
 
 
@@ -50,16 +63,8 @@ def parse_frontmatter_and_body(text: str) -> tuple[dict[str, Any], str]:
         return {}, text
     frontmatter_text = "\n".join(lines[1:end])
     body = "\n".join(lines[end + 1 :]).lstrip()
-    if yaml is not None:
-        payload = yaml.safe_load(frontmatter_text) or {}
-        return payload if isinstance(payload, dict) else {}, body
-    data: dict[str, Any] = {}
-    for line in frontmatter_text.splitlines():
-        if ":" not in line or line.startswith(" "):
-            continue
-        key, value = line.split(":", 1)
-        data[key.strip()] = value.strip().strip("'\"|")
-    return data, body
+    payload = parse_yaml_text(frontmatter_text) or {}
+    return (payload if isinstance(payload, dict) else {}), body
 
 
 def parse_sections(body: str) -> dict[str, str]:
@@ -122,6 +127,9 @@ def build_ir(root: Path) -> dict[str, Any]:
     compatibility = interface.get("compatibility", {}) if isinstance(interface, dict) else {}
     gates = interface.get("gates", {}) if isinstance(interface, dict) else {}
     intent = manifest.get("intent", {}) if isinstance(manifest.get("intent"), dict) else {}
+    creator_defaults = manifest.get("creator_defaults", {})
+    if not isinstance(creator_defaults, dict):
+        creator_defaults = {}
 
     return {
         "schema_version": SCHEMA_VERSION,
@@ -138,11 +146,11 @@ def build_ir(root: Path) -> dict[str, Any]:
         "intent": {
             "description": frontmatter.get("description", ""),
             "job_to_be_done": intent.get("job_to_be_done") or frontmatter.get("description", ""),
-            "target_users": intent.get("target_users", ["Qiaomu operator"]),
+            "target_users": intent.get("target_users", ["HugAILab operator"]),
             "inputs": intent.get("inputs", []),
             "outputs": intent.get("outputs", []),
             "exclusions": intent.get("exclusions", []),
-            "qiaomu_defaults": manifest.get("qiaomu_defaults", {}),
+            "creator_defaults": creator_defaults,
         },
         "triggers": {
             "should_trigger": trigger_samples(root, "should_trigger"),
@@ -181,7 +189,7 @@ def build_ir(root: Path) -> dict[str, Any]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Export compact Skill IR for a Qiaomu skill.")
+    parser = argparse.ArgumentParser(description="Export compact Skill IR for a HugAILab skill.")
     parser.add_argument("skill_dir", nargs="?", default=".", help="Skill directory.")
     parser.add_argument("--output", "-o", help="Write JSON to this path.")
     args = parser.parse_args()

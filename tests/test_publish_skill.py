@@ -48,13 +48,6 @@ class PublishSkillTest(unittest.TestCase):
             ("joeseesun", "qiaomu-demo"),
         )
 
-    def test_profile_marker_inside_code_fence_is_ignored(self) -> None:
-        text = "```md\n<!-- qiaomu-profile:start -->\n```\n\n## License\n"
-        updated = PUBLISH.insert_profile(text)
-        self.assertEqual(updated.count(PUBLISH.PROFILE_START), 2)
-        self.assertIn("## 关于向阳乔木", updated)
-        self.assertEqual(PUBLISH.insert_profile(updated), updated)
-
     def test_generated_readme_passes_public_contract(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
@@ -71,8 +64,33 @@ class PublishSkillTest(unittest.TestCase):
                 upstream,
             )
             (root / "README.md").write_text(text, encoding="utf-8")
-            self.assertEqual(PUBLISH.check_readme(root, upstream, require_profile=False), [])
+            self.assertEqual(PUBLISH.check_readme(root, upstream), [])
             self.assertIn("validate_skill.py", text)
+
+    def test_generated_readme_honors_creator_defaults(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            text = PUBLISH.generated_readme(
+                {
+                    "name": "hugai-demo",
+                    "description": "把重复工作流整理成可验证的 skill 包。",
+                    "version": "1.0.0",
+                    "owner": "HugAILab",
+                },
+                "example",
+                "hugai-demo",
+                "",
+                {
+                    "skill_name_prefix": "hugai-",
+                    "max_preferred_hyphen_parts": 3,
+                    "copyright": "Copyright (c) 2026 HugAILab Team",
+                    "x": "https://x.com/hugailab",
+                    "github": "https://github.com/example",
+                },
+            )
+            self.assertIn("Copyright (c) 2026 HugAILab Team", text)
+            self.assertIn("https://x.com/hugailab", text)
+            self.assertIn("https://github.com/example", text)
 
     def test_default_branch_push_is_rejected(self) -> None:
         for branch in ("", "main", "master"):
@@ -134,7 +152,6 @@ class PublishSkillTest(unittest.TestCase):
                 verify_only=False,
                 no_merge=False,
                 no_sync_local=True,
-                skip_qiaomu_profile=False,
             )
             result = PUBLISH.publish(args, FakeRunner())
             self.assertTrue(result["ok"])
@@ -144,11 +161,7 @@ class PublishSkillTest(unittest.TestCase):
             self.assertFalse((root / "README.md").exists())
             self.assertEqual(result["default_branch_push"], "forbidden")
 
-    def test_profile_assets_are_bundled(self) -> None:
-        for name in PUBLISH.PROFILE_ASSETS:
-            self.assertTrue((PUBLISH.PROFILE_SOURCE / name).is_file(), name)
-
-    def test_prepare_package_writes_license_readme_and_profile(self) -> None:
+    def test_prepare_package_writes_license_and_readme_without_profile(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
             (root / "manifest.json").write_text(
@@ -159,20 +172,19 @@ class PublishSkillTest(unittest.TestCase):
                 root,
                 {
                     "name": "qiaomu-demo",
-                    "description": "把重复工作流整理成可验证的 qiaomu skill。",
+                    "description": "把重复工作流整理成可验证的 skill。",
                     "version": "1.0.0",
-                    "owner": "向阳乔木",
+                    "owner": "示例团队",
                 },
-                "joeseesun",
-                "qiaomu-demo",
+                "example",
+                "demo-skill",
                 write=True,
-                include_profile=True,
             )
             self.assertEqual(result["failures"], [])
-            self.assertTrue((root / "LICENSE").is_file())
-            self.assertIn(PUBLISH.PROFILE_START, (root / "README.md").read_text(encoding="utf-8"))
-            for name in PUBLISH.PROFILE_ASSETS.values():
-                self.assertTrue((root / PUBLISH.PROFILE_TARGET / name).is_file())
+            readme = (root / "README.md").read_text(encoding="utf-8")
+            self.assertNotIn("向阳乔木", readme)
+            self.assertNotIn("assets/qiaomu-profile", readme)
+            self.assertNotIn("打赏", readme)
 
     def test_local_sync_preserves_previous_copy_outside_skill_discovery(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

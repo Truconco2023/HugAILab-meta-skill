@@ -1,13 +1,18 @@
 #!/usr/bin/env python3
-"""Validate the lightweight Qiaomu skill package contract."""
+"""Validate the lightweight HugAILab skill package contract."""
 
 from __future__ import annotations
 
 import argparse
 import json
 import re
+import sys
 from pathlib import Path
 from typing import Any
+
+_SCRIPT_DIR = Path(__file__).resolve().parent
+if str(_SCRIPT_DIR) not in sys.path:
+    sys.path.insert(0, str(_SCRIPT_DIR))
 
 try:
     import yaml  # type: ignore
@@ -19,6 +24,7 @@ REQUIRED_ROOT_FILES = ["SKILL.md", "README.md", "agents/interface.yaml", "manife
 REQUIRED_FRONTMATTER = ["name", "description"]
 REQUIRED_INTERFACE_FIELDS = ["display_name", "short_description", "default_prompt"]
 REQUIRED_MANIFEST_FIELDS = ["name", "version", "owner", "updated_at", "status", "maturity_tier"]
+META_SKILL_NAMES = {"hugailab-meta-skill", "HugAILab-meta-skill", "qiaomu-meta-skill"}
 IGNORED_DISCOVERY_DIRS = {".git", "dist", "node_modules", "__pycache__"}
 FORBIDDEN_DISCOVERY_DEPENDENCIES = (
     '.agents/skills/find-skills/SKILL.md',
@@ -42,12 +48,18 @@ def load_json(path: Path) -> dict[str, Any]:
     return payload
 
 
-def load_yaml(path: Path) -> dict[str, Any]:
-    text = read_text(path)
+def parse_yaml_text(text: str) -> Any:
+    """Parse YAML with PyYAML when available, otherwise use the bundled subset parser."""
     if yaml is not None:
-        payload = yaml.safe_load(text) or {}
-        return payload if isinstance(payload, dict) else {}
-    return {}
+        return yaml.safe_load(text)
+    from hugai_yaml import safe_load  # type: ignore
+
+    return safe_load(text)
+
+
+def load_yaml(path: Path) -> dict[str, Any]:
+    payload = parse_yaml_text(read_text(path)) or {}
+    return payload if isinstance(payload, dict) else {}
 
 
 def parse_frontmatter(text: str) -> dict[str, Any]:
@@ -59,24 +71,8 @@ def parse_frontmatter(text: str) -> dict[str, Any]:
     except ValueError:
         return {}
     frontmatter_text = "\n".join(lines[1:end])
-    if yaml is not None:
-        payload = yaml.safe_load(frontmatter_text) or {}
-        return payload if isinstance(payload, dict) else {}
-
-    data: dict[str, Any] = {}
-    current_key = ""
-    for raw in frontmatter_text.splitlines():
-        if not raw.strip():
-            continue
-        if raw.startswith(" ") and current_key:
-            data[current_key] = f"{data.get(current_key, '')}\n{raw.strip()}".strip()
-            continue
-        if ":" not in raw:
-            continue
-        key, value = raw.split(":", 1)
-        current_key = key.strip()
-        data[current_key] = value.strip().strip("'\"|")
-    return data
+    payload = parse_yaml_text(frontmatter_text) or {}
+    return payload if isinstance(payload, dict) else {}
 
 
 def markdown_links(text: str) -> list[str]:
@@ -156,7 +152,7 @@ def validate(root: Path) -> dict[str, Any]:
         if not (root / rel).exists():
             failures.append(f"missing required file: {rel}")
 
-    if root.name == "qiaomu-meta-skill":
+    if root.name in META_SKILL_NAMES:
         for rel in ("SKILL.md", "README.md", "references/prior-art-research.md"):
             path = root / rel
             if not path.exists():
@@ -167,7 +163,7 @@ def validate(root: Path) -> dict[str, Any]:
                     failures.append(f"{rel} contains external discovery-skill dependency: {forbidden}")
         for relative in ("scripts/research_prior_art.py", "scripts/release_check.py", "scripts/publish_skill.py"):
             if not (root / relative).is_file():
-                failures.append(f"qiaomu-meta-skill missing built-in factory script: {relative}")
+                failures.append(f"{root.name} missing built-in factory script: {relative}")
 
     skill_entrypoints = discover_skill_entrypoints(root)
     nested_entrypoints = [path for path in skill_entrypoints if path != Path("SKILL.md")]
@@ -187,8 +183,8 @@ def validate(root: Path) -> dict[str, Any]:
             if not frontmatter.get(field):
                 failures.append(f"SKILL.md missing frontmatter field: {field}")
         description = str(frontmatter.get("description", ""))
-        if frontmatter.get("name") == "qiaomu-meta-skill":
-            for token in ("skill", "qiaomu", "workflow"):
+        if frontmatter.get("name") == "hugailab-meta-skill":
+            for token in ("skill", "hugailab", "workflow"):
                 if token not in description.lower():
                     warnings.append(f"description may be missing routing token: {token}")
         for rel in markdown_links(skill_text):
@@ -252,6 +248,22 @@ def validate(root: Path) -> dict[str, Any]:
             warnings.append(
                 f"SKILL.md exceeds production context budget: {skill_bytes} > {MAX_PRODUCTION_SKILL_BYTES} bytes"
             )
+        creator_defaults = manifest.get("creator_defaults", {})
+        if isinstance(creator_defaults, dict):
+            name = str(manifest.get("name", ""))
+            max_parts = creator_defaults.get("max_preferred_hyphen_parts")
+            if isinstance(max_parts, int) and name:
+                parts = len(name.split("-"))
+                if parts > max_parts:
+                    warnings.append(
+                        f"skill name has {parts} hyphen parts, exceeding "
+                        f"creator_defaults.max_preferred_hyphen_parts ({max_parts})"
+                    )
+            prefix = str(creator_defaults.get("skill_name_prefix", "")).strip()
+            if prefix and name and root.name not in META_SKILL_NAMES and not name.startswith(prefix):
+                warnings.append(
+                    f"skill name does not start with configured creator_defaults.skill_name_prefix: {prefix}"
+                )
 
     validate_evidence_reports(root, manifest, failures, warnings)
 
@@ -284,7 +296,7 @@ def validate(root: Path) -> dict[str, Any]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Validate a Qiaomu skill package.")
+    parser = argparse.ArgumentParser(description="Validate a HugAILab skill package.")
     parser.add_argument("skill_dir", nargs="?", default=".", help="Skill directory to validate.")
     args = parser.parse_args()
 

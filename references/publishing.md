@@ -1,6 +1,6 @@
 # Self-Contained Skill Publishing
 
-`qiaomu-meta-skill` owns the complete public release path. Do not require or invoke a separate publisher skill after this package is selected.
+`hugailab-meta-skill` owns the complete public release path. Do not require or invoke a separate publisher skill after this package is selected.
 
 ## Capability contract
 
@@ -9,7 +9,7 @@ The bundled `scripts/publish_skill.py` covers the useful behavior learned from `
 1. strict `SKILL.md` and `manifest.json` identity/version checks
 2. MIT `LICENSE` creation when missing
 3. README generation or quality validation
-4. bundled Qiaomu profile/QR assets and idempotent README block injection
+4. brand-neutral README preparation (no author profiles, QR codes, or donation links)
 5. GitHub owner/repository detection without conflating repository and skill names
 6. repository creation with a baseline default branch when needed
 7. feature-branch commit and push; direct default-branch push is forbidden
@@ -25,7 +25,7 @@ Read-only audit:
 python3 scripts/publish_skill.py /path/to/skill --dry-run
 ```
 
-Prepare LICENSE, README and Qiaomu profile locally without GitHub writes:
+Prepare LICENSE and README locally without GitHub writes:
 
 ```bash
 python3 scripts/publish_skill.py /path/to/skill --prepare-only
@@ -56,7 +56,6 @@ Useful target controls:
 - `--branch codex/...`
 - `--private`
 - `--no-sync-local`
-- `--skip-qiaomu-profile` only for explicitly non-Qiaomu packages
 
 ## Safety decisions
 
