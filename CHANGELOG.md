@@ -1,5 +1,13 @@
 # Changelog
 
+## 3.5.0 (2026-08-10)
+
+- `publish_skill.py`：PR 创建后自动等待 GitHub 状态检查（`--wait-checks-timeout`，默认 600s），CI pending 不再要求人工重跑发布器。
+- `validate_skill.py`：内置危险模式静态扫描 `scan_dangerous_patterns`（下载执行/动态执行/凭据读取/外传/持久化/提示词注入，文档降级 + os.environ 上下文判定）；新增 SKILL.md/README 引用脚本存在性检查与 references 上下文预算告警。
+- `release_check.py`：新增 `skill_pattern_scan` 门禁（block 仅限脚本内高危 kind：download_exec/dynamic_exec/persistence/destructive/prompt_injection；其余为人工审查 warn 信号）。
+- `output_eval.py`：llm_judge 裁判输出容错（`normalize_llm_answer` 取首个 yes/no，兼容 “yes, yes, yes” 等列表式回答）。
+- 自证扩展：output cases 覆盖 CI 等待、危险模式扫描、引用检查；65/65 单元测试。
+
 ## 3.4.0 (2026-08-10)
 
 - 新 skill 默认命名规则：`hugailab-` 前缀（`hugailab-xxxxx` 或 `hugailab-xxx-xxxx`，前缀后最多 5 段）。`new_skill.py` 自动为名称补前缀（已带前缀不重复添加）；`manifest.json` 的 `creator_defaults.skill_name_prefix` 默认改为 `hugailab`。

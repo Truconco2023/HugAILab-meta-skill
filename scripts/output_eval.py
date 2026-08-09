@@ -22,6 +22,7 @@ import argparse
 import json
 import os
 import random
+import re
 import time
 import urllib.request
 from datetime import date
@@ -37,6 +38,11 @@ def load_json(path: Path) -> dict[str, Any]:
     if not isinstance(payload, dict):
         raise ValueError(f"{path} must contain a JSON object")
     return payload
+
+
+def normalize_llm_answer(answer: str) -> str | None:
+    match = re.match(r"^\s*(yes|no)\b", answer.strip().lower())
+    return match.group(1) if match else None
 
 
 def read_text(path: Path) -> str:
@@ -103,8 +109,11 @@ def llm_judge(
         try:
             with urllib.request.urlopen(request, timeout=60) as response:
                 body = json.loads(response.read().decode("utf-8"))
-            answer = str(body["choices"][0]["message"]["content"]).strip().lower()
-            return answer == must, f"llm answered {answer!r}, expected {must!r}"
+            raw = str(body["choices"][0]["message"]["content"])
+            answer = normalize_llm_answer(raw)
+            if answer is None:
+                return False, f"llm answered unexpected format {raw[:80]!r}, expected {must!r}"
+            return answer == must, f"llm answered {raw[:40]!r}, expected {must!r}"
         except (OSError, TimeoutError) as exc:
             last_error = exc
             if attempt < retries:

@@ -94,7 +94,7 @@ python3 scripts/publish_skill.py /path/to/skill --dry-run
 - `Scaffold`: valid frontmatter, useful README hook, natural triggers, explicit exclusions.
 - `Production`: Scaffold plus interface, trigger eval, output contract, troubleshooting, root isolation, and install verification.
 - `Library`: Production plus Skill IR, portability, trust, review cadence, and evidence artifacts.
-- `Governed`: Library plus permission/rollback boundary, secret scan, output or integrity-preserving human evidence, and public-claim guard.
+- `Governed`: Library plus permission/rollback boundary, secret scan, dangerous-pattern scan (`skill_pattern_scan`), output or integrity-preserving human evidence, and public-claim guard.
 
 Unavailable telemetry, provider runs, approval, install proof, or human review must remain `missing evidence`; planned work is not proof. See [Review And Release Gates](references/review-release-gates.md) and [Resource Boundary Spec](references/resource-boundaries.md).
 

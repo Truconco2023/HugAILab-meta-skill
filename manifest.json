@@ -1,6 +1,6 @@
 {
   "name": "hugailab-meta-skill",
-  "version": "3.4.0",
+  "version": "3.5.0",
   "owner": "HugAILab",
   "updated_at": "2026-08-10",
   "status": "active",
@@ -46,6 +46,9 @@
   "release_gates": [
     "prior_art_research",
     "built_in_prior_art_discovery",
+    "skill_pattern_scan",
+    "referenced_script_check",
+    "pr_checks_wait",
     "dual_catalog_discovery",
     "cross_catalog_deduplication",
     "resilient_catalog_fetch",

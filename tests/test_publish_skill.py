@@ -37,6 +37,59 @@ class FakeRunner:
 
 
 class PublishSkillTest(unittest.TestCase):
+    def test_wait_for_pr_checks_polls_until_complete(self) -> None:
+        calls = {"count": 0}
+
+        def fake_runner(args: list[str], _cwd: Path, **_kwargs: object):
+            calls["count"] += 1
+            if calls["count"] == 1:
+                payload = {
+                    "statusCheckRollup": [
+                        {"name": "test", "status": "IN_PROGRESS", "conclusion": None}
+                    ]
+                }
+            else:
+                payload = {
+                    "statusCheckRollup": [
+                        {"name": "test", "status": "COMPLETED", "conclusion": "SUCCESS"}
+                    ]
+                }
+            return PUBLISH.CommandResult(args, 0, json.dumps(payload), "")
+
+        with patch.object(PUBLISH.time, "sleep", return_value=None):
+            result = PUBLISH.wait_for_pr_checks(
+                Path("/tmp"),
+                "owner/repo",
+                "https://github.com/owner/repo/pull/1",
+                600,
+                interval=1,
+                runner=fake_runner,
+            )
+        self.assertTrue(result["ok"])
+        self.assertEqual(result["pending"], [])
+        self.assertEqual(calls["count"], 2)
+
+    def test_wait_for_pr_checks_timeout_reports_pending(self) -> None:
+        def fake_runner(args: list[str], _cwd: Path, **_kwargs: object):
+            payload = {
+                "statusCheckRollup": [
+                    {"name": "test", "status": "IN_PROGRESS", "conclusion": None}
+                ]
+            }
+            return PUBLISH.CommandResult(args, 0, json.dumps(payload), "")
+
+        with patch.object(PUBLISH.time, "sleep", return_value=None):
+            result = PUBLISH.wait_for_pr_checks(
+                Path("/tmp"),
+                "owner/repo",
+                "https://github.com/owner/repo/pull/1",
+                0,
+                interval=1,
+                runner=fake_runner,
+            )
+        self.assertFalse(result["ok"])
+        self.assertEqual(result["pending"], ["test"])
+
     def test_origin_parser_supports_https_and_ssh(self) -> None:
         self.assertEqual(
             PUBLISH.parse_origin("https://github.com/joeseesun/qiaomu-demo.git"),

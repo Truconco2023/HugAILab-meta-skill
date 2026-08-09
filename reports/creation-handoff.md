@@ -2,9 +2,19 @@
 
 ## Result
 
-- Skill: `hugailab-meta-skill` 3.4.0（fork：`Truconco2023/HugAILab-meta-skill`）
+- Skill: `hugailab-meta-skill` 3.5.0（fork：`Truconco2023/HugAILab-meta-skill`）
 - Job: research, create, evaluate, package, govern, and safely publish reusable agent skills through one self-contained workflow
 - Status: v3.1.0 已发布并通过 published 门禁；v3.2.0 为新一轮质量/易用性升级，本地验证通过后待推送合并与发布。
+
+## v3.5.0 升级内容（2026-08-10）
+
+基于 obsidian-clip / macos-security-audit / meta-skill 自身三个真实实例的第三轮自举提升：
+
+- 发布器自动等待 PR CI（消除两次发布中“pending → 人工重跑”的重复劳动）。
+- 内置危险模式扫描并接入发布门禁（把 macos-security-audit 的静态扫描能力收编为工厂自身能力）。
+- validate 增加“SKILL.md/README 引用脚本存在性”检查（obsidian-clip 扫描发现的 4 条 medium 正是此类）。
+- references 上下文预算告警，防止工厂自身膨胀。
+- 评分卡落盘 `reports/scorecard.md`，综合 9.6。
 
 ## v3.4.0 升级内容（2026-08-10）
 
