@@ -1,21 +1,19 @@
 {
-  "ok": false,
-  "evidence_kind": "recorded_fixture",
+  "ok": true,
+  "evidence_kind": "provider_backed",
   "generated_at": "2026-08-10",
   "tool": "output_eval.py",
   "summary": {
     "cases_total": 3,
-    "cases_passed": 2,
+    "cases_passed": 3,
     "assertions_total": 14,
-    "assertions_executed": 12,
-    "assertions_skipped": 2,
+    "assertions_executed": 14,
+    "assertions_skipped": 0,
     "with_skill_assertion_pass_rate": 1.0,
     "baseline_passed_total": 0,
-    "provider_used": false
+    "provider_used": true
   },
-  "missing_evidence": [
-    "provider-backed LLM judges not run; pass --llm-assert with OPENAI_API_KEY"
-  ],
+  "missing_evidence": [],
   "results": [
     {
       "id": "create_skill_package",
@@ -126,12 +124,12 @@
       "id": "self_llm_judge_evidence",
       "prompt": "用 hugailab-meta-skill 交付可验证的 skill",
       "assertions_total": 5,
-      "assertions_passed": 3,
-      "assertions_skipped": 2,
+      "assertions_passed": 5,
+      "assertions_skipped": 0,
       "baseline_passed": 0,
       "baseline_detail": "baseline produced no package artifacts; scoring 0 for file-backed assertions",
       "human_notes": "v3.3.0 自证：新能力以 provider-backed 证据落地。",
-      "provider_used": false,
+      "provider_used": true,
       "results": [
         {
           "assertion": {
@@ -166,8 +164,7 @@
             "must": "yes"
           },
           "passed": true,
-          "skipped": true,
-          "detail": "llm_judge skipped (fixture mode)"
+          "detail": "llm answered 'yes', expected 'yes'"
         },
         {
           "assertion": {
@@ -176,8 +173,7 @@
             "must": "yes"
           },
           "passed": true,
-          "skipped": true,
-          "detail": "llm_judge skipped (fixture mode)"
+          "detail": "llm answered 'yes', expected 'yes'"
         }
       ]
     }

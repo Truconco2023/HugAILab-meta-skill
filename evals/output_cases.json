@@ -6,11 +6,30 @@
       "baseline_output": "好的，我可以帮你把这个流程整理成一份文档，建议先列出步骤……",
       "with_skill_output": "已创建 hugailab 风格 skill 包：SKILL.md、manifest.json、agents/interface.yaml、evals/trigger_cases.json 与 reports/skill-ir.json。",
       "assertions": [
-        {"kind": "file_exists", "path": "SKILL.md"},
-        {"kind": "contains", "path": "SKILL.md", "needle": "name: hugailab-meta-skill"},
-        {"kind": "contains", "path": "SKILL.md", "needle": "## Router Rules"},
-        {"kind": "contains", "path": "manifest.json", "needle": "\"version\""},
-        {"kind": "not_contains", "path": "README.md", "needle": "sk-"}
+        {
+          "kind": "file_exists",
+          "path": "SKILL.md"
+        },
+        {
+          "kind": "contains",
+          "path": "SKILL.md",
+          "needle": "name: hugailab-meta-skill"
+        },
+        {
+          "kind": "contains",
+          "path": "SKILL.md",
+          "needle": "## Router Rules"
+        },
+        {
+          "kind": "contains",
+          "path": "manifest.json",
+          "needle": "\"version\""
+        },
+        {
+          "kind": "not_contains",
+          "path": "README.md",
+          "needle": "sk-"
+        }
       ],
       "human_notes": "真实使用时还应人工确认 description 的触发边界与产出结构。"
     },
@@ -20,12 +39,60 @@
       "baseline_output": "我看了看，整体还行，建议优化一下描述。",
       "with_skill_output": "只读审计：运行 validate_skill.py 与 trigger_eval.py，输出 failures/warnings 清单，不修改任何文件。",
       "assertions": [
-        {"kind": "file_exists", "path": "reports/skill-ir.json"},
-        {"kind": "contains", "path": "reports/skill-ir.json", "needle": "evidence_boundary"},
-        {"kind": "contains", "path": "reports/trigger-eval.json", "needle": "\"ok\": true"},
-        {"kind": "not_contains", "path": "README.md", "needle": "BEGIN PRIVATE KEY"}
+        {
+          "kind": "file_exists",
+          "path": "reports/skill-ir.json"
+        },
+        {
+          "kind": "contains",
+          "path": "reports/skill-ir.json",
+          "needle": "evidence_boundary"
+        },
+        {
+          "kind": "contains",
+          "path": "reports/trigger-eval.json",
+          "needle": "\"ok\": true"
+        },
+        {
+          "kind": "not_contains",
+          "path": "README.md",
+          "needle": "BEGIN PRIVATE KEY"
+        }
       ],
       "human_notes": "审计型请求应验证未产生文件改动；当前以只读断言近似。"
+    },
+    {
+      "id": "self_llm_judge_evidence",
+      "prompt": "用 hugailab-meta-skill 交付可验证的 skill",
+      "baseline_output": "我帮你写一个提示词。",
+      "with_skill_output": "生成 skill 包并跑 validate/trigger/output eval，证据写 reports/。",
+      "assertions": [
+        {
+          "kind": "file_exists",
+          "path": "scripts/output_eval.py"
+        },
+        {
+          "kind": "contains",
+          "path": "scripts/output_eval.py",
+          "needle": "--retries"
+        },
+        {
+          "kind": "contains",
+          "path": "references/output-eval-method.md",
+          "needle": "llm_judge 断言写法"
+        },
+        {
+          "kind": "llm_judge",
+          "prompt": "hugailab-meta-skill 的 output_eval.py 是否支持 llm_judge 网络重试参数 --retries 与 --retry-backoff，并在 fixture 模式统计 assertions_skipped？只回答 yes 或 no。",
+          "must": "yes"
+        },
+        {
+          "kind": "llm_judge",
+          "prompt": "references/output-eval-method.md 是否包含 llm_judge 断言写法一节，且建议自包含提示词、避免逐字比对式表述？只回答 yes 或 no。",
+          "must": "yes"
+        }
+      ],
+      "human_notes": "v3.3.0 自证：新能力以 provider-backed 证据落地。"
     }
   ]
 }

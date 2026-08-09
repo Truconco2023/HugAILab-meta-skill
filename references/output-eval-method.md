@@ -33,6 +33,14 @@ Trigger eval 证明“会不会叫对 skill”。Output eval 证明“叫对以�
 
 避免只奖励复读固定句子。能靠背一个短语通过的断言，不是好断言。
 
+## llm_judge 断言写法（实战教训）
+
+- **提示词必须自包含**：把要判断的 artifact 内容（摘要、要点、段落、字段值）直接嵌入 prompt，不要写“请打开文件看”。
+- **避免逐字比对式表述**：“该段原文为…，若卡片确实包含则回答 yes”这类写法会因为 bullet 拼接、标点差异被裁判模型判 no。改用可验证问法：“卡片包含小节 `## Missing evidence`，其下第一条 bullet 为 `...`。该卡片是否包含 missing evidence 信息？”
+- **摘要忠实度不要隐含穷举**：问“是否准确反映三大要点且没有曲解”，不要问“是否包含 MAU 数字”（摘要省略细节不代表不忠实）。
+- **固定输出协议**：只回答 yes 或 no；temperature 0；max_tokens 5。
+- **网络调用建议**：`--llm-assert --retries 2 --retry-backoff 1.0`（默认已开），避免单次 connection reset 中断整轮评测；provider 运行结果写 `reports/output-evidence.json` 作为发布证据。
+
 ## 证据边界
 
 - `recorded_fixture` 只能说明回归样例可复现，不能叫模型实跑证据。

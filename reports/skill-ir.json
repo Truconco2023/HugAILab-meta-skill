@@ -1,9 +1,9 @@
 {
   "schema_version": "2.0.0-hugailab-lite",
-  "generated_at": "2026-08-09",
+  "generated_at": "2026-08-10",
   "package": {
     "name": "hugailab-meta-skill",
-    "version": "3.2.0",
+    "version": "3.3.0",
     "owner": "HugAILab",
     "maturity_tier": "governed",
     "lifecycle_stage": "library",
@@ -160,6 +160,7 @@
       "reports/iteration-2026-08-09-v3.1.md",
       "reports/iteration-2026-08-09-v3.2.md",
       "reports/output-eval.json",
+      "reports/output-evidence.json",
       "reports/prior-art-research.md",
       "reports/skill-ir.json",
       "reports/skillsmp-integration-2026-08-03.md",
