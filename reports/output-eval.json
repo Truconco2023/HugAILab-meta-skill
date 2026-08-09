@@ -6,9 +6,9 @@
   "summary": {
     "cases_total": 3,
     "cases_passed": 2,
-    "assertions_total": 20,
-    "assertions_executed": 16,
-    "assertions_skipped": 4,
+    "assertions_total": 23,
+    "assertions_executed": 18,
+    "assertions_skipped": 5,
     "with_skill_assertion_pass_rate": 1.0,
     "baseline_passed_total": 0,
     "provider_used": false
@@ -125,12 +125,12 @@
     {
       "id": "self_llm_judge_evidence",
       "prompt": "用 hugailab-meta-skill 交付可验证的 skill",
-      "assertions_total": 11,
-      "assertions_passed": 7,
-      "assertions_skipped": 4,
+      "assertions_total": 14,
+      "assertions_passed": 9,
+      "assertions_skipped": 5,
       "baseline_passed": 0,
       "baseline_detail": "baseline produced no package artifacts; scoring 0 for file-backed assertions",
-      "human_notes": "v3.5.0 自证：命名规则 + CI 等待 + 危险模式扫描 + 引用检查以 provider-backed 证据落地。",
+      "human_notes": "v3.6.0 自证：评分器 + 脚手架集成 + 既有能力以 provider-backed 证据落地。",
       "provider_used": false,
       "results": [
         {
@@ -197,6 +197,24 @@
         },
         {
           "assertion": {
+            "kind": "contains",
+            "path": "scripts/score_skill.py",
+            "needle": "score_trigger"
+          },
+          "passed": true,
+          "detail": "contains 'score_trigger' in scripts/score_skill.py"
+        },
+        {
+          "assertion": {
+            "kind": "contains",
+            "path": "scripts/new_skill.py",
+            "needle": "score_skill.py"
+          },
+          "passed": true,
+          "detail": "contains 'score_skill.py' in scripts/new_skill.py"
+        },
+        {
+          "assertion": {
             "kind": "llm_judge",
             "prompt": "hugailab-meta-skill 的 output_eval.py 是否支持 llm_judge 网络重试参数 --retries 与 --retry-backoff，并在 fixture 模式统计 assertions_skipped？只回答 yes 或 no。",
             "must": "yes"
@@ -229,6 +247,16 @@
           "assertion": {
             "kind": "llm_judge",
             "prompt": "hugailab-meta-skill 是否同时具备 PR 后自动等待状态检查、validate 内置危险模式扫描、release_check 含 skill_pattern_scan 门禁这三项能力？只回答一个词 yes 或 no。",
+            "must": "yes"
+          },
+          "passed": true,
+          "skipped": true,
+          "detail": "llm_judge skipped (fixture mode)"
+        },
+        {
+          "assertion": {
+            "kind": "llm_judge",
+            "prompt": "score_skill.py 是否为证据绑定评分器（六维加权、只读 reports、缺失证据降分），并且 new_skill.py 在 production 模式下自动生成 scorecard.json？只回答一个词 yes 或 no。",
             "must": "yes"
           },
           "passed": true,

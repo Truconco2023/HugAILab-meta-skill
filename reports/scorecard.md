@@ -1,14 +1,18 @@
-# hugailab-meta-skill Scorecard（v3.5.0，HugAILab 内部评分卡）
+# Skill 评分卡：hugailab-meta-skill v3.6.0
 
-基于三个真实陪跑实例评估：obsidian-clip v0.3.0（综合 9.4）、macos-security-audit v0.1.0（双模式一次发布成功）、meta-skill 自身自证。
+- 综合评分：**9.8 / 10**
+- 评分时间：2026-08-10T02:27:06+08:00
+- 说明：分数反映证据成熟度，不反映业务价值；缺失证据会降分并明确列出。
 
-| 维度 | 权重 | v3.4.0 | v3.5.0 | 关键证据 |
+| 维度 | 权重 | 得分 | 加权 | 证据 |
 |---|---:|---:|---:|---|
-| 工具链完整性与自动化 | 25% | 9.3 | 9.6 | 发布器自动等待 CI；危险模式扫描进门禁；引用脚本检查；new_skill 命名规则 |
-| 触发与输出评测 | 20% | 9.5 | 9.6 | 自身 34/34；两个实例 17/17、16/16；provider 自证含新能力 |
-| 文档与最佳实践 | 15% | 9.5 | 9.6 | llm_judge 断言指引、网络故障排查、命名规则文档 |
-| 真实实例验证 | 20% | 9.5 | 9.7 | 三个真实 skill 全链路交付 + 发布后安装验证 |
-| 治理与安全 | 20% | 9.5 | 9.7 | secret scan + skill_pattern_scan 双门禁；missing evidence 纪律 |
-| **综合** | 100% | **9.46** | **9.64** | 加权平均 |
+| 触发边界评测 | 15% | 10.0 | 1.5 | 34/34, weak=0 |
+| 输出内容质量 | 25% | 10.0 | 2.5 | provider_backed, rate=1.0 |
+| prior-art 与 Skill IR | 15% | 10.0 | 1.5 | IR+prior-art: 10/10 |
+| 复用/安装验证 | 20% | 10.0 | 2.0 | tests=13, examples/fixtures, README |
+| 文档/接口/安全 | 15% | 9.0 | 1.35 | validate warnings=1 |
+| 发布治理证据 | 10% | 9.0 | 0.9 | gates=39 |
 
-结论：v3.5.0 综合 **9.6**，较 v3.4.0 提升约 0.15；主要增量来自发布自动化与安全门禁自举。
+## Missing evidence
+
+- pattern scan: 0 high / 17 medium review signals; blocking kinds are download_exec/dynamic_exec/persistence/destructive/prompt_injection

@@ -2,9 +2,14 @@
 
 ## Result
 
-- Skill: `hugailab-meta-skill` 3.5.0（fork：`Truconco2023/HugAILab-meta-skill`）
+- Skill: `hugailab-meta-skill` 3.6.0（fork：`Truconco2023/HugAILab-meta-skill`）
 - Job: research, create, evaluate, package, govern, and safely publish reusable agent skills through one self-contained workflow
 - Status: v3.1.0 已发布并通过 published 门禁；v3.2.0 为新一轮质量/易用性升级，本地验证通过后待推送合并与发布。
+
+## v3.6.0 升级内容（2026-08-10）
+
+- 新增 `score_skill.py` 证据绑定自动评分器（六维加权、只读证据、missing evidence 降分）。
+- `new_skill.py --mode production` 自动生成评分卡；meta-skill 自身评分卡由评分器自举产出。
 
 ## v3.5.0 升级内容（2026-08-10）
 

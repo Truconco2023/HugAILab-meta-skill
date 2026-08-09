@@ -1,5 +1,11 @@
 # Changelog
 
+## 3.6.0 (2026-08-10)
+
+- 新增 `scripts/score_skill.py`：证据绑定自动评分器。六维加权（触发 15% / 输出 25% / prior-art+IR 15% / 复用安装 20% / 文档安全 15% / 治理 10%），只读 reports、不制造证据；缺失证据明确列出并降分（fixture-only 输出封顶 6.5）。
+- `new_skill.py --mode production` 生成后自动输出 `reports/scorecard.json` 与 `reports/scorecard.md`（初始分 + missing evidence）。
+- meta-skill 自举：用评分器给自身打分并落盘评分卡。
+
 ## 3.5.0 (2026-08-10)
 
 - `publish_skill.py`：PR 创建后自动等待 GitHub 状态检查（`--wait-checks-timeout`，默认 600s），CI pending 不再要求人工重跑发布器。
