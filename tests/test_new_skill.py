@@ -78,6 +78,7 @@ class NewSkillTest(unittest.TestCase):
             reports = Path(directory) / "hugailab-prod-demo" / "reports"
             self.assertTrue((reports / "skill-ir.json").is_file())
             self.assertTrue((reports / "trigger-eval.json").is_file())
+            self.assertTrue((reports / "scorecard.json").is_file())
 
 
 if __name__ == "__main__":

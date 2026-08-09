@@ -86,6 +86,7 @@ python3 scripts/validate_skill.py .
 python3 scripts/export_skill_ir.py . --output reports/skill-ir.json
 python3 scripts/trigger_eval.py . --cases evals/trigger_cases.json --output reports/trigger-eval.json
 python3 scripts/release_check.py . --phase local --run-tests
+python3 scripts/score_skill.py . --output reports/scorecard.json --report reports/scorecard.md
 python3 scripts/publish_skill.py /path/to/skill --dry-run
 ```
 

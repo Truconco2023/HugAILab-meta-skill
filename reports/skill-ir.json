@@ -3,7 +3,7 @@
   "generated_at": "2026-08-10",
   "package": {
     "name": "hugailab-meta-skill",
-    "version": "3.5.0",
+    "version": "3.6.0",
     "owner": "HugAILab",
     "maturity_tier": "governed",
     "lifecycle_stage": "library",
@@ -142,6 +142,7 @@
       "scripts/publish_skill.py",
       "scripts/release_check.py",
       "scripts/research_prior_art.py",
+      "scripts/score_skill.py",
       "scripts/search_skillsmp.py",
       "scripts/trigger_eval.py",
       "scripts/validate_skill.py"
@@ -162,6 +163,7 @@
       "reports/output-eval.json",
       "reports/output-evidence.json",
       "reports/prior-art-research.md",
+      "reports/scorecard.json",
       "reports/scorecard.md",
       "reports/skill-ir.json",
       "reports/skillsmp-integration-2026-08-03.md",
