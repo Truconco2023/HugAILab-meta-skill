@@ -191,7 +191,7 @@
         {
           "assertion": {
             "kind": "llm_judge",
-            "prompt": "new_skill.py 是否默认把新 skill 名规范化为 hugailab- 前缀（BRAND_PREFIX）且前缀后限 1-2 段？只回答 yes 或 no。",
+            "prompt": "new_skill.py 是否默认把新 skill 名规范化为 hugailab- 前缀（BRAND_PREFIX）且前缀后最多 5 段？只回答 yes 或 no。",
             "must": "yes"
           },
           "passed": true,

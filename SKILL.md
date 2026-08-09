@@ -124,7 +124,7 @@ Detailed CLI and safety decisions: [Self-Contained Skill Publishing](references/
 ## Creator Defaults
 
 - Prefer practical, concise, publishable Chinese output.
-- 新 skill 默认命名 `hugailab-xxxxx` 或 `hugailab-xxx-xxxx`（前缀后 1–2 段）；`new_skill.py` 自动补前缀，用户显式要求其他前缀时遵循用户。
+- 新 skill 默认命名 `hugailab-` 前缀（如 `hugailab-xxxxx`、`hugailab-xxx-xxxx`，前缀后最多 5 段）；`new_skill.py` 自动补前缀，用户显式要求其他前缀时遵循用户。
 - Keep one creator authority and one root skill entrypoint.
 - Preserve platform-neutral source plus minimal adapters.
 - Branding-free by default: published packages contain no author profile, QR, or donation assets.

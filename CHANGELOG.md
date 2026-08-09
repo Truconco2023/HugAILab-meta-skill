@@ -2,7 +2,7 @@
 
 ## 3.4.0 (2026-08-10)
 
-- 新 skill 默认命名规则：`hugailab-xxxxx` 或 `hugailab-xxx-xxxx`。`new_skill.py` 自动为名称补 `hugailab-` 前缀（已带前缀不重复添加），并校验前缀后 1–2 段；`manifest.json` 的 `creator_defaults.skill_name_prefix` 默认改为 `hugailab`。
+- 新 skill 默认命名规则：`hugailab-` 前缀（`hugailab-xxxxx` 或 `hugailab-xxx-xxxx`，前缀后最多 5 段）。`new_skill.py` 自动为名称补前缀（已带前缀不重复添加）；`manifest.json` 的 `creator_defaults.skill_name_prefix` 默认改为 `hugailab`。
 - README 快速上手与 SKILL.md Creator Defaults 同步命名规则；CLI 输出新增 `name` 字段。
 
 ## 3.3.0 (2026-08-10)

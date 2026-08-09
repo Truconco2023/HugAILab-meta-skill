@@ -62,7 +62,7 @@ python3 ~/.agents/skills/hugailab-meta-skill/scripts/validate_skill.py \
 python3 scripts/new_skill.py my-demo --description "把周报整理成要点和待办"
 ```
 
-> 命名规则：新 skill 默认自动补 `hugailab-` 前缀（`my-demo` → `hugailab-my-demo`），前缀后 1–2 段小写字母/数字/连字符；已带前缀则不会重复添加。若需其他前缀，请显式说明。
+> 命名规则：新 skill 默认自动补 `hugailab-` 前缀（`my-demo` → `hugailab-my-demo`），前缀后最多 5 段小写字母/数字/连字符；已带前缀则不会重复添加。若需其他前缀，请显式说明。
 
 2. 编辑 `hugailab-my-demo/SKILL.md` 的 `description` 和正文，让触发描述贴合你的真实用法。
 3. 跑一次验证，再按报告补触发用例：

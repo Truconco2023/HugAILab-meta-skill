@@ -26,11 +26,11 @@ def validate_name(name: str) -> str:
     if raw in {"skill", "skills", "meta"}:
         raise SystemExit(f"reserved skill name: {raw!r}")
     core = raw[len(BRAND_PREFIX) + 1 :] if raw.startswith(f"{BRAND_PREFIX}-") else raw
-    if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+)?", core):
+    if not re.fullmatch(r"[a-z0-9]+(?:-[a-z0-9]+){0,4}", core):
         raise SystemExit(
             f"invalid skill name: {name!r} "
-            f"(HugAILab default is {BRAND_PREFIX}-<word> or {BRAND_PREFIX}-<word>-<word>; "
-            "lowercase letters, digits and 1-2 segments after the prefix)"
+            f"(HugAILab default is {BRAND_PREFIX}-<word> or {BRAND_PREFIX}-<a>-<b>; "
+            "lowercase letters, digits and at most 5 segments after the prefix)"
         )
     return raw if raw.startswith(f"{BRAND_PREFIX}-") else f"{BRAND_PREFIX}-{core}"
 

@@ -23,14 +23,19 @@ class NewSkillTest(unittest.TestCase):
         self.assertEqual(NEW_SKILL.validate_name(" My-Demo "), "hugailab-my-demo")
         self.assertEqual(NEW_SKILL.validate_name("hugailab-demo"), "hugailab-demo")
         self.assertEqual(NEW_SKILL.validate_name("hugailab-web-clipper"), "hugailab-web-clipper")
+        self.assertEqual(
+            NEW_SKILL.validate_name("hugailab-a-b-c-d-e"),
+            "hugailab-a-b-c-d-e",
+        )
+        self.assertEqual(NEW_SKILL.validate_name("a-b-c"), "hugailab-a-b-c")
         with self.assertRaises(SystemExit):
             NEW_SKILL.validate_name("Bad Name")
         with self.assertRaises(SystemExit):
             NEW_SKILL.validate_name("skill")
         with self.assertRaises(SystemExit):
-            NEW_SKILL.validate_name("hugailab-a-b-c")
+            NEW_SKILL.validate_name("hugailab-a-b-c-d-e-f")
         with self.assertRaises(SystemExit):
-            NEW_SKILL.validate_name("a-b-c")
+            NEW_SKILL.validate_name("a-b-c-d-e-f")
 
     def test_scaffold_mode_creates_valid_package(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
