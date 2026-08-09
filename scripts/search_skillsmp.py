@@ -108,7 +108,7 @@ def retry_delay(attempt: int, backoff: float, jitter: float) -> float:
 
 
 def fetch_once(args: argparse.Namespace) -> tuple[dict[str, Any], dict[str, str | None]]:
-    headers = {"Accept": "application/json", "User-Agent": "qiaomu-meta-skill/2.7"}
+    headers = {"Accept": "application/json", "User-Agent": "hugailab-meta-skill/3.0"}
     api_key = os.environ.get("SKILLSMP_API_KEY", "").strip()
     if api_key:
         headers["Authorization"] = f"Bearer {api_key}"

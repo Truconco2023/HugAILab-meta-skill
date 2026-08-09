@@ -67,8 +67,8 @@
       "weight": 2.0,
       "core": true
     },
-    "qiaomu": {
-      "phrases": ["qiaomu", "乔木", "向阳乔木"],
+    "brand": {
+      "phrases": ["hugailab", "hugai", "qiaomu", "乔木", "向阳乔木"],
       "weight": 0.5,
       "core": false
     },
@@ -133,12 +133,12 @@
   ],
   "should_trigger": [
     {
-      "text": "把这个流程整理成一个 qiaomu skill",
+      "text": "把这个流程整理成一个 hugailab skill",
       "family": "cn_workflow_to_skill",
       "required": ["skill", "source_material", "authoring_action"]
     },
     {
-      "text": "基于这个开源 skill 优化升级乔木 meta skill",
+      "text": "基于这个开源 skill 优化升级 HugAILab meta skill",
       "family": "cn_upgrade_existing",
       "required": ["skill", "authoring_action"]
     },
@@ -153,7 +153,7 @@
       "required": ["skill", "source_material", "authoring_action"]
     },
     {
-      "text": "Create a skill from this repeated workflow and package it for Qiaomu team reuse.",
+      "text": "Create a skill from this repeated workflow and package it for HugAILab team reuse.",
       "family": "en_workflow_to_skill",
       "required": ["skill", "source_material", "authoring_action"]
     },
@@ -163,14 +163,14 @@
       "required": ["skill", "source_material", "authoring_action"]
     },
     {
-      "text": "先搜索 skill 目录，找安装量最高、口碑证据强的相关能力，学习后创建一个更好的 qiaomu skill",
+      "text": "先搜索 skill 目录，找安装量最高、口碑证据强的相关能力，学习后创建一个更好的 hugailab skill",
       "family": "cn_prior_art_synthesis",
       "required": ["skill", "prior_art", "authoring_action"]
     },
     {
-      "text": "Research the strongest existing agent skills, then synthesize an original Qiaomu skill without copying them.",
+      "text": "Research the strongest existing agent skills, then synthesize an original HugAILab skill without copying them.",
       "family": "en_prior_art_synthesis",
-      "required": ["skill", "qiaomu"],
+      "required": ["skill", "brand"],
       "min_score": 0.34
     },
     {
@@ -179,7 +179,7 @@
       "required": ["skill", "authoring_action"]
     },
     {
-      "text": "审计这个 qiaomu skill 的路由边界和输出评估，只给发现和修复建议，先不要改文件",
+      "text": "审计这个 hugailab skill 的路由边界和输出评估，只给发现和修复建议，先不要改文件",
       "family": "cn_audit_only",
       "required": ["skill", "eval_release"]
     },
@@ -189,17 +189,17 @@
       "required": ["skill", "authoring_action"]
     },
     {
-      "text": "把这个 qiaomu skill 发布到 GitHub，并完成 PR、Release 和干净安装验证",
+      "text": "把这个 hugailab skill 发布到 GitHub，并完成 PR、Release 和干净安装验证",
       "family": "cn_full_publish",
       "required": ["skill", "authoring_action"]
     },
     {
-      "text": "先 dry-run 检查这个乔木 skill 的 README、Profile、版本和发布条件，不要写 GitHub",
+      "text": "先 dry-run 检查这个 HugAILab skill 的 README、Profile、版本和发布条件，不要写 GitHub",
       "family": "cn_publish_dry_run",
       "required": ["skill", "authoring_action"]
     },
     {
-      "text": "把这个 qiaomu skill 直接推 main 发布，如果不安全就改成规范 PR 流程",
+      "text": "把这个 hugailab skill 直接推 main 发布，如果不安全就改成规范 PR 流程",
       "family": "cn_unsafe_publish_correction",
       "required": ["skill", "authoring_action"]
     },

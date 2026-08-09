@@ -1,6 +1,6 @@
 """Minimal YAML-subset loader used when PyYAML is unavailable.
 
-The Qiaomu/HugAILab scripts only need a small, predictable subset of YAML:
+The HugAILab scripts only need a small, predictable subset of YAML:
 nested mappings, block and flow lists, quoted/plain scalars, booleans, nulls,
 numbers, comments, and ``|``/``>`` block scalars.  This module implements that
 subset with the standard library so package validation and Skill IR export keep

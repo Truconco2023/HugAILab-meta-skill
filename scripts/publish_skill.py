@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
-"""Safely prepare and publish a Qiaomu agent skill through GitHub review gates.
+"""Safely prepare and publish a HugAILab agent skill through GitHub review gates.
 
 This script absorbs the useful behavior of qiaomu-skill-publisher while keeping
-qiaomu-meta-skill's stricter release contract: no direct default-branch push,
+hugailab-meta-skill's stricter release contract: no direct default-branch push,
 immutable released versions, PR inspection, a versioned GitHub Release, and a
 clean npx installation check before reporting success.
 """
@@ -110,7 +110,7 @@ def identity(root: Path) -> dict[str, str]:
     if not skill_path.is_file():
         raise PublishError("missing SKILL.md")
     if not manifest_path.is_file():
-        raise PublishError("missing manifest.json; public Qiaomu skills require versioned metadata")
+        raise PublishError("missing manifest.json; public HugAILab skills require versioned metadata")
     frontmatter = VALIDATOR.parse_frontmatter(skill_path.read_text(encoding="utf-8"))
     manifest = load_json(manifest_path)
     name = str(frontmatter.get("name", "")).strip()
@@ -587,7 +587,7 @@ def publish(args: argparse.Namespace, runner: Runner = run) -> dict[str, Any]:
     pr_url = existing_pr.stdout.strip() if existing_pr.ok else ""
     if not pr_url:
         body = (
-            f"Publish `{meta['name']}` v{meta['version']} through the Qiaomu governed release flow.\n\n"
+            f"Publish `{meta['name']}` v{meta['version']} through the HugAILab governed release flow.\n\n"
             "- package validation and secret scan run locally\n"
             "- no direct default-branch push\n"
             "- merge is followed by a versioned Release and clean installation check"
@@ -698,7 +698,7 @@ def publish(args: argparse.Namespace, runner: Runner = run) -> dict[str, Any]:
 
 
 def parse_args() -> argparse.Namespace:
-    parser = argparse.ArgumentParser(description="Prepare and publish a Qiaomu skill through branch, PR, Release, and install gates.")
+    parser = argparse.ArgumentParser(description="Prepare and publish a HugAILab skill through branch, PR, Release, and install gates.")
     parser.add_argument("skill_dir", help="Skill package directory")
     parser.add_argument("--github-user")
     parser.add_argument("--repo-name")

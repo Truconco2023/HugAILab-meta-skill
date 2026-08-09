@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Validate the lightweight Qiaomu skill package contract."""
+"""Validate the lightweight HugAILab skill package contract."""
 
 from __future__ import annotations
 
@@ -24,7 +24,7 @@ REQUIRED_ROOT_FILES = ["SKILL.md", "README.md", "agents/interface.yaml", "manife
 REQUIRED_FRONTMATTER = ["name", "description"]
 REQUIRED_INTERFACE_FIELDS = ["display_name", "short_description", "default_prompt"]
 REQUIRED_MANIFEST_FIELDS = ["name", "version", "owner", "updated_at", "status", "maturity_tier"]
-META_SKILL_NAMES = {"qiaomu-meta-skill", "HugAILab-meta-skill"}
+META_SKILL_NAMES = {"hugailab-meta-skill", "HugAILab-meta-skill", "qiaomu-meta-skill"}
 IGNORED_DISCOVERY_DIRS = {".git", "dist", "node_modules", "__pycache__"}
 FORBIDDEN_DISCOVERY_DEPENDENCIES = (
     '.agents/skills/find-skills/SKILL.md',
@@ -52,7 +52,7 @@ def parse_yaml_text(text: str) -> Any:
     """Parse YAML with PyYAML when available, otherwise use the bundled subset parser."""
     if yaml is not None:
         return yaml.safe_load(text)
-    from qiaomu_yaml import safe_load  # type: ignore
+    from hugai_yaml import safe_load  # type: ignore
 
     return safe_load(text)
 
@@ -163,7 +163,7 @@ def validate(root: Path) -> dict[str, Any]:
                     failures.append(f"{rel} contains external discovery-skill dependency: {forbidden}")
         for relative in ("scripts/research_prior_art.py", "scripts/release_check.py", "scripts/publish_skill.py"):
             if not (root / relative).is_file():
-                failures.append(f"qiaomu-meta-skill missing built-in factory script: {relative}")
+                failures.append(f"{root.name} missing built-in factory script: {relative}")
 
     skill_entrypoints = discover_skill_entrypoints(root)
     nested_entrypoints = [path for path in skill_entrypoints if path != Path("SKILL.md")]
@@ -183,8 +183,8 @@ def validate(root: Path) -> dict[str, Any]:
             if not frontmatter.get(field):
                 failures.append(f"SKILL.md missing frontmatter field: {field}")
         description = str(frontmatter.get("description", ""))
-        if frontmatter.get("name") == "qiaomu-meta-skill":
-            for token in ("skill", "qiaomu", "workflow"):
+        if frontmatter.get("name") == "hugailab-meta-skill":
+            for token in ("skill", "hugailab", "workflow"):
                 if token not in description.lower():
                     warnings.append(f"description may be missing routing token: {token}")
         for rel in markdown_links(skill_text):
@@ -280,7 +280,7 @@ def validate(root: Path) -> dict[str, Any]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Validate a Qiaomu skill package.")
+    parser = argparse.ArgumentParser(description="Validate a HugAILab skill package.")
     parser.add_argument("skill_dir", nargs="?", default=".", help="Skill directory to validate.")
     args = parser.parse_args()
 

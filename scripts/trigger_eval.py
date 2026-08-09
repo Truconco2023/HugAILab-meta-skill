@@ -96,7 +96,11 @@ DEFAULT_CONCEPTS: dict[str, dict[str, Any]] = {
         "weight": 2.0,
         "core": True,
     },
-    "qiaomu": {"phrases": ["qiaomu", "乔木", "向阳乔木"], "weight": 0.5, "core": False},
+    "brand": {
+        "phrases": ["hugailab", "hugai", "qiaomu", "乔木", "向阳乔木"],
+        "weight": 0.5,
+        "core": False,
+    },
     "eval_release": {
         "phrases": [
             "eval",
@@ -144,7 +148,7 @@ POSITIVE_BUCKETS = ("should_trigger", "should_not_trigger", "near_neighbor")
 def parse_yaml_text(text: str) -> Any:
     if yaml is not None:
         return yaml.safe_load(text)
-    from qiaomu_yaml import safe_load
+    from hugai_yaml import safe_load
 
     return safe_load(text)
 

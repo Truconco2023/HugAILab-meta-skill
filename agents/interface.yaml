@@ -1,7 +1,7 @@
 interface:
-  display_name: "Qiaomu Meta Skill"
-  short_description: "Research, create, evaluate, and safely publish Qiaomu skills end to end"
-  default_prompt: "Use $qiaomu-meta-skill as the single skill-authoring and publishing authority. Use its resilient built-in dual-catalog research runner across skills.sh and SkillsMP, deduplicate and verify candidates in GitHub source, synthesize proven mechanisms without copying, and create, improve, migrate, audit, or release my skill package with proportional evals and executable release gates. When I explicitly request publication, use the bundled self-contained publisher to prepare LICENSE and README, then publish through a feature branch, PR, versioned GitHub Release, npx discovery and isolated clean install. Never push directly to main/master, never reuse a released version, and do not invoke a separate creator, discovery or publisher skill. Qiaomu profile/QR injection is opt-in and must not happen unless I explicitly ask. In the final handoff, name the skills studied, explain what was learned and rejected, and separate design advantages from validated advantages and hypotheses. Respect audit-only requests by reporting findings without editing files."
+  display_name: "HugAILab Meta Skill"
+  short_description: "Research, create, evaluate, and safely publish HugAILab skills end to end"
+  default_prompt: "Use $hugailab-meta-skill as the single skill-authoring and publishing authority. Use its resilient built-in dual-catalog research runner across skills.sh and SkillsMP, deduplicate and verify candidates in GitHub source, synthesize proven mechanisms without copying, and create, improve, migrate, audit, or release my skill package with proportional evals and executable release gates. When I explicitly request publication, use the bundled self-contained publisher to prepare LICENSE and README, then publish through a feature branch, PR, versioned GitHub Release, npx discovery and isolated clean install. Never push directly to main/master, never reuse a released version, and do not invoke a separate creator, discovery or publisher skill. Profile/QR injection (--qiaomu-profile) is opt-in and must not happen unless I explicitly ask. In the final handoff, name the skills studied, explain what was learned and rejected, and separate design advantages from validated advantages and hypotheses. Respect audit-only requests by reporting findings without editing files."
   examples:
     - "把这个流程整理成一个可复用的 skill"
     - "优化这个已有 skill，补 trigger eval 和发布门禁"
@@ -47,7 +47,7 @@ gates:
     - "README hook and natural trigger examples"
     - "clear exclusions"
   production:
-    - "qiaomu-meta-skill is the single authoring authority"
+    - "hugailab-meta-skill is the single authoring authority"
     - "prior-art research report or explicit missing evidence"
     - "skills.sh and SkillsMP source-separated discovery or explicit catalog unavailability"
     - "user-facing reference, lesson, rejection, advantage, and evidence handoff"
@@ -70,4 +70,4 @@ gates:
     - "local, PR, and published release readiness checked by executable gates"
     - "manifest, Skill IR, trigger report, remote version, and release evidence remain consistent"
     - "bundled publisher forbids direct default-branch push and released-version reuse"
-    - "README, MIT LICENSE, bundled Qiaomu profile, PR discussion/check state, Release, discovery and clean install are verified"
+    - "README, MIT LICENSE, optional profile assets, PR discussion/check state, Release, discovery and clean install are verified"

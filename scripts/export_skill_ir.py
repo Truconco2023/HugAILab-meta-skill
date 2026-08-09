@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Export a compact Skill IR document from a Qiaomu skill package."""
+"""Export a compact Skill IR document from a HugAILab skill package."""
 
 from __future__ import annotations
 
@@ -21,7 +21,7 @@ except Exception:  # pragma: no cover
     yaml = None
 
 
-SCHEMA_VERSION = "2.0.0-qiaomu-lite"
+SCHEMA_VERSION = "2.0.0-hugailab-lite"
 
 
 def read_text(path: Path) -> str:
@@ -41,7 +41,7 @@ def load_json(path: Path) -> dict[str, Any]:
 def parse_yaml_text(text: str) -> Any:
     if yaml is not None:
         return yaml.safe_load(text)
-    from qiaomu_yaml import safe_load
+    from hugai_yaml import safe_load
 
     return safe_load(text)
 
@@ -146,7 +146,7 @@ def build_ir(root: Path) -> dict[str, Any]:
         "intent": {
             "description": frontmatter.get("description", ""),
             "job_to_be_done": intent.get("job_to_be_done") or frontmatter.get("description", ""),
-            "target_users": intent.get("target_users", ["Qiaomu operator"]),
+            "target_users": intent.get("target_users", ["HugAILab operator"]),
             "inputs": intent.get("inputs", []),
             "outputs": intent.get("outputs", []),
             "exclusions": intent.get("exclusions", []),
@@ -189,7 +189,7 @@ def build_ir(root: Path) -> dict[str, Any]:
 
 
 def main() -> None:
-    parser = argparse.ArgumentParser(description="Export compact Skill IR for a Qiaomu skill.")
+    parser = argparse.ArgumentParser(description="Export compact Skill IR for a HugAILab skill.")
     parser.add_argument("skill_dir", nargs="?", default=".", help="Skill directory.")
     parser.add_argument("--output", "-o", help="Write JSON to this path.")
     args = parser.parse_args()

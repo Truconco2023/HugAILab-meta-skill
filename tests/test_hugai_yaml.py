@@ -9,9 +9,9 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[1]
-SPEC = importlib.util.spec_from_file_location("qiaomu_yaml", ROOT / "scripts" / "qiaomu_yaml.py")
+SPEC = importlib.util.spec_from_file_location("hugai_yaml", ROOT / "scripts" / "hugai_yaml.py")
 if SPEC is None or SPEC.loader is None:  # pragma: no cover
-    raise RuntimeError("unable to load scripts/qiaomu_yaml.py")
+    raise RuntimeError("unable to load scripts/hugai_yaml.py")
 YAML = importlib.util.module_from_spec(SPEC)
 SPEC.loader.exec_module(YAML)
 
@@ -77,7 +77,7 @@ plain: value # comment
 
     def test_real_interface_yaml_parses(self) -> None:
         payload = YAML.safe_load((ROOT / "agents" / "interface.yaml").read_text(encoding="utf-8"))
-        self.assertEqual(payload["interface"]["display_name"], "Qiaomu Meta Skill")
+        self.assertEqual(payload["interface"]["display_name"], "HugAILab Meta Skill")
         self.assertIn("openai", payload["compatibility"]["adapter_targets"])
         self.assertIn("scaffold", payload["gates"])
 
@@ -86,9 +86,9 @@ plain: value # comment
         lines = text.splitlines()
         end = lines[1:].index("---") + 1
         payload = YAML.safe_load("\n".join(lines[1:end]))
-        self.assertEqual(payload["name"], "qiaomu-meta-skill")
+        self.assertEqual(payload["name"], "hugailab-meta-skill")
         self.assertIn("Research, create", payload["description"])
-        self.assertEqual(payload["metadata"]["version"], "2.9.0")
+        self.assertEqual(payload["metadata"]["version"], "3.0.0")
 
 
 if __name__ == "__main__":

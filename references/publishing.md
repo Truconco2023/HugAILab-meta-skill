@@ -1,6 +1,6 @@
 # Self-Contained Skill Publishing
 
-`qiaomu-meta-skill` owns the complete public release path. Do not require or invoke a separate publisher skill after this package is selected.
+`hugailab-meta-skill` owns the complete public release path. Do not require or invoke a separate publisher skill after this package is selected.
 
 ## Capability contract
 
@@ -25,7 +25,7 @@ Read-only audit:
 python3 scripts/publish_skill.py /path/to/skill --dry-run
 ```
 
-Prepare LICENSE, README and Qiaomu profile locally without GitHub writes:
+Prepare LICENSE and README locally without GitHub writes (profile assets only with `--qiaomu-profile`):
 
 ```bash
 python3 scripts/publish_skill.py /path/to/skill --prepare-only

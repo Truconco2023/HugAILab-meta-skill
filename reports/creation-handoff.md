@@ -2,9 +2,16 @@
 
 ## Result
 
-- Skill: `qiaomu-meta-skill` 2.9.0（fork：`Truconco2023/HugAILab-meta-skill`）
+- Skill: `hugailab-meta-skill` 3.0.0（fork：`Truconco2023/HugAILab-meta-skill`）
 - Job: research, create, evaluate, package, govern, and safely publish reusable agent skills through one self-contained workflow
-- Status: 本地候选已完整验证（无 PyYAML 环境 48/48 测试、34/34 触发评测、0 个包校验失败）；公开发布与干净安装证明在 v2.9.0 发布流程完成前保持 `missing evidence`
+- Status: 本地候选已完整验证（无 PyYAML 环境 48/48 测试、34/34 触发评测、0 个包校验失败）；公开发布与干净安装证明在 v3.0.0 发布流程完成前保持 `missing evidence`
+
+## v3.0.0 彻底改名
+
+- 内部 skill 名由 `qiaomu-meta-skill` 改为 `hugailab-meta-skill`：SKILL.md frontmatter、manifest、interface.yaml、README、安装命令、`~/.agents/skills` 路径、校验器 `META_SKILL_NAMES`、发布器错误信息全部同步。
+- 内置 YAML 模块由 `qiaomu_yaml.py` 更名为 `hugai_yaml.py`；触发评测品牌概念由 `qiaomu` 改为 `brand`（phrases 保留 `hugailab`/`hugai`，同时兼容 `qiaomu`/`乔木` 旧说法）。
+- 方法文档中的品牌称谓更新为 HugAILab；上游 `joeseesun/qiaomu-meta-skill`、`qiaomu-skill-publisher`、`qiaomu-profile` 资产、`--qiaomu-profile` 标志、README 上游案例表与 `向阳乔木` 署名按来源保留。
+- 版本升至 3.0.0（major bump，因为对外身份变更）；`search_skillsmp.py` User-Agent 同步为 `hugailab-meta-skill/3.0`。
 
 ## v2.9.0 升级内容
 
@@ -40,7 +47,7 @@
 
 - Why shortlisted: direct meta-skill reference with full-lifecycle engineering, evaluation, governance, and portability concepts.
 - Learned: Skill IR, evidence boundaries, release gates, output evaluation, review layers, and post-release iteration.
-- Applied in: Qiaomu Skill OS layers, gate ladder, Skill IR export, output-eval method, and SkillOps references.
+- Applied in: HugAILab Skill OS layers, gate ladder, Skill IR export, output-eval method, and SkillOps references.
 
 ### `wshobson/agents@evaluation-methodology`
 
@@ -50,7 +57,7 @@
 
 ### `joeseesun/qiaomu-skill-publisher`
 
-- Why shortlisted: the user's explicit reference and the existing Qiaomu implementation of LICENSE, README, Profile, repository naming and `npx` installation.
+- Why shortlisted: the user's explicit reference and the upstream Qiaomu implementation of LICENSE, README, Profile, repository naming and `npx` installation.
 - Learned: idempotent profile markers, strict YAML handling, repository/skill-name separation, public README scaffolding, discovery and temporary installation.
 - Applied in: bundled `scripts/publish_skill.py`, `references/publishing.md`, profile assets, trigger cases and publisher regression tests.
 
@@ -78,6 +85,6 @@
 - Unit tests: 48/48 通过，新增 YAML 降级、触发评测严格性/覆盖度、发布器品牌默认值测试。
 - Avatar: 4096²/5.9MB → 512²/68.6KB。
 - 发布器 `--dry-run`、`--prepare-only` 行为由更新后的测试覆盖；默认不再写入 Profile。
-- Public release / clean-install proof for 2.9.0: `missing evidence` until the release workflow completes.
+- Public release / clean-install proof for 3.0.0: `missing evidence` until the release workflow completes.
 - Provider-backed head-to-head output evaluation: `missing evidence`.
 - Human blind comparison of trigger reliability: `missing evidence`.

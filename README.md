@@ -1,4 +1,4 @@
-# qiaomu-meta-skill
+# hugailab-meta-skill
 
 > 把一句「把这个流程做成 Skill」，变成一个真正能被发现、能稳定触发、能通过验证、还能一键开源的 Skill。
 
@@ -14,15 +14,15 @@ npx skills add Truconco2023/HugAILab-meta-skill
 安装以后，你只需要把提示词、SOP、聊天记录、旧 Skill、脚本或一个模糊想法交给 Agent：
 
 ```text
-用乔木元 Skill，把这套工作流做成一个可复用的 Skill；
+用 HugAILab Meta Skill，把这套工作流做成一个可复用的 Skill；
 先研究同类热门 Skill，完成触发评测和安全检查，然后发布到 GitHub。
 ```
 
 它会自己完成：**需求收敛 → 同类检索 → 取长避短 → Skill 设计 → 触发评测 → 格式校验 → README → API 泄露检查 → PR → Release → npx 安装验证**。
 
-**v2.9.0 本地候选已验证：** 48/48 单元测试、34/34 触发评测（18/18 场景族）、0 个包校验问题（无 PyYAML 环境同样通过）。公开发布证据以 [Releases](https://github.com/Truconco2023/HugAILab-meta-skill/releases) 为准。
+**v3.0.0 本地候选已验证：** 48/48 单元测试、34/34 触发评测（18/18 场景族）、0 个包校验问题（无 PyYAML 环境同样通过）。公开发布证据以 [Releases](https://github.com/Truconco2023/HugAILab-meta-skill/releases) 为准。
 
-## 为什么我做了这个
+## 为什么会有这个项目（上游背景）
 
 Skill 正在变成 Agent 时代真正可复用的软件单元，但“写一份 `SKILL.md`”离一个好用的 Skill 还很远：
 
@@ -32,13 +32,13 @@ Skill 正在变成 Agent 时代真正可复用的软件单元，但“写一份 
 - 本地能跑，不代表别人能安装，更不代表可以安全发布。
 - README、许可证、版本、密钥泄露、PR、Release 和安装证明，经常在最后一步一起失控。
 
-Anthropic 与 OpenAI 的官方 `skill-creator` 奠定了很好的基础。乔木元 Skill 在此之上补齐了我实际做几十个 Skill 时最需要的一段：**先搜索再创造、用证据控制质量，并把成品安全发布给别人使用。**
+Anthropic 与 OpenAI 的官方 `skill-creator` 奠定了很好的基础。上游 `qiaomu-meta-skill` 在此之上补齐了作者实际做几十个 Skill 时最需要的一段：**先搜索再创造、用证据控制质量，并把成品安全发布给别人使用。**
 
-初始方法来自搭档姚老师的 [`yaojingang/yao-meta-skill`](https://github.com/yaojingang/yao-meta-skill)。我继续研究并整合 Anthropic、OpenAI 等 Agent Skill 的公开最佳实践，随后加入 skills.sh、SkillsMP、GitHub 验源、乔木式轻量门禁与自包含发布能力。
+初始方法来自搭档姚老师的 [`yaojingang/yao-meta-skill`](https://github.com/yaojingang/yao-meta-skill)。上游作者继续研究并整合 Anthropic、OpenAI 等 Agent Skill 的公开最佳实践，随后加入 skills.sh、SkillsMP、GitHub 验源、轻量门禁与自包含发布能力；HugAILab fork 在此基础上迭代维护。
 
 ## 它比普通 Skill 创建器多做什么
 
-| 能力 | 普通“生成 SKILL.md” | qiaomu-meta-skill |
+| 能力 | 普通“生成 SKILL.md” | hugailab-meta-skill |
 |---|---:|---:|
 | 从 Prompt / SOP / 对话 / 旧 Skill 提炼工作流 | ✓ | ✓ |
 | 先搜索 skills.sh 与 SkillsMP 的相关 Skill |  | ✓ |
@@ -47,16 +47,16 @@ Anthropic 与 OpenAI 的官方 `skill-creator` 奠定了很好的基础。乔木
 | 测试该触发与不该触发的真实说法 | 视实现而定 | ✓ |
 | 区分设计优势、已验证优势和待验证假设 |  | ✓ |
 | 校验目录、版本、上下文预算与递归发现 |  | ✓ |
-| README、MIT License、乔木 Profile 自动准备 |  | ✓ |
+| README、MIT License、可选 Profile（需显式开启） |  | ✓ |
 | Secret / API 泄露扫描 |  | ✓ |
 | 功能分支、PR、检查、Release |  | ✓ |
 | `npx skills add` 公开发现与隔离安装验证 |  | ✓ |
 
 它不是让 Skill 变得更重，而是让复杂度与风险匹配：个人试验走轻量 `Scaffold`，公开发布才启用完整 `Governed` 门禁。
 
-## 真实做出来过什么
+## 上游真实做出来过什么
 
-截至 2026-08-04，我扫描并去重了本机 Codex 会话、创建交接和 prior-art 报告。能确认有明确创建或实质重构证据的 Qiaomu Skill 共 **28 个**；其中 **18 个已有公开仓库**。这不是“可能适用”的演示列表，而是真实对话留下的工作结果。
+截至 2026-08-04，上游作者扫描并去重了本机 Codex 会话、创建交接和 prior-art 报告。能确认有明确创建或实质重构证据的 Qiaomu Skill 共 **28 个**；其中 **18 个已有公开仓库**。这不是“可能适用”的演示列表，而是真实对话留下的工作结果。
 
 ### 已公开，可直接查看
 
@@ -94,7 +94,7 @@ Anthropic 与 OpenAI 的官方 `skill-creator` 奠定了很好的基础。乔木
 
 ## 它研究过哪些 Skill
 
-乔木元 Skill 不会看到排行榜第一名就照搬。它会从 skills.sh、SkillsMP 与 GitHub 找出“流行度锚点、可信来源、互补专家”，阅读源文件后再决定保留、改造、拒绝或原创。
+HugAILab Meta Skill 不会看到排行榜第一名就照搬。它会从 skills.sh、SkillsMP 与 GitHub 找出“流行度锚点、可信来源、互补专家”，阅读源文件后再决定保留、改造、拒绝或原创。
 
 <details>
 <summary><strong>已进入公开 prior-art 报告的完整去重清单</strong></summary>
@@ -152,7 +152,7 @@ Anthropic 与 OpenAI 的官方 `skill-creator` 奠定了很好的基础。乔木
 - [`nyblnet/bento`](https://github.com/nyblnet/bento)
 - [`yArna/isChinaUser`](https://github.com/yArna/isChinaUser)
 - [`larksuite/cli`](https://github.com/larksuite/cli)
-- 本地 `baocut`、`gsap`、`lottie` Skill，以及 `qiaomu-mondo-poster-design` 等乔木已有能力
+- 本地 `baocut`、`gsap`、`lottie` Skill，以及 `qiaomu-mondo-poster-design` 等上游已有能力
 
 </details>
 
@@ -205,15 +205,15 @@ npx skills add Truconco2023/HugAILab-meta-skill
 只安装这个 Skill：
 
 ```bash
-npx skills add Truconco2023/HugAILab-meta-skill --skill qiaomu-meta-skill
+npx skills add Truconco2023/HugAILab-meta-skill --skill hugailab-meta-skill
 ```
 
 验证：
 
 ```bash
-test -f ~/.agents/skills/qiaomu-meta-skill/SKILL.md
-python3 ~/.agents/skills/qiaomu-meta-skill/scripts/validate_skill.py \
-  ~/.agents/skills/qiaomu-meta-skill
+test -f ~/.agents/skills/hugailab-meta-skill/SKILL.md
+python3 ~/.agents/skills/hugailab-meta-skill/scripts/validate_skill.py \
+  ~/.agents/skills/hugailab-meta-skill
 ```
 
 前置条件：
@@ -317,7 +317,7 @@ Upstream inspiration: https://github.com/yaojingang/yao-meta-skill; https://gith
 <!-- fork-note:start -->
 ## 关于本 Fork
 
-本仓库由 [HugAILab](https://github.com/Truconco2023) 维护，基于上游 `joeseesun/qiaomu-meta-skill` v2.8.1 继续迭代。默认不注入任何作者个人品牌、二维码或打赏入口；如需原版乔木 Profile，请使用 `--qiaomu-profile` 显式开启。
+本仓库由 [HugAILab](https://github.com/Truconco2023) 维护，基于上游 `joeseesun/qiaomu-meta-skill` 继续迭代，内部名称已改为 `hugailab-meta-skill`（v3.0.0）。默认不注入任何作者个人品牌、二维码或打赏入口；如需原版乔木 Profile，请使用 `--qiaomu-profile` 显式开启。
 
 <!-- fork-note:end -->
 
@@ -326,7 +326,7 @@ Upstream inspiration: https://github.com/yaojingang/yao-meta-skill; https://gith
 <a name="english"></a>
 ## English
 
-`qiaomu-meta-skill` turns prompts, SOPs, transcripts, scripts, and existing skills into researched, evaluated, installable agent-skill packages.
+`hugailab-meta-skill` turns prompts, SOPs, transcripts, scripts, and existing skills into researched, evaluated, installable agent-skill packages.
 
 Unlike a one-shot `SKILL.md` generator, it includes dual-catalog prior-art research, GitHub source verification, trigger evaluation, evidence-aware release gates, secret scanning, pull-request publication, versioned Releases, and clean `npx` installation verification.
 
@@ -340,7 +340,7 @@ Try saying:
 - “Research the strongest related skills, then synthesize an original version.”
 - “Publish this skill to GitHub and prove that a clean machine can discover and install it.”
 
-The project is intentionally fork-friendly: install it, run a real workflow, then replace Qiaomu's defaults with your own judgment, tools, style, and evaluation boundary.
+The project is intentionally fork-friendly: install it, run a real workflow, then replace the upstream defaults with your own judgment, tools, style, and evaluation boundary.
 
 ## License
 

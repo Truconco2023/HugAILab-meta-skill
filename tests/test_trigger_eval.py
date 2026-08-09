@@ -57,7 +57,7 @@ class TriggerEvalTest(unittest.TestCase):
                     {
                         "text": "把这个流程整理成一个 skill",
                         "family": "workflow",
-                        "required": ["skill", "qiaomu"],
+                        "required": ["skill", "brand"],
                     }
                 ],
                 "should_not_trigger": [],
@@ -66,7 +66,7 @@ class TriggerEvalTest(unittest.TestCase):
         )
         strict = EVAL.evaluate(Path(root), cases)
         self.assertFalse(strict["ok"])
-        self.assertTrue(any("qiaomu" in item["required_missing"] for item in strict["failures"]))
+        self.assertTrue(any("brand" in item["required_missing"] for item in strict["failures"]))
         lenient = EVAL.evaluate(Path(root), cases, lenient=True)
         self.assertTrue(lenient["ok"], lenient["failures"])
 
@@ -88,7 +88,7 @@ class TriggerEvalTest(unittest.TestCase):
                     {
                         "text": "发布这个 skill",
                         "family": "publish",
-                        "required": ["skill", "qiaomu", "eval_release"],
+                        "required": ["skill", "brand", "eval_release"],
                     },
                 ],
                 "should_not_trigger": [],
