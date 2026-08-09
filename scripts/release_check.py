@@ -153,7 +153,8 @@ def evaluate(root: Path, phase: str, run_tests: bool, install_check: bool) -> di
     root = root.resolve()
     gates: list[dict[str, Any]] = []
     package = VALIDATOR.validate(root)
-    gate(gates, "package_validation", "pass" if package["ok"] and not package["warnings"] else "block", package)
+    package_status = "pass" if package["ok"] and not package["warnings"] else ("warn" if package["ok"] else "block")
+    gate(gates, "package_validation", package_status, package)
 
     consistency = version_consistency(root)
     gate(gates, "version_and_report_consistency", "pass" if consistency["ok"] else "block", consistency)

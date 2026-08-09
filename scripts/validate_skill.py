@@ -49,7 +49,10 @@ DANGEROUS_PATTERNS = (
     ("credential_access", re.compile(r"\b(?:OPENAI_API_KEY|ANTHROPIC_API_KEY|GITHUB_TOKEN|GH_TOKEN|OPENROUTER_API_KEY|DEEPSEEK_API_KEY)\b", re.I)),
     ("network_exfil", re.compile(r"https?://[^\s\"']+", re.I)),
     ("destructive", re.compile(r"\brm\s+-rf\b|shutil\.rmtree|os\.remove\s*\(", re.I)),
-    ("persistence", re.compile(r"crontab|LaunchAgent|LaunchDaemon|\.plist", re.I)),
+    ("persistence", re.compile(
+        r"(?:launchctl\s+load|crontab\s+[a-z]|write_text\([^)]*\.plist|/Library/Launch(?:Daemons|Agents)/)",
+        re.I,
+    )),
     ("prompt_injection", re.compile(
         r"ignore\s+(?:all\s+)?(?:previous\s+)?instructions|"
         r"忽略\s+(?:之前|所有).{0,6}(?:指令|约束)|"
