@@ -15,6 +15,9 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Checkout default branch ref (published gate requires a named branch)
+        run: git checkout -B main
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
