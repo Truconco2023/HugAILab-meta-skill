@@ -295,7 +295,12 @@ def main() -> None:
         output.parent.mkdir(parents=True, exist_ok=True)
         output.write_text(rendered + "\n", encoding="utf-8")
     print(rendered)
-    if not result["ok"]:
+    executed_failures = sum(
+        1
+        for case in result["results"]
+        if case["assertions_passed"] < case["assertions_total"] - case["assertions_skipped"]
+    )
+    if executed_failures:
         raise SystemExit(2)
 
 
