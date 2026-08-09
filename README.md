@@ -31,7 +31,7 @@ npx skills add Truconco2023/HugAILab-meta-skill
 - **无 PyYAML 也能自校验**：内置纯标准库 YAML 解析器，干净环境开箱即用。
 - **触发评测更严格**：加权概念 + 每用例必选概念 + 场景族覆盖，默认 strict 模式，杜绝"两个词碰巧重叠就通过"。
 - **资产体积精简**：头像由 5.9MB 压缩到 68.6KB。
-- **品牌中立**：默认不注入任何作者个人品牌、二维码或打赏入口；发布产物只带持有者自己的版权信息。
+- **默认命名规则**：新 skill 自动使用 `hugailab-` 前缀，格式为 `hugailab-xxxxx` 或 `hugailab-xxx-xxxx`，提升 Hug AI Lab 辨识度；仍不注入作者个人品牌、二维码或打赏入口。
 - **彻底改名**：内部 skill 名为 `hugailab-meta-skill`（v3.x），上游署名按来源保留。
 
 ## 安装与验证
@@ -62,12 +62,14 @@ python3 ~/.agents/skills/hugailab-meta-skill/scripts/validate_skill.py \
 python3 scripts/new_skill.py my-demo --description "把周报整理成要点和待办"
 ```
 
-2. 编辑 `my-demo/SKILL.md` 的 `description` 和正文，让触发描述贴合你的真实用法。
+> 命名规则：新 skill 默认自动补 `hugailab-` 前缀（`my-demo` → `hugailab-my-demo`），前缀后 1–2 段小写字母/数字/连字符；已带前缀则不会重复添加。若需其他前缀，请显式说明。
+
+2. 编辑 `hugailab-my-demo/SKILL.md` 的 `description` 和正文，让触发描述贴合你的真实用法。
 3. 跑一次验证，再按报告补触发用例：
 
 ```bash
-python3 scripts/validate_skill.py my-demo
-python3 scripts/trigger_eval.py my-demo --cases my-demo/evals/trigger_cases.json
+python3 scripts/validate_skill.py hugailab-my-demo
+python3 scripts/trigger_eval.py hugailab-my-demo --cases hugailab-my-demo/evals/trigger_cases.json
 ```
 
 4. 需要团队复用或公开发布时，用 `--mode production` 重新生成，或直接看仓库内的完整示例：[examples/demo-skill](examples/demo-skill)（示例按规范使用 `SKILL.example.md`，复制为 `SKILL.md` 即可独立使用）。

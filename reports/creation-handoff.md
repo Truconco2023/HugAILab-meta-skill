@@ -2,9 +2,14 @@
 
 ## Result
 
-- Skill: `hugailab-meta-skill` 3.3.0（fork：`Truconco2023/HugAILab-meta-skill`）
+- Skill: `hugailab-meta-skill` 3.4.0（fork：`Truconco2023/HugAILab-meta-skill`）
 - Job: research, create, evaluate, package, govern, and safely publish reusable agent skills through one self-contained workflow
 - Status: v3.1.0 已发布并通过 published 门禁；v3.2.0 为新一轮质量/易用性升级，本地验证通过后待推送合并与发布。
+
+## v3.4.0 升级内容（2026-08-10）
+
+- 新增默认命名规则：新 skill 一律 `hugailab-xxxxx` 或 `hugailab-xxx-xxxx`；`new_skill.py` 自动补前缀、前缀后限 1–2 段，`creator_defaults.skill_name_prefix` 默认 `hugailab`。
+- 目的：提升 Hug AI Lab 品牌辨识度与影响力；用户显式要求其他前缀时遵循用户。
 
 ## v3.3.0 升级内容（2026-08-10）
 

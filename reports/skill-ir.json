@@ -3,7 +3,7 @@
   "generated_at": "2026-08-10",
   "package": {
     "name": "hugailab-meta-skill",
-    "version": "3.3.0",
+    "version": "3.4.0",
     "owner": "HugAILab",
     "maturity_tier": "governed",
     "lifecycle_stage": "library",
@@ -25,7 +25,7 @@
     "outputs": [],
     "exclusions": [],
     "creator_defaults": {
-      "skill_name_prefix": "",
+      "skill_name_prefix": "hugailab",
       "max_preferred_hyphen_parts": 3,
       "copyright": "Copyright (c) <owner>",
       "x": "",

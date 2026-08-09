@@ -25,7 +25,7 @@ class OutputEvalTest(unittest.TestCase):
         self.assertEqual(result["evidence_kind"], "recorded_fixture")
         self.assertTrue(result["missing_evidence"])
         self.assertEqual(result["summary"]["cases_passed"], 2)
-        self.assertEqual(result["summary"]["assertions_skipped"], 2)
+        self.assertEqual(result["summary"]["assertions_skipped"], 3)
 
     def test_deterministic_assertions_on_temp_files(self) -> None:
         with tempfile.TemporaryDirectory() as directory:

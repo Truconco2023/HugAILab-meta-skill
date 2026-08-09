@@ -6,8 +6,8 @@
   "summary": {
     "cases_total": 3,
     "cases_passed": 3,
-    "assertions_total": 14,
-    "assertions_executed": 14,
+    "assertions_total": 16,
+    "assertions_executed": 16,
     "assertions_skipped": 0,
     "with_skill_assertion_pass_rate": 1.0,
     "baseline_passed_total": 0,
@@ -123,12 +123,12 @@
     {
       "id": "self_llm_judge_evidence",
       "prompt": "用 hugailab-meta-skill 交付可验证的 skill",
-      "assertions_total": 5,
-      "assertions_passed": 5,
+      "assertions_total": 7,
+      "assertions_passed": 7,
       "assertions_skipped": 0,
       "baseline_passed": 0,
       "baseline_detail": "baseline produced no package artifacts; scoring 0 for file-backed assertions",
-      "human_notes": "v3.3.0 自证：新能力以 provider-backed 证据落地。",
+      "human_notes": "v3.4.0 自证：命名规则 + 新能力以 provider-backed 证据落地。",
       "provider_used": true,
       "results": [
         {
@@ -159,6 +159,15 @@
         },
         {
           "assertion": {
+            "kind": "contains",
+            "path": "scripts/new_skill.py",
+            "needle": "BRAND_PREFIX = \"hugailab\""
+          },
+          "passed": true,
+          "detail": "contains 'BRAND_PREFIX = \"hugailab\"' in scripts/new_skill.py"
+        },
+        {
+          "assertion": {
             "kind": "llm_judge",
             "prompt": "hugailab-meta-skill 的 output_eval.py 是否支持 llm_judge 网络重试参数 --retries 与 --retry-backoff，并在 fixture 模式统计 assertions_skipped？只回答 yes 或 no。",
             "must": "yes"
@@ -170,6 +179,15 @@
           "assertion": {
             "kind": "llm_judge",
             "prompt": "references/output-eval-method.md 是否包含 llm_judge 断言写法一节，且建议自包含提示词、避免逐字比对式表述？只回答 yes 或 no。",
+            "must": "yes"
+          },
+          "passed": true,
+          "detail": "llm answered 'yes', expected 'yes'"
+        },
+        {
+          "assertion": {
+            "kind": "llm_judge",
+            "prompt": "new_skill.py 是否默认把新 skill 名规范化为 hugailab- 前缀（BRAND_PREFIX）且前缀后限 1-2 段？只回答 yes 或 no。",
             "must": "yes"
           },
           "passed": true,

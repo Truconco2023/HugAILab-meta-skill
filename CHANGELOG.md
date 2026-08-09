@@ -1,5 +1,10 @@
 # Changelog
 
+## 3.4.0 (2026-08-10)
+
+- 新 skill 默认命名规则：`hugailab-xxxxx` 或 `hugailab-xxx-xxxx`。`new_skill.py` 自动为名称补 `hugailab-` 前缀（已带前缀不重复添加），并校验前缀后 1–2 段；`manifest.json` 的 `creator_defaults.skill_name_prefix` 默认改为 `hugailab`。
+- README 快速上手与 SKILL.md Creator Defaults 同步命名规则；CLI 输出新增 `name` 字段。
+
 ## 3.3.0 (2026-08-10)
 
 - `output_eval.py`：`llm_judge` 网络调用支持重试（`--retries` / `--retry-backoff`），单次 connection reset 不再中断整轮评测；fixture 模式明确统计 `assertions_skipped`，pass rate 只按已执行断言计算，CLI 仅对已执行断言失败退出非零（`make check` 兼容 fixture 跳过）。
