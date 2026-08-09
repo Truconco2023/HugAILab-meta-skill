@@ -10,9 +10,8 @@ import unittest
 from http.client import IncompleteRead
 from pathlib import Path
 from types import SimpleNamespace
-from urllib.error import HTTPError
 from unittest.mock import MagicMock, patch
-
+from urllib.error import HTTPError
 
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location("search_skillsmp", ROOT / "scripts" / "search_skillsmp.py")
@@ -27,7 +26,7 @@ class FakeResponse:
         self.body = body
         self.headers = headers or {}
 
-    def __enter__(self) -> "FakeResponse":
+    def __enter__(self) -> FakeResponse:
         return self
 
     def __exit__(self, *_args: object) -> None:

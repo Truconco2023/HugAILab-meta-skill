@@ -1,0 +1,27 @@
+{
+  "recommended_threshold": 0.34,
+  "description_required_concepts": ["skill", "source_material"],
+  "positive_concepts": {
+    "skill": {"phrases": ["skill", "技能"], "weight": 3.0, "core": true},
+    "source_material": {
+      "phrases": ["会议", "纪要", "meeting", "notes", "记录"],
+      "weight": 2.0,
+      "core": true
+    }
+  },
+  "negative_patterns": ["不要做成 skill", "只总结"],
+  "should_trigger": [
+    {
+      "text": "用 hugai-demo 把这段会议纪要整理成行动项",
+      "family": "meeting_notes",
+      "required": ["skill", "source_material"]
+    }
+  ],
+  "should_not_trigger": [
+    {
+      "text": "帮我写一篇公众号文章",
+      "family": "article_only"
+    }
+  ],
+  "near_neighbor": []
+}

@@ -12,7 +12,6 @@ import unittest
 from pathlib import Path
 from unittest.mock import patch
 
-
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location("publish_skill", ROOT / "scripts" / "publish_skill.py")
 if SPEC is None or SPEC.loader is None:  # pragma: no cover
@@ -68,29 +67,27 @@ class PublishSkillTest(unittest.TestCase):
             self.assertIn("validate_skill.py", text)
 
     def test_generated_readme_honors_creator_defaults(self) -> None:
-        with tempfile.TemporaryDirectory() as directory:
-            root = Path(directory)
-            text = PUBLISH.generated_readme(
-                {
-                    "name": "hugai-demo",
-                    "description": "把重复工作流整理成可验证的 skill 包。",
-                    "version": "1.0.0",
-                    "owner": "HugAILab",
-                },
-                "example",
-                "hugai-demo",
-                "",
-                {
-                    "skill_name_prefix": "hugai-",
-                    "max_preferred_hyphen_parts": 3,
-                    "copyright": "Copyright (c) 2026 HugAILab Team",
-                    "x": "https://x.com/hugailab",
-                    "github": "https://github.com/example",
-                },
-            )
-            self.assertIn("Copyright (c) 2026 HugAILab Team", text)
-            self.assertIn("https://x.com/hugailab", text)
-            self.assertIn("https://github.com/example", text)
+        text = PUBLISH.generated_readme(
+            {
+                "name": "hugai-demo",
+                "description": "把重复工作流整理成可验证的 skill 包。",
+                "version": "1.0.0",
+                "owner": "HugAILab",
+            },
+            "example",
+            "hugai-demo",
+            "",
+            {
+                "skill_name_prefix": "hugai-",
+                "max_preferred_hyphen_parts": 3,
+                "copyright": "Copyright (c) 2026 HugAILab Team",
+                "x": "https://x.com/hugailab",
+                "github": "https://github.com/example",
+            },
+        )
+        self.assertIn("Copyright (c) 2026 HugAILab Team", text)
+        self.assertIn("https://x.com/hugailab", text)
+        self.assertIn("https://github.com/example", text)
 
     def test_default_branch_push_is_rejected(self) -> None:
         for branch in ("", "main", "master"):

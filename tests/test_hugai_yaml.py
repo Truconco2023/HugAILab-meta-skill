@@ -7,7 +7,6 @@ import importlib.util
 import unittest
 from pathlib import Path
 
-
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location("hugai_yaml", ROOT / "scripts" / "hugai_yaml.py")
 if SPEC is None or SPEC.loader is None:  # pragma: no cover
@@ -56,6 +55,10 @@ description: |
 """
         )
         self.assertEqual(literal["description"], "line one\nline two\n")
+        kept = YAML.safe_load("text: |+\n  line one\n\n")
+        self.assertEqual(kept["text"], "line one\n\n")
+        stripped = YAML.safe_load("text: |-\n  line one\n\n")
+        self.assertEqual(stripped["text"], "line one")
         folded = YAML.safe_load(
             """
 summary: >-
@@ -88,7 +91,7 @@ plain: value # comment
         payload = YAML.safe_load("\n".join(lines[1:end]))
         self.assertEqual(payload["name"], "hugailab-meta-skill")
         self.assertIn("Research, create", payload["description"])
-        self.assertEqual(payload["metadata"]["version"], "3.1.0")
+        self.assertEqual(payload["metadata"]["version"], "3.2.0")
 
 
 if __name__ == "__main__":

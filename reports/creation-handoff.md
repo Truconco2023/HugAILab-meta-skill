@@ -2,9 +2,17 @@
 
 ## Result
 
-- Skill: `hugailab-meta-skill` 3.1.0（fork：`Truconco2023/HugAILab-meta-skill`）
+- Skill: `hugailab-meta-skill` 3.2.0（fork：`Truconco2023/HugAILab-meta-skill`）
 - Job: research, create, evaluate, package, govern, and safely publish reusable agent skills through one self-contained workflow
-- Status: 本地候选已完整验证（无 PyYAML 环境 46/46 测试、34/34 触发评测、0 个包校验失败）；公开发布与干净安装证明在 v3.1.0 发布流程完成前保持 `missing evidence`
+- Status: v3.1.0 已发布并通过 published 门禁；v3.2.0 为新一轮质量/易用性升级，本地验证通过后待推送合并与发布。
+
+## v3.2.0 升级内容
+
+1. **P0 输出评测**：`scripts/output_eval.py`（确定性断言 + 可选 provider LLM 判定 + 盲评包生成），`evals/output_cases.json` 2 场景，fixture 模式通过；provider 运行诚实标记 `missing evidence`。
+2. **P0 语义触发评测**：`trigger_eval.py --llm` 模式（OpenAI 兼容 API），与关键词 smoke 并存。
+3. **P1 工程化**：ruff/mypy/Makefile/CHANGELOG；修复 Python <3.11 的 `datetime.UTC` 兼容问题；修复 `hugai_yaml` 块标量 chomping 与空行保留。
+4. **P1 脚手架**：`scripts/new_skill.py`（scaffold/production）与 `examples/demo-skill` 示例。
+5. **P2 发布自动化**：`.github/workflows/release.yml` tag 门禁；SKILL.md 瘦身 + README 快速上手/FAQ。
 
 ## v3.1.0 迭代升级
 
@@ -90,10 +98,13 @@
 
 - Deterministic package validation: 0 failures, 0 warnings（系统 Python 3.12 无 PyYAML 环境实测）。
 - Trigger eval: 34/34 通过，0 false positive，0 false negative，18/18 family 覆盖，0 个 weak 用例。
-- Unit tests: 46/46 通过，覆盖 YAML 降级、触发评测严格性/覆盖度、creator_defaults 与发布器品牌中立行为。
+- Unit tests: 57/57 通过，覆盖 YAML 降级、触发评测严格性/覆盖度、输出评测、LLM 模式、creator_defaults、脚手架与发布器品牌中立行为。
+- Lint/type: ruff 与 mypy 全绿（10 个脚本）。
+- Output eval: recorded fixture 2/2 通过；provider-backed LLM 判定与人工盲评保持 `missing evidence`。
+- Python 兼容性：修复 `datetime.UTC` 在 Python <3.11 的导入问题；YAML 块标量 chomping 与空行保留已修复并有测试。
 - Avatar: 4096²/5.9MB → 512²/68.6KB。
 - 发布器 `--dry-run`、`--prepare-only` 行为由更新后的测试覆盖；发布器不含任何 Profile/QR 注入代码。
 - GitHub Actions CI: 已新增（Python 3.12，有/无 PyYAML 双路径），首次运行时需要在合并后确认绿。
-- Public release / clean-install proof for 3.1.0: `missing evidence` until the release workflow completes.
+- Public release / clean-install proof for 3.2.0: `missing evidence` until the release workflow completes.
 - Provider-backed head-to-head output evaluation: `missing evidence`.
 - Human blind comparison of trigger reliability: `missing evidence`.

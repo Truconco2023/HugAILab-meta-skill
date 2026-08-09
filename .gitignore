@@ -1,4 +1,7 @@
 __pycache__/
 *.py[cod]
 .DS_Store
+.mypy_cache/
+.ruff_cache/
+.pytest_cache/
 reports/local-release-check*.json

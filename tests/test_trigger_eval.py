@@ -8,7 +8,7 @@ import json
 import tempfile
 import unittest
 from pathlib import Path
-
+from unittest.mock import patch
 
 ROOT = Path(__file__).resolve().parents[1]
 SPEC = importlib.util.spec_from_file_location("trigger_eval", ROOT / "scripts" / "trigger_eval.py")
@@ -124,6 +124,27 @@ class TriggerEvalTest(unittest.TestCase):
         record = result["results"]["near_neighbor"][0]
         self.assertFalse(record["predicted_trigger"])
         self.assertLess(record["score"], 0.34)
+
+    def test_llm_mode_requires_api_key(self) -> None:
+        with patch.dict(EVAL.os.environ, {}, clear=False):
+            EVAL.os.environ.pop("OPENAI_API_KEY", None)
+            with self.assertRaises(RuntimeError):
+                EVAL.llm_predict("desc", "prompt", "gpt-4o-mini")
+
+    def test_llm_mode_uses_model_prediction(self) -> None:
+        class FakeResponse:
+            def __enter__(self) -> FakeResponse:
+                return self
+
+            def __exit__(self, *_args: object) -> None:
+                return None
+
+            def read(self) -> bytes:
+                return b'{"choices": [{"message": {"content": "yes"}}]}'
+
+        with patch.dict(EVAL.os.environ, {"OPENAI_API_KEY": "test-key"}, clear=False):
+            with patch.object(EVAL.urllib.request, "urlopen", return_value=FakeResponse()):
+                self.assertTrue(EVAL.llm_predict("desc", "create a skill", "gpt-4o-mini"))
 
 
 if __name__ == "__main__":

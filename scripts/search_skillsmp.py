@@ -9,14 +9,19 @@ import os
 import random
 import sys
 import time
-from datetime import UTC, datetime
+
+try:
+    from datetime import UTC, datetime  # type: ignore[attr-defined]
+except ImportError:  # pragma: no cover - Python < 3.11
+    from datetime import datetime, timezone
+
+    UTC = timezone.utc
 from http.client import IncompleteRead, RemoteDisconnected
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
 from urllib.parse import urlencode, urlparse
 from urllib.request import Request, urlopen
-
 
 API_URL = "https://skillsmp.com/api/v1/skills/search"
 RETRYABLE_HTTP_STATUS = {408, 425, 429, 500, 502, 503, 504}

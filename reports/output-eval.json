@@ -1,0 +1,121 @@
+{
+  "ok": true,
+  "evidence_kind": "recorded_fixture",
+  "generated_at": "2026-08-09",
+  "tool": "output_eval.py",
+  "summary": {
+    "cases_total": 2,
+    "cases_passed": 2,
+    "with_skill_assertion_pass_rate": 1.0,
+    "baseline_passed_total": 0,
+    "provider_used": false
+  },
+  "missing_evidence": [
+    "provider-backed LLM judges not run; pass --llm-assert with OPENAI_API_KEY"
+  ],
+  "results": [
+    {
+      "id": "create_skill_package",
+      "prompt": "把这个流程整理成一个可复用的 skill",
+      "assertions_total": 5,
+      "assertions_passed": 5,
+      "baseline_passed": 0,
+      "baseline_detail": "baseline produced no package artifacts; scoring 0 for file-backed assertions",
+      "human_notes": "真实使用时还应人工确认 description 的触发边界与产出结构。",
+      "provider_used": false,
+      "results": [
+        {
+          "assertion": {
+            "kind": "file_exists",
+            "path": "SKILL.md"
+          },
+          "passed": true,
+          "detail": "file exists: SKILL.md"
+        },
+        {
+          "assertion": {
+            "kind": "contains",
+            "path": "SKILL.md",
+            "needle": "name: hugailab-meta-skill"
+          },
+          "passed": true,
+          "detail": "contains 'name: hugailab-meta-skill' in SKILL.md"
+        },
+        {
+          "assertion": {
+            "kind": "contains",
+            "path": "SKILL.md",
+            "needle": "## Router Rules"
+          },
+          "passed": true,
+          "detail": "contains '## Router Rules' in SKILL.md"
+        },
+        {
+          "assertion": {
+            "kind": "contains",
+            "path": "manifest.json",
+            "needle": "\"version\""
+          },
+          "passed": true,
+          "detail": "contains '\"version\"' in manifest.json"
+        },
+        {
+          "assertion": {
+            "kind": "not_contains",
+            "path": "README.md",
+            "needle": "sk-"
+          },
+          "passed": true,
+          "detail": "does not contain 'sk-' in README.md"
+        }
+      ]
+    },
+    {
+      "id": "audit_only",
+      "prompt": "审计这个 skill 的路由与输出评估，只给建议，先不要改文件",
+      "assertions_total": 4,
+      "assertions_passed": 4,
+      "baseline_passed": 0,
+      "baseline_detail": "baseline produced no package artifacts; scoring 0 for file-backed assertions",
+      "human_notes": "审计型请求应验证未产生文件改动；当前以只读断言近似。",
+      "provider_used": false,
+      "results": [
+        {
+          "assertion": {
+            "kind": "file_exists",
+            "path": "reports/skill-ir.json"
+          },
+          "passed": true,
+          "detail": "file exists: reports/skill-ir.json"
+        },
+        {
+          "assertion": {
+            "kind": "contains",
+            "path": "reports/skill-ir.json",
+            "needle": "evidence_boundary"
+          },
+          "passed": true,
+          "detail": "contains 'evidence_boundary' in reports/skill-ir.json"
+        },
+        {
+          "assertion": {
+            "kind": "contains",
+            "path": "reports/trigger-eval.json",
+            "needle": "\"ok\": true"
+          },
+          "passed": true,
+          "detail": "contains '\"ok\": true' in reports/trigger-eval.json"
+        },
+        {
+          "assertion": {
+            "kind": "not_contains",
+            "path": "README.md",
+            "needle": "BEGIN PRIVATE KEY"
+          },
+          "passed": true,
+          "detail": "does not contain 'BEGIN PRIVATE KEY' in README.md"
+        }
+      ]
+    }
+  ]
+}

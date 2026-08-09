@@ -3,7 +3,7 @@
   "generated_at": "2026-08-09",
   "package": {
     "name": "hugailab-meta-skill",
-    "version": "3.1.0",
+    "version": "3.2.0",
     "owner": "HugAILab",
     "maturity_tier": "governed",
     "lifecycle_stage": "library",
@@ -90,16 +90,11 @@
     "compact_workflow": [
       "Decide whether the request deserves a reusable skill; otherwise answer directly and create no package.",
       "Capture job, finished output, target users, inputs, exclusions, permissions, standards, existing assets, platforms, and publication intent.",
-      "Pass prior-art discovery or record why it is not applicable or missing evidence.",
-      "Pass the generalization gate for sample-driven core changes.",
-      "Choose the lightest valid mode.",
-      "Write the `description` early; run `evals/trigger_cases.json` before expanding structure.",
-      "Create only earned resources. Never create ceremonial directories or duplicate README/SKILL prose.",
-      "Export `reports/skill-ir.json` for Production+, public, or cross-platform packages.",
-      "Add output evals when correctness, safety, persuasion, or repeatability cannot be shown by trigger tests alone.",
-      "Keep mutations within the requested action boundary and preserve rollback for risky changes.",
-      "Validate package, unit tests, trigger behavior, context budget, secret/trust boundaries, and evidence claims.",
-      "Produce the creation handoff and clearly label missing evidence.",
+      "Pass prior-art discovery or record `missing evidence`; pass the generalization gate for sample-driven changes; choose the lightest valid mode.",
+      "Write the `description` early; run `evals/trigger_cases.json` before expanding structure; create only earned resources.",
+      "Export `reports/skill-ir.json` for Production+; add output evals when trigger tests alone cannot show correctness, safety, or repeatability.",
+      "Keep mutations inside the requested action boundary and preserve rollback for risky changes.",
+      "Validate package, unit tests, trigger behavior, context budget, secret/trust boundaries, and evidence claims; produce the creation handoff with clearly labeled missing evidence.",
       "When publication is requested, read [Self-Contained Skill Publishing](references/publishing.md), then use the bundled publisher for feature branch → validation → PR → merge → release/install verification; never push directly to the default branch."
     ],
     "gate_ladder": [
@@ -142,6 +137,8 @@
     "scripts": [
       "scripts/export_skill_ir.py",
       "scripts/hugai_yaml.py",
+      "scripts/new_skill.py",
+      "scripts/output_eval.py",
       "scripts/publish_skill.py",
       "scripts/release_check.py",
       "scripts/research_prior_art.py",
@@ -150,6 +147,7 @@
       "scripts/validate_skill.py"
     ],
     "evals": [
+      "evals/output_cases.json",
       "evals/trigger_cases.json"
     ],
     "reports": [
@@ -160,6 +158,8 @@
       "reports/iteration-2026-08-09-v2.9.md",
       "reports/iteration-2026-08-09-v3.0.md",
       "reports/iteration-2026-08-09-v3.1.md",
+      "reports/iteration-2026-08-09-v3.2.md",
+      "reports/output-eval.json",
       "reports/prior-art-research.md",
       "reports/skill-ir.json",
       "reports/skillsmp-integration-2026-08-03.md",

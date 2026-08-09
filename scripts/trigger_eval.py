@@ -23,8 +23,10 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 import re
 import sys
+import urllib.request
 from pathlib import Path
 from typing import Any
 
@@ -148,6 +150,7 @@ DEFAULT_CONCEPTS: dict[str, dict[str, Any]] = {
 
 DEFAULT_REQUIRED_DESCRIPTION = ["skill", "source_material", "authoring_action"]
 POSITIVE_BUCKETS = ("should_trigger", "should_not_trigger", "near_neighbor")
+OPENAI_BASE_URL = os.environ.get("OPENAI_BASE_URL", "https://api.openai.com/v1")
 
 
 def parse_yaml_text(text: str) -> Any:
@@ -236,6 +239,99 @@ def negative_hit(text: str, patterns: list[str]) -> str | None:
         if phrase_present(normalized, pattern):
             return pattern
     return None
+
+
+def llm_predict(description: str, prompt: str, model: str) -> bool:
+    """Ask an OpenAI-compatible model whether the skill should trigger."""
+    api_key = os.environ.get("OPENAI_API_KEY", "").strip()
+    if not api_key:
+        raise RuntimeError("OPENAI_API_KEY is required for --llm")
+    payload = {
+        "model": model,
+        "messages": [
+            {
+                "role": "system",
+                "content": (
+                    "You decide whether an agent skill should activate for a user request. "
+                    "Answer with exactly one word: yes or no."
+                ),
+            },
+            {
+                "role": "user",
+                "content": (
+                    f"Skill description:\n{description}\n\n"
+                    f"User request:\n{prompt}\n\n"
+                    "Should this skill activate?"
+                ),
+            },
+        ],
+        "temperature": 0,
+        "max_tokens": 5,
+    }
+    request = urllib.request.Request(
+        f"{OPENAI_BASE_URL.rstrip('/')}/chat/completions",
+        data=json.dumps(payload).encode("utf-8"),
+        headers={
+            "Content-Type": "application/json",
+            "Authorization": f"Bearer {api_key}",
+        },
+        method="POST",
+    )
+    with urllib.request.urlopen(request, timeout=60) as response:
+        body = json.loads(response.read().decode("utf-8"))
+    answer = str(body["choices"][0]["message"]["content"]).strip().lower()
+    return answer == "yes"
+
+
+def llm_evaluate(
+    root: Path,
+    cases_path: Path,
+    model: str,
+    limit: int,
+) -> dict[str, Any]:
+    cases = load_json(cases_path)
+    description = parse_description(root / "SKILL.md")
+    records: list[dict[str, Any]] = []
+    failures: list[dict[str, Any]] = []
+    totals = {"total": 0, "passed": 0, "false_positive": 0, "false_negative": 0}
+    for bucket in POSITIVE_BUCKETS:
+        expected = bucket == "should_trigger"
+        for item in case_items(cases, bucket):
+            if len(records) >= limit:
+                break
+            prompt = str(item.get("text", ""))
+            predicted = llm_predict(description, prompt, model)
+            passed = predicted == expected
+            record = {
+                "prompt": prompt,
+                "family": item.get("family", "default"),
+                "bucket": bucket,
+                "expected_trigger": expected,
+                "predicted_trigger": predicted,
+                "passed": passed,
+            }
+            records.append(record)
+            totals["total"] += 1
+            if passed:
+                totals["passed"] += 1
+            else:
+                kind = "false_negative" if expected else "false_positive"
+                totals[kind] += 1
+                failures.append(record)
+    ok = totals["total"] > 0 and not failures
+    return {
+        "ok": ok,
+        "evidence_kind": "provider_backed",
+        "mode": "llm",
+        "model": model,
+        "description_concepts": sorted(concept_hits(description, normalize_concepts(cases.get("positive_concepts") or DEFAULT_CONCEPTS))),
+        "summary": {
+            **totals,
+            "pass_rate": round(totals["passed"] / totals["total"], 3) if totals["total"] else 0,
+        },
+        "failures": failures,
+        "results": records,
+    }
 
 
 def case_items(cases: dict[str, Any], bucket: str) -> list[dict[str, Any]]:
@@ -353,13 +449,25 @@ def main() -> None:
         action="store_true",
         help="Score-only mode: do not enforce per-case required concepts.",
     )
+    parser.add_argument(
+        "--llm",
+        action="store_true",
+        help="Semantic mode: predict triggers with an OpenAI-compatible model (needs OPENAI_API_KEY).",
+    )
+    parser.add_argument("--llm-model", default="gpt-4o-mini", help="Model for --llm mode.")
+    parser.add_argument("--llm-limit", type=int, default=20, help="Max cases to send in --llm mode.")
     args = parser.parse_args()
 
     root = Path(args.skill_dir).resolve()
     cases_path = Path(args.cases)
     if not cases_path.is_absolute():
         cases_path = root / cases_path
-    result = evaluate(root, cases_path, lenient=args.lenient)
+    if args.llm:
+        result = llm_evaluate(root, cases_path, args.llm_model, args.llm_limit)
+        if not args.output:
+            args.output = "reports/trigger-eval-llm.json"
+    else:
+        result = evaluate(root, cases_path, lenient=args.lenient)
     rendered = json.dumps(result, ensure_ascii=False, indent=2)
     if args.output:
         output = Path(args.output)

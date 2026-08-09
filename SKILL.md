@@ -4,7 +4,7 @@ description: |
   Research, create, improve, migrate, evaluate, package, install-check, govern, and safely publish HugAILab agent skills from workflows, prompts, transcripts, docs, SOPs, runbooks, scripts, or notes. Use for new or existing skills, prior-art synthesis, routing/trigger boundaries, trigger or output evals, Skill IR, release gates, README preparation, GitHub repository and pull-request publication, versioned Releases, clean npx installation, team reuse, and create-and-publish flows. The publication path is self-contained and forbids direct default-branch pushes. Exclude one-off summaries, translations, ordinary docs, non-skill package publishing, and tasks that explicitly should not become a skill.
 metadata:
   author: HugAILab
-  version: "3.1.0"
+  version: "3.2.0"
   upstream_inspiration: yaojingang/yao-meta-skill; joeseesun/qiaomu-skill-publisher
 ---
 
@@ -36,10 +36,7 @@ Choose proportionally with [Operating Modes](references/operating-modes.md), [Ga
 
 ## Built-In Prior-Art Discovery
 
-Before a new skill or substantial redesign:
-
-1. Derive 2–4 intent-shaped queries covering outcome, domain action, quality mechanism, and an adjacent synonym when useful.
-2. Prefer the unified runner:
+Before a new skill or substantial redesign, run 2–4 intent-shaped queries through the unified runner:
 
 ```bash
 python3 scripts/research_prior_art.py "<query 1>" "<query 2>" --strict --summary --output reports/prior-art-candidates.json
@@ -52,23 +49,13 @@ npx --yes skills find "<query>"
 python3 scripts/search_skillsmp.py "<query>" --limit 20 --sort stars
 ```
 
-3. Keep metrics separate: skills.sh installs measure adoption; SkillsMP stars belong to the source repository; neither is a user rating or quality score.
-4. Deduplicate by canonical GitHub repository and skill path. Collapse translations, mirrors, and obvious forks without adding metrics together.
-5. Shortlist genuinely relevant popularity, trust, and complementary anchors. Inspect source `SKILL.md`, maintenance, license, permissions, security signals, and available rating evidence; never execute untrusted candidate code just to study it.
-6. Synthesize `keep / adapt / reject / invent`. Map each adopted mechanism to the new package instead of collaging prose.
-7. Preserve dated sources, metrics, failures, deduplication, lessons, rejections, and missing evidence in `reports/prior-art-research.md` for Production+ or materially researched work.
+Then: keep metrics separate (skills.sh installs ≠ SkillsMP stars ≠ user ratings); deduplicate by canonical repository/skill path; shortlist popularity/trust/complementary anchors and inspect source before adoption; synthesize `keep / adapt / reject / invent`; preserve dated evidence in `reports/prior-art-research.md` for Production+.
 
 If a catalog fails, continue with the other sources, record `missing evidence`, and lower the claim. Full method: [Prior-Art Research](references/prior-art-research.md).
 
 ## Generalization Gate
 
-Before promoting one failure into a core rule:
-
-1. restate it as a domain-neutral behavior
-2. classify it as core mechanism, optional adapter, or eval-only fixture
-3. promote only safety/factual/permission invariants or behavior repeated across unrelated domains
-4. keep one-off details in fixtures or specialist references
-5. rerun the original and unrelated boundary cases
+Before promoting one failure into a core rule: restate it as a domain-neutral behavior; classify it as core mechanism, optional adapter, or eval-only fixture; promote only safety/factual/permission invariants or behaviors repeated across unrelated domains; keep one-off details in fixtures; then rerun original and unrelated boundary cases.
 
 Prefer intent fidelity, source fidelity, and decision rules over an expanding topic encyclopedia.
 
@@ -85,17 +72,12 @@ Prefer intent fidelity, source fidelity, and decision rules over an expanding to
 
 1. Decide whether the request deserves a reusable skill; otherwise answer directly and create no package.
 2. Capture job, finished output, target users, inputs, exclusions, permissions, standards, existing assets, platforms, and publication intent.
-3. Pass prior-art discovery or record why it is not applicable or missing evidence.
-4. Pass the generalization gate for sample-driven core changes.
-5. Choose the lightest valid mode.
-6. Write the `description` early; run `evals/trigger_cases.json` before expanding structure.
-7. Create only earned resources. Never create ceremonial directories or duplicate README/SKILL prose.
-8. Export `reports/skill-ir.json` for Production+, public, or cross-platform packages.
-9. Add output evals when correctness, safety, persuasion, or repeatability cannot be shown by trigger tests alone.
-10. Keep mutations within the requested action boundary and preserve rollback for risky changes.
-11. Validate package, unit tests, trigger behavior, context budget, secret/trust boundaries, and evidence claims.
-12. Produce the creation handoff and clearly label missing evidence.
-13. When publication is requested, read [Self-Contained Skill Publishing](references/publishing.md), then use the bundled publisher for feature branch → validation → PR → merge → release/install verification; never push directly to the default branch.
+3. Pass prior-art discovery or record `missing evidence`; pass the generalization gate for sample-driven changes; choose the lightest valid mode.
+4. Write the `description` early; run `evals/trigger_cases.json` before expanding structure; create only earned resources.
+5. Export `reports/skill-ir.json` for Production+; add output evals when trigger tests alone cannot show correctness, safety, or repeatability.
+6. Keep mutations inside the requested action boundary and preserve rollback for risky changes.
+7. Validate package, unit tests, trigger behavior, context budget, secret/trust boundaries, and evidence claims; produce the creation handoff with clearly labeled missing evidence.
+8. When publication is requested, read [Self-Contained Skill Publishing](references/publishing.md), then use the bundled publisher for feature branch → validation → PR → merge → release/install verification; never push directly to the default branch.
 
 Core commands:
 
@@ -133,11 +115,9 @@ The final creation handoff must name the **reference skills studied**, give **ca
 ## Publish Flow
 
 1. Treat README as a product page: value, install, natural examples, prerequisites, outputs, configuration, risks, and troubleshooting.
-2. Audit without mutation when useful: `python3 scripts/publish_skill.py /path/to/skill --dry-run`.
-3. Only after an explicit publish request, run `python3 scripts/publish_skill.py /path/to/skill`.
-4. The bundled publisher prepares MIT LICENSE and README without third-party branding; resolves skill/repository identity; blocks secrets and reused release versions; creates or reuses a GitHub repository; and publishes only through a feature branch and PR.
-5. Merge is blocked by conflicts, failed/pending checks or requested changes. Successful publication creates `vX.Y.Z`, verifies `npx skills add --list`, performs an isolated install, and runs the published release gate.
-6. Do not report publication complete until the remote default version, GitHub Release, discovery and clean installation are verified.
+2. Audit without mutation when useful (`--dry-run`); run the full publisher only after an explicit publish request.
+3. The bundled publisher prepares MIT LICENSE and README without third-party branding; resolves identity; blocks secrets and reused versions; creates or reuses a repository; publishes only through a feature branch and PR; merge is blocked by conflicts, failed/pending checks, or requested changes.
+4. Do not report publication complete until the remote default version, GitHub Release, discovery and clean installation are verified.
 
 Detailed CLI and safety decisions: [Self-Contained Skill Publishing](references/publishing.md). README method: [GitHub README Playbook](references/github-readme-playbook.md). Operation method: [SkillOps Loop](references/skillops-loop.md).
 
