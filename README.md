@@ -20,7 +20,7 @@ npx skills add Truconco2023/HugAILab-meta-skill
 
 它会自己完成：**需求收敛 → 同类检索 → 取长避短 → Skill 设计 → 触发评测 → 格式校验 → README → API 泄露检查 → PR → Release → npx 安装验证**。
 
-**v3.6.0 本地候选已验证：** 72+/72 单元测试、34/34 触发评测（18/18 场景族、0 个弱用例）、0 个包校验问题（无 PyYAML 环境同样通过）、ruff/mypy 全绿；新增证据绑定自动评分器（score_skill.py），production 脚手架自动输出评分卡；发布器自动等待 CI、危险模式扫描门禁、引用检查与上下文预算告警自 v3.5.0 起内置。公开发布证据以 [Releases](https://github.com/Truconco2023/HugAILab-meta-skill/releases) 为准。
+**v3.6.1 本地候选已验证：** 78/78 单元测试、34/34 触发评测（18/18 场景族、0 个弱用例）、0 个包校验问题（无 PyYAML 环境同样通过）、ruff/mypy 全绿；评分器支持初始快照标识与新鲜度门禁，脚手架评分顺序与公平性已修复。公开发布证据以 [Releases](https://github.com/Truconco2023/HugAILab-meta-skill/releases) 为准。
 
 ## 这是做什么的
 

@@ -1,5 +1,14 @@
 # Changelog
 
+## 3.6.1 (2026-08-10)
+
+- 修复评分生命周期缺陷（来自用户对初始评分快照的质疑）：
+  - `new_skill.py` 评分顺序修复：先写 prior-art/handoff 占位文件，再跑 `score_skill.py`，初始分不再被“包处于非法中间态”误伤（docs 维度不再因时序得到 0 分）。
+  - `score_skill.py` 新增 `--label initial|final`：脚手架评分标记 `snapshot=initial`，Markdown 顶部明示“⚠ 初始快照，完成证据后请重新评分”，避免过期快照被当作最终状态。
+  - 公平性修正：docs 维度只按结构 warnings 扣分（pattern 审查信号由 `skill_pattern_scan` 门禁单独管理）；governance 维度在 `release_gates` 为空时用 provider 评测/真实 prior-art/handoff 证据替代计分。
+  - 新增 `scorecard_freshness` 发布门禁：scorecard.json 早于 trigger/output/IR 证据时告警并给出刷新命令；`Makefile` 新增 `make score`。
+- 回归：78/78 单元测试；新脚手架初始分由 2.5 修正为 3.0 且带初始快照标识；obsidian-clip / macos-security-audit 公平性重评 8.8 / 8.7。
+
 ## 3.6.0 (2026-08-10)
 
 - 新增 `scripts/score_skill.py`：证据绑定自动评分器。六维加权（触发 15% / 输出 25% / prior-art+IR 15% / 复用安装 20% / 文档安全 15% / 治理 10%），只读 reports、不制造证据；缺失证据明确列出并降分（fixture-only 输出封顶 6.5）。

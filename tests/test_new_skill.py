@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import importlib.util
+import json
 import subprocess
 import sys
 import tempfile
@@ -79,6 +80,8 @@ class NewSkillTest(unittest.TestCase):
             self.assertTrue((reports / "skill-ir.json").is_file())
             self.assertTrue((reports / "trigger-eval.json").is_file())
             self.assertTrue((reports / "scorecard.json").is_file())
+            scorecard = json.loads((reports / "scorecard.json").read_text(encoding="utf-8"))
+            self.assertEqual(scorecard["snapshot"], "initial")
 
 
 if __name__ == "__main__":

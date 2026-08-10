@@ -137,18 +137,6 @@ def run_bundled_scripts(root: Path, production: bool) -> None:
         [sys.executable, str(SCRIPT_DIR / "export_skill_ir.py"), str(root), "--output", "reports/skill-ir.json"],
         check=True,
     )
-    subprocess.run(
-        [
-            sys.executable,
-            str(SCRIPT_DIR / "score_skill.py"),
-            str(root),
-            "--output",
-            "reports/scorecard.json",
-            "--report",
-            "reports/scorecard.md",
-        ],
-        check=False,
-    )
     (root / "reports" / "prior-art-research.md").write_text(
         "# Prior-Art Research\n\n- Researched at: N/A\n- Missing evidence: catalog research not yet run for this generated package.\n",
         encoding="utf-8",
@@ -156,6 +144,20 @@ def run_bundled_scripts(root: Path, production: bool) -> None:
     (root / "reports" / "creation-handoff.md").write_text(
         "# Creation Handoff\n\n- Reference skills studied: N/A\n- Missing evidence: real task history not yet recorded.\n",
         encoding="utf-8",
+    )
+    subprocess.run(
+        [
+            sys.executable,
+            str(SCRIPT_DIR / "score_skill.py"),
+            str(root),
+            "--label",
+            "initial",
+            "--output",
+            "reports/scorecard.json",
+            "--report",
+            "reports/scorecard.md",
+        ],
+        check=False,
     )
 
 

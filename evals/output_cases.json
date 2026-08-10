@@ -112,6 +112,16 @@
           "needle": "score_skill.py"
         },
         {
+          "kind": "contains",
+          "path": "scripts/score_skill.py",
+          "needle": "--label"
+        },
+        {
+          "kind": "contains",
+          "path": "scripts/release_check.py",
+          "needle": "scorecard_freshness"
+        },
+        {
           "kind": "llm_judge",
           "prompt": "hugailab-meta-skill 的 output_eval.py 是否支持 llm_judge 网络重试参数 --retries 与 --retry-backoff，并在 fixture 模式统计 assertions_skipped？只回答 yes 或 no。",
           "must": "yes"
@@ -135,9 +145,14 @@
           "kind": "llm_judge",
           "prompt": "score_skill.py 是否为证据绑定评分器（六维加权、只读 reports、缺失证据降分），并且 new_skill.py 在 production 模式下自动生成 scorecard.json？只回答一个词 yes 或 no。",
           "must": "yes"
+        },
+        {
+          "kind": "llm_judge",
+          "prompt": "脚手架评分是否标记为初始快照（--label initial）并在评分卡上提示重新评分？release_check 是否包含 scorecard_freshness 新鲜度门禁？只回答一个词 yes 或 no。",
+          "must": "yes"
         }
       ],
-      "human_notes": "v3.6.0 自证：评分器 + 脚手架集成 + 既有能力以 provider-backed 证据落地。"
+      "human_notes": "v3.6.1 自证：评分器生命周期修复 + 既有能力以 provider-backed 证据落地。"
     }
   ]
 }

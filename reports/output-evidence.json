@@ -6,8 +6,8 @@
   "summary": {
     "cases_total": 3,
     "cases_passed": 3,
-    "assertions_total": 23,
-    "assertions_executed": 23,
+    "assertions_total": 26,
+    "assertions_executed": 26,
     "assertions_skipped": 0,
     "with_skill_assertion_pass_rate": 1.0,
     "baseline_passed_total": 0,
@@ -123,12 +123,12 @@
     {
       "id": "self_llm_judge_evidence",
       "prompt": "用 hugailab-meta-skill 交付可验证的 skill",
-      "assertions_total": 14,
-      "assertions_passed": 14,
+      "assertions_total": 17,
+      "assertions_passed": 17,
       "assertions_skipped": 0,
       "baseline_passed": 0,
       "baseline_detail": "baseline produced no package artifacts; scoring 0 for file-backed assertions",
-      "human_notes": "v3.6.0 自证：评分器 + 脚手架集成 + 既有能力以 provider-backed 证据落地。",
+      "human_notes": "v3.6.1 自证：评分器生命周期修复 + 既有能力以 provider-backed 证据落地。",
       "provider_used": true,
       "results": [
         {
@@ -213,6 +213,24 @@
         },
         {
           "assertion": {
+            "kind": "contains",
+            "path": "scripts/score_skill.py",
+            "needle": "--label"
+          },
+          "passed": true,
+          "detail": "contains '--label' in scripts/score_skill.py"
+        },
+        {
+          "assertion": {
+            "kind": "contains",
+            "path": "scripts/release_check.py",
+            "needle": "scorecard_freshness"
+          },
+          "passed": true,
+          "detail": "contains 'scorecard_freshness' in scripts/release_check.py"
+        },
+        {
+          "assertion": {
             "kind": "llm_judge",
             "prompt": "hugailab-meta-skill 的 output_eval.py 是否支持 llm_judge 网络重试参数 --retries 与 --retry-backoff，并在 fixture 模式统计 assertions_skipped？只回答 yes 或 no。",
             "must": "yes"
@@ -251,6 +269,15 @@
           "assertion": {
             "kind": "llm_judge",
             "prompt": "score_skill.py 是否为证据绑定评分器（六维加权、只读 reports、缺失证据降分），并且 new_skill.py 在 production 模式下自动生成 scorecard.json？只回答一个词 yes 或 no。",
+            "must": "yes"
+          },
+          "passed": true,
+          "detail": "llm answered 'yes', expected 'yes'"
+        },
+        {
+          "assertion": {
+            "kind": "llm_judge",
+            "prompt": "脚手架评分是否标记为初始快照（--label initial）并在评分卡上提示重新评分？release_check 是否包含 scorecard_freshness 新鲜度门禁？只回答一个词 yes 或 no。",
             "must": "yes"
           },
           "passed": true,

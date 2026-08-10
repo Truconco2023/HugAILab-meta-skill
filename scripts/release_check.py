@@ -149,6 +149,29 @@ def output_evidence_status(root: Path) -> tuple[str, dict[str, Any]]:
     }
 
 
+def scorecard_freshness(root: Path) -> tuple[str, dict[str, Any]]:
+    scorecard = root / "reports" / "scorecard.json"
+    if not scorecard.is_file():
+        return "warn", {"path": "reports/scorecard.json", "missing_evidence": True}
+    evidence_files = (
+        root / "reports" / "trigger-eval.json",
+        root / "reports" / "output-evidence.json",
+        root / "reports" / "skill-ir.json",
+    )
+    stale = []
+    score_mtime = scorecard.stat().st_mtime
+    for path in evidence_files:
+        if path.is_file() and path.stat().st_mtime > score_mtime:
+            stale.append(str(path.relative_to(root)))
+    if stale:
+        return "warn", {
+            "path": "reports/scorecard.json",
+            "stale_evidence": stale,
+            "hint": "run: python3 scripts/score_skill.py . --output reports/scorecard.json --report reports/scorecard.md",
+        }
+    return "pass", {"path": "reports/scorecard.json", "fresh": True}
+
+
 def evaluate(root: Path, phase: str, run_tests: bool, install_check: bool) -> dict[str, Any]:
     root = root.resolve()
     gates: list[dict[str, Any]] = []
@@ -267,6 +290,9 @@ def evaluate(root: Path, phase: str, run_tests: bool, install_check: bool) -> di
 
     output_status, output_evidence = output_evidence_status(root)
     gate(gates, "provider_or_human_output_evidence", output_status, output_evidence)
+
+    scorecard_status, scorecard_evidence = scorecard_freshness(root)
+    gate(gates, "scorecard_freshness", scorecard_status, scorecard_evidence)
 
     blocks = [item for item in gates if item["status"] == "block"]
     warnings = [item for item in gates if item["status"] == "warn"]
