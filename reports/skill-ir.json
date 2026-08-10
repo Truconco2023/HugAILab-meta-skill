@@ -3,7 +3,7 @@
   "generated_at": "2026-08-10",
   "package": {
     "name": "hugailab-meta-skill",
-    "version": "3.6.0",
+    "version": "3.6.1",
     "owner": "HugAILab",
     "maturity_tier": "governed",
     "lifecycle_stage": "library",

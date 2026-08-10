@@ -12,6 +12,9 @@ trigger:
 ir:
 	python3 scripts/export_skill_ir.py . --output reports/skill-ir.json
 
+score:
+	python3 scripts/score_skill.py . --output reports/scorecard.json --report reports/scorecard.md
+
 output:
 	python3 scripts/output_eval.py . --cases evals/output_cases.json --output reports/output-eval.json
 

@@ -191,6 +191,7 @@ class ScoreSkillTest(unittest.TestCase):
             "version": "0.1.0",
             "score": 8.5,
             "generated_at": "2026-08-10T00:00:00+08:00",
+            "snapshot": "final",
             "dimensions": [
                 {"label": "触发边界评测", "weight": 0.15, "score": 10.0, "evidence": "4/4"}
             ],
@@ -201,6 +202,55 @@ class ScoreSkillTest(unittest.TestCase):
         self.assertIn("8.5", text)
         self.assertIn("Missing evidence", text)
         self.assertIn("缺 provider 评测", text)
+
+    def test_initial_snapshot_markdown_warns_stale(self) -> None:
+        payload = {
+            "skill_name": "hugailab-demo",
+            "version": "0.1.0",
+            "score": 2.5,
+            "generated_at": "2026-08-10T00:00:00+08:00",
+            "snapshot": "initial",
+            "dimensions": [],
+            "missing_evidence": [],
+        }
+        text = SCORE.render_scorecard(payload)
+        self.assertIn("初始快照", text)
+        self.assertIn("重新运行 score_skill.py 刷新", text)
+
+    def test_docs_security_ignores_pattern_scan_warnings(self) -> None:
+        root = Path(tempfile.mkdtemp())
+        with unittest.mock.patch.object(
+            SCORE,
+            "validate",
+            return_value={
+                "ok": True,
+                "failures": [],
+                "warnings": [
+                    "pattern scan: 0 high / 17 medium review signals; blocking kinds are ...",
+                    "README may be missing natural examples",
+                ],
+            },
+        ):
+            result = SCORE.score_docs_security(root)
+        self.assertEqual(result["score"], 9.0)
+        self.assertTrue(any("README" in item for item in result["missing_evidence"]))
+
+    def test_governance_uses_evidence_substitute_without_gates(self) -> None:
+        root = Path(tempfile.mkdtemp())
+        reports = root / "reports"
+        reports.mkdir()
+        (reports / "trigger-eval.json").write_text('{"ok": true}', encoding="utf-8")
+        (reports / "output-evidence.json").write_text(
+            json.dumps({"evidence_kind": "provider_backed"}),
+            encoding="utf-8",
+        )
+        (reports / "creation-handoff.md").write_text("v0.1.0", encoding="utf-8")
+        (reports / "prior-art-research.md").write_text(
+            "# Prior-Art\n\n- Researched at: 2026-08-10\n- 完成调研。\n",
+            encoding="utf-8",
+        )
+        result = SCORE.score_governance(root, {"version": "0.1.0", "release_gates": []})
+        self.assertGreaterEqual(result["score"], 6.0)
 
 
 if __name__ == "__main__":

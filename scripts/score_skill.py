@@ -146,8 +146,13 @@ def score_docs_security(root: Path) -> dict[str, Any]:
     if not result["ok"]:
         return {"score": 0.0, "evidence": f"validate failures={len(result['failures'])}", "missing_evidence": result["failures"]}
     warnings = result.get("warnings") or []
-    score = max(0.0, 10.0 - len(warnings))
-    return {"score": round(score, 1), "evidence": f"validate warnings={len(warnings)}", "missing_evidence": warnings[:5]}
+    structural = [w for w in warnings if not w.startswith("pattern scan:")]
+    score = max(0.0, 10.0 - len(structural))
+    return {
+        "score": round(score, 1),
+        "evidence": f"validate structural warnings={len(structural)}",
+        "missing_evidence": structural[:5],
+    }
 
 
 def score_governance(root: Path, manifest: dict[str, Any]) -> dict[str, Any]:
@@ -157,19 +162,31 @@ def score_governance(root: Path, manifest: dict[str, Any]) -> dict[str, Any]:
     if isinstance(gates, list) and gates:
         score += 3.0
     else:
-        missing.append("manifest release_gates 为空")
+        missing.append("manifest release_gates 为空（无字段时用评测/调研证据替代部分治理分）")
     if (root / "reports" / "trigger-eval.json").is_file():
         score += 2.0
-    if (root / "reports" / "output-evidence.json").is_file():
+    evidence = load_json(root / "reports" / "output-evidence.json")
+    if evidence is not None and str(evidence.get("evidence_kind")) in {"provider_backed", "human_blind_review"}:
         score += 2.0
-    if (root / "reports" / "output-eval.json").is_file():
+    elif (root / "reports" / "output-eval.json").is_file():
         score += 1.0
     handoff = root / "reports" / "creation-handoff.md"
     if handoff.is_file() and str(manifest.get("version")) in handoff.read_text(encoding="utf-8"):
         score += 1.0
     else:
         missing.append("creation-handoff 未提及当前版本")
-    return {"score": round(score, 1), "evidence": f"gates={len(gates) if isinstance(gates, list) else 0}", "missing_evidence": missing}
+    prior_path = root / "reports" / "prior-art-research.md"
+    if prior_path.is_file() and not any(
+        token in prior_path.read_text(encoding="utf-8") for token in ("Researched at: N/A", "not yet run")
+    ):
+        score += 2.0
+    else:
+        missing.append("prior-art 调研证据缺失或为占位")
+    return {
+        "score": round(score, 1),
+        "evidence": f"gates={len(gates) if isinstance(gates, list) else 0}, evidence-backed",
+        "missing_evidence": missing,
+    }
 
 
 def render_scorecard(payload: dict[str, Any]) -> str:
@@ -183,6 +200,13 @@ def render_scorecard(payload: dict[str, Any]) -> str:
         "| 维度 | 权重 | 得分 | 加权 | 证据 |",
         "|---|---:|---:|---:|---|",
     ]
+    if payload.get("snapshot") == "initial":
+        lines.insert(
+            4,
+            "- ⚠ **初始快照**：脚手架生成时的基线分数，不代表最终状态；"
+            "完成 prior-art/测试/provider 评测后请重新运行 score_skill.py 刷新。",
+        )
+        lines.insert(5, "")
     for item in payload["dimensions"]:
         lines.append(
             f"| {item['label']} | {int(item['weight'] * 100)}% | {item['score']} | "
@@ -194,7 +218,7 @@ def render_scorecard(payload: dict[str, Any]) -> str:
     return "\n".join(lines) + "\n"
 
 
-def score(root: Path, evidence_path: Path | None) -> dict[str, Any]:
+def score(root: Path, evidence_path: Path | None, label: str = "final") -> dict[str, Any]:
     manifest = load_json(root / "manifest.json") or {}
     manifest_loaded = bool(manifest)
     dimension_results: list[dict[str, Any]] = []
@@ -222,6 +246,7 @@ def score(root: Path, evidence_path: Path | None) -> dict[str, Any]:
         "skill_dir": str(root.resolve()),
         "skill_name": str(manifest.get("name") or root.resolve().name),
         "version": str(manifest.get("version") or "unknown"),
+        "snapshot": label,
         "score": total,
         "dimensions": dimension_results,
         "missing_evidence": sorted(set(all_missing)),
@@ -235,13 +260,14 @@ def main() -> None:
     parser.add_argument("--output", default="", help="JSON output path.")
     parser.add_argument("--report", default="", help="Markdown scorecard output path.")
     parser.add_argument("--evidence", default="", help="Optional provider evidence JSON path (e.g. reports/output-evidence.json).")
+    parser.add_argument("--label", choices=("initial", "final"), default="final", help="Snapshot label for the scorecard.")
     args = parser.parse_args()
 
     root = Path(args.skill_dir).expanduser().resolve()
     if not root.is_dir():
         raise SystemExit(f"skill directory not found: {root}")
     evidence = Path(args.evidence).expanduser().resolve() if args.evidence else None
-    payload = score(root, evidence)
+    payload = score(root, evidence, label=args.label)
     rendered = json.dumps(payload, ensure_ascii=False, indent=2)
     if args.output:
         output_path = Path(args.output).expanduser()

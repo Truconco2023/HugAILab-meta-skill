@@ -2,9 +2,13 @@
 
 ## Result
 
-- Skill: `hugailab-meta-skill` 3.6.0（fork：`Truconco2023/HugAILab-meta-skill`）
+- Skill: `hugailab-meta-skill` 3.6.1（fork：`Truconco2023/HugAILab-meta-skill`）
 - Job: research, create, evaluate, package, govern, and safely publish reusable agent skills through one self-contained workflow
 - Status: v3.1.0 已发布并通过 published 门禁；v3.2.0 为新一轮质量/易用性升级，本地验证通过后待推送合并与发布。
+
+## v3.6.1 修复内容（2026-08-10）
+
+- 评分生命周期缺陷修复：脚手架评分顺序（占位文件先就位）、初始快照标识（`--label initial`）、scorecard 新鲜度门禁、docs/governance 评分公平性。
 
 ## v3.6.0 升级内容（2026-08-10）
 

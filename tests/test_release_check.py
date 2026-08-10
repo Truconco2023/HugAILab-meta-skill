@@ -6,6 +6,7 @@ from __future__ import annotations
 import importlib.util
 import json
 import tempfile
+import time
 import unittest
 from pathlib import Path
 
@@ -18,6 +19,27 @@ SPEC.loader.exec_module(RELEASE)
 
 
 class ReleaseCheckTest(unittest.TestCase):
+    def test_scorecard_freshness_warns_when_evidence_newer(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            root = Path(directory)
+            reports = root / "reports"
+            reports.mkdir()
+            (reports / "scorecard.json").write_text("{}", encoding="utf-8")
+            status, evidence = RELEASE.scorecard_freshness(root)
+            self.assertEqual(status, "pass")
+            self.assertTrue(evidence["fresh"])
+            time.sleep(0.02)
+            (reports / "trigger-eval.json").write_text("{}", encoding="utf-8")
+            status, evidence = RELEASE.scorecard_freshness(root)
+            self.assertEqual(status, "warn")
+            self.assertIn("stale_evidence", evidence)
+
+    def test_scorecard_freshness_missing_is_warn(self) -> None:
+        with tempfile.TemporaryDirectory() as directory:
+            status, evidence = RELEASE.scorecard_freshness(Path(directory))
+            self.assertEqual(status, "warn")
+            self.assertTrue(evidence["missing_evidence"])
+
     def test_secret_scan_reports_location_without_value(self) -> None:
         with tempfile.TemporaryDirectory() as directory:
             root = Path(directory)
